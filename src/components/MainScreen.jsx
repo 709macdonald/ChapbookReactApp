@@ -5,6 +5,7 @@ import IndividualFileScreen from "./IndividualFileScreen";
 
 export default function MainScreen({
   files,
+  setFiles,
   isLoadingFiles,
   showAllFiles,
   setShowAllFiles,
@@ -18,6 +19,21 @@ export default function MainScreen({
     setIndividualFile(file);
     setShowAllFiles(false);
     setShowIndividualFile(true);
+  };
+
+  const backToAllFileView = () => {
+    setIndividualFile(null);
+    setShowAllFiles(true);
+    setShowIndividualFile(false);
+  };
+
+  const onUpdateFileTags = (updateFn) => {
+    setFiles((prevFiles) => {
+      const updatedFiles = updateFn(prevFiles);
+      const updatedFile = updatedFiles.find((f) => f.id === indvidualFile.id);
+      setIndividualFile(updatedFile);
+      return updatedFiles;
+    });
   };
 
   return (
@@ -36,9 +52,11 @@ export default function MainScreen({
         openIndividualFile={openIndividualFile}
       />
       <IndividualFileScreen
-        files={files}
+        file={indvidualFile}
         showIndividualFile={showIndividualFile}
         setShowAllFiles={setShowAllFiles}
+        backToAllFileView={backToAllFileView}
+        onUpdateFileTags={onUpdateFileTags}
       />
     </div>
   );

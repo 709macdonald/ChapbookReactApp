@@ -71,6 +71,7 @@ function App() {
       />
       <MainScreen
         files={files}
+        setFiles={setFiles}
         isLoadingFiles={isLoadingFiles}
         showAllFiles={showAllFiles}
         setShowAllFiles={setShowAllFiles}
