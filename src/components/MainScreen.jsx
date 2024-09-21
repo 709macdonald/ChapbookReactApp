@@ -10,7 +10,16 @@ export default function MainScreen({
   setShowAllFiles,
   showIndividualFile,
   setShowIndividualFile,
+  handleDeleteFile,
 }) {
+  const [indvidualFile, setIndividualFile] = useState(null);
+
+  const openIndividualFile = (file) => {
+    setIndividualFile(file);
+    setShowAllFiles(false);
+    setShowIndividualFile(true);
+  };
+
   return (
     <div className="mainScreenDiv">
       <div className="bgLogoDiv">
@@ -23,6 +32,8 @@ export default function MainScreen({
         files={files}
         showAllFiles={showAllFiles}
         setShowIndividualFile={setShowIndividualFile}
+        handleDeleteFile={handleDeleteFile}
+        openIndividualFile={openIndividualFile}
       />
       <IndividualFileScreen
         files={files}

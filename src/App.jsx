@@ -5,7 +5,7 @@ import MainScreen from "./components/MainScreen";
 function App() {
   const [files, setFiles] = useState([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
-  const [showAllFiles, setShowAllFiles] = useState(false);
+  const [showAllFiles, setShowAllFiles] = useState(true);
   const [showIndividualFile, setShowIndividualFile] = useState(false);
 
   /* LOCAL STORAGE */
@@ -55,7 +55,12 @@ function App() {
     console.log("Updated files:", files);
   }, [files]);
 
-  /* OTHER CODE */
+  /* DELETE FILES */
+
+  const handleDeleteFile = (id) => {
+    const updatedFiles = files.filter((file) => file.id !== id);
+    setFiles(updatedFiles);
+  };
 
   return (
     <div className="containerDiv">
@@ -71,6 +76,7 @@ function App() {
         setShowAllFiles={setShowAllFiles}
         showIndividualFile={showIndividualFile}
         setShowIndividualFile={setShowIndividualFile}
+        handleDeleteFile={handleDeleteFile}
       />
     </div>
   );
