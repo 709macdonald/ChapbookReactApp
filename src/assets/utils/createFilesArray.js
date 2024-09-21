@@ -4,7 +4,7 @@ import { imageTextExtraction } from "./ImageTextUtils";
 import { wordTextExtraction } from "./wordDocTextUtils";
 
 export const createFilesArray = async (selectedUserFiles) => {
-  const processedFiles = await Promise.all(
+  const processedUserFiles = await Promise.all(
     selectedUserFiles.map(async (file) => {
       try {
         const fileContent = await new Promise((resolve, reject) => {
@@ -47,5 +47,5 @@ export const createFilesArray = async (selectedUserFiles) => {
     })
   );
 
-  return processedFiles.filter((file) => file !== null);
+  return processedUserFiles.filter((file) => file !== null);
 };

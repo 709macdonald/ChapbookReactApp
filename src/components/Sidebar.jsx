@@ -11,7 +11,6 @@ export default function Sidebar({ files, setFiles, setIsLoadingFiles }) {
         </h2>
       </div>
       <FileUploadSection
-        files={files}
         setFiles={setFiles}
         setIsLoadingFiles={setIsLoadingFiles}
       />

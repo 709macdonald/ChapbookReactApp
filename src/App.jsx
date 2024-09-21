@@ -5,6 +5,8 @@ import MainScreen from "./components/MainScreen";
 function App() {
   const [files, setFiles] = useState([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
+  const [showAllFiles, setShowAllFiles] = useState(false);
+  const [showIndividualFile, setShowIndividualFile] = useState(false);
 
   /* LOCAL STORAGE */
 
@@ -62,7 +64,14 @@ function App() {
         setFiles={setFiles}
         setIsLoadingFiles={setIsLoadingFiles}
       />
-      <MainScreen files={files} isLoadingFiles={isLoadingFiles} />
+      <MainScreen
+        files={files}
+        isLoadingFiles={isLoadingFiles}
+        showAllFiles={showAllFiles}
+        setShowAllFiles={setShowAllFiles}
+        showIndividualFile={showIndividualFile}
+        setShowIndividualFile={setShowIndividualFile}
+      />
     </div>
   );
 }

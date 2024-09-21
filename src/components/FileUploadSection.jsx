@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { createFilesArray } from "../assets/utils/createFilesArray";
 
-export default function FileUploadSection({
-  setFiles,
-  files,
-  setIsLoadingFiles,
-}) {
-  const [folderName, setFolderName] = useState("");
+export default function FileUploadSection({ setFiles, setIsLoadingFiles }) {
+  const [folderName, setFolderName] = useState("Select Folder");
 
   const selectUserFiles = async (event) => {
     const selectedUserFiles = Array.from(event.target.files);
@@ -19,8 +15,8 @@ export default function FileUploadSection({
         : "Selected Files";
       setFolderName(folderSelected);
 
-      const processedFiles = await createFilesArray(selectedUserFiles);
-      setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
+      const processedUserFiles = await createFilesArray(selectedUserFiles);
+      setFiles((prevFiles) => [...prevFiles, ...processedUserFiles]);
 
       setIsLoadingFiles(false);
     }

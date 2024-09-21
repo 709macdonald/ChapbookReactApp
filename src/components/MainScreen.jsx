@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import LoadingGear from "./LoadingGear";
-import FileSearchScreen from "./FileSearchScreen";
+import AllFilesScreen from "./AllFilesScreen";
 import IndividualFileScreen from "./IndividualFileScreen";
 
-export default function MainScreen({ files, isLoadingFiles }) {
+export default function MainScreen({
+  files,
+  isLoadingFiles,
+  showAllFiles,
+  setShowAllFiles,
+  showIndividualFile,
+  setShowIndividualFile,
+}) {
   return (
     <div className="mainScreenDiv">
       <div className="bgLogoDiv">
@@ -12,8 +19,16 @@ export default function MainScreen({ files, isLoadingFiles }) {
         </h2>
       </div>
       <LoadingGear isLoadingFiles={isLoadingFiles} />
-      <FileSearchScreen />
-      <IndividualFileScreen />
+      <AllFilesScreen
+        files={files}
+        showAllFiles={showAllFiles}
+        setShowIndividualFile={setShowIndividualFile}
+      />
+      <IndividualFileScreen
+        files={files}
+        showIndividualFile={showIndividualFile}
+        setShowAllFiles={setShowAllFiles}
+      />
     </div>
   );
 }
