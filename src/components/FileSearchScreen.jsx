@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 
 export default function FileSearchScreen({
   files,
@@ -31,8 +31,9 @@ export default function FileSearchScreen({
       .filter(Boolean);
   }, [files, searchWord, assistedSearchWords]);
 
-  setResultsCount(filteredFilesWithText.length);
-
+  useEffect(() => {
+    setResultsCount(filteredFilesWithText.length);
+  }, [filteredFilesWithText, setResultsCount]);
   const isSearchActive = searchWord || assistedSearchWords.length > 0;
 
   const isPdf = (file) => file.type === "application/pdf";
