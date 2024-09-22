@@ -3,17 +3,20 @@ import React, { useState, useEffect } from "react";
 export default function SearchBarSection({
   searchWord,
   setSearchWord,
-  setSimilarWords,
   suggestions,
   setSuggestions,
 }) {
+  /* ASSISTED SEARCH */
+
+  const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
+
   useEffect(() => {
-    if (searchWord) {
+    if (searchWord && isAssistedSearchEnabled) {
       fetchSimilarWords(searchWord);
     } else {
       setSuggestions([]);
     }
-  }, [searchWord]);
+  }, [searchWord, isAssistedSearchEnabled]);
 
   const fetchSimilarWords = async (word) => {
     try {
@@ -21,9 +24,15 @@ export default function SearchBarSection({
       const data = await response.json();
       const similarWords = data.slice(0, 10).map((item) => item.word);
       setSuggestions(similarWords);
-      setSimilarWords(similarWords);
     } catch (error) {
       console.error("Error fetching similar words:", error);
+    }
+  };
+
+  const toggleAssistedSearch = () => {
+    setIsAssistedSearchEnabled((prev) => !prev);
+    if (isAssistedSearchEnabled) {
+      setSuggestions([]);
     }
   };
 
@@ -38,6 +47,11 @@ export default function SearchBarSection({
       />
       <button>
         <i className="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <button onClick={toggleAssistedSearch}>
+        {isAssistedSearchEnabled
+          ? "Disable Assisted Search"
+          : "Enable Assisted Search"}
       </button>
 
       {/* Display suggestions */}
