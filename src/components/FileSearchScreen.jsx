@@ -51,7 +51,7 @@ export default function FileSearchScreen({
   if (!showAllFiles) return null;
 
   return (
-    <div className="fileList">
+    <div className="fileSearchScreenDiv">
       {filteredFilesWithText.length > 0 ? (
         filteredFilesWithText.map((file) => (
           <div key={file.id} className="fileDisplay">
@@ -82,36 +82,33 @@ export default function FileSearchScreen({
             ) : (
               <i className="fa-regular fa-file wordIcon"></i>
             )}
-
-            <div className="fileDisplayText">
-              <p className="pdfText">{file.name}</p>
-              <p className="matchedWords">
-                {isSearchActive && file.matchedWords.length > 0 ? (
-                  <>
-                    Found:{" "}
-                    <span className="showMatchedWords">
-                      {file.matchedWords.join(", ")}
-                    </span>
-                  </>
-                ) : (
-                  ""
-                )}
-              </p>
-              {isPdf(file) || isImage(file) || isWordDoc(file) ? (
-                <button
-                  onClick={() => openIndividualFile(file)}
-                  className="fileView"
-                >
-                  View File
-                </button>
-              ) : null}
+            <p className="pdfText">{file.name}</p>
+            <p className="matchedWords">
+              {isSearchActive && file.matchedWords.length > 0 ? (
+                <>
+                  Found:{" "}
+                  <span className="showMatchedWords">
+                    {file.matchedWords.join(", ")}
+                  </span>
+                </>
+              ) : (
+                ""
+              )}
+            </p>
+            {isPdf(file) || isImage(file) || isWordDoc(file) ? (
               <button
-                onClick={() => handleDeleteFile(file.id)}
-                className="fileDelete"
+                onClick={() => openIndividualFile(file)}
+                className="fileView"
               >
-                Delete File
+                View File
               </button>
-            </div>
+            ) : null}
+            <button
+              onClick={() => handleDeleteFile(file.id)}
+              className="fileDelete"
+            >
+              Delete File
+            </button>
           </div>
         ))
       ) : (
