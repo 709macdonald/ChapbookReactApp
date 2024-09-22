@@ -5,13 +5,14 @@ import MainScreen from "./components/MainScreen";
 function App() {
   const [files, setFiles] = useState([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
+  const [resultsCount, setResultsCount] = useState(0);
   const [showAllFiles, setShowAllFiles] = useState(true);
   const [showIndividualFile, setShowIndividualFile] = useState(false);
 
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
 
-  /* LOCAL STORAGE */
+  /* LOCAL STORAGE LOGiC */
 
   useEffect(() => {
     const storedFiles = localStorage.getItem("files");
@@ -58,7 +59,7 @@ function App() {
     console.log("Updated files:", files);
   }, [files]);
 
-  /* DELETE FILES */
+  /* DELETE FILES LOGIC */
 
   const handleDeleteFile = (id) => {
     const updatedFiles = files.filter((file) => file.id !== id);
@@ -71,6 +72,9 @@ function App() {
         files={files}
         setFiles={setFiles}
         setIsLoadingFiles={setIsLoadingFiles}
+        resultsCount={resultsCount}
+        setShowAllFiles={setShowAllFiles}
+        setShowIndividualFile={setShowIndividualFile}
         searchWord={searchWord}
         setSearchWord={setSearchWord}
         assistedSearchWords={assistedSearchWords}
@@ -80,6 +84,7 @@ function App() {
         files={files}
         setFiles={setFiles}
         isLoadingFiles={isLoadingFiles}
+        setResultsCount={setResultsCount}
         showAllFiles={showAllFiles}
         setShowAllFiles={setShowAllFiles}
         showIndividualFile={showIndividualFile}

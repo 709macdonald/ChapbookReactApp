@@ -7,6 +7,7 @@ export default function MainScreen({
   files,
   setFiles,
   isLoadingFiles,
+  setResultsCount,
   showAllFiles,
   setShowAllFiles,
   showIndividualFile,
@@ -48,6 +49,7 @@ export default function MainScreen({
       <LoadingGear isLoadingFiles={isLoadingFiles} />
       <FileSearchScreen
         files={files}
+        setResultsCount={setResultsCount}
         showAllFiles={showAllFiles}
         setShowIndividualFile={setShowIndividualFile}
         handleDeleteFile={handleDeleteFile}

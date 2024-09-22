@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 
 export default function FileSearchScreen({
   files,
+  setResultsCount,
   showAllFiles,
   handleDeleteFile,
   openIndividualFile,
@@ -27,8 +28,10 @@ export default function FileSearchScreen({
 
         return matchedWords.length > 0 ? { ...file, matchedWords } : null;
       })
-      .filter(Boolean); // Remove any null results (files with no matches)
+      .filter(Boolean);
   }, [files, searchWord, assistedSearchWords]);
+
+  setResultsCount(filteredFilesWithText.length);
 
   const isSearchActive = searchWord || assistedSearchWords.length > 0;
 

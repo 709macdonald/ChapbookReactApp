@@ -6,6 +6,9 @@ export default function Sidebar({
   files,
   setFiles,
   setIsLoadingFiles,
+  resultsCount,
+  setShowAllFiles,
+  setShowIndividualFile,
   searchWord,
   setSearchWord,
   assistedSearchWords,
@@ -21,6 +24,9 @@ export default function Sidebar({
       <FileUploadSection
         setFiles={setFiles}
         setIsLoadingFiles={setIsLoadingFiles}
+        resultsCount={resultsCount}
+        setShowAllFiles={setShowAllFiles}
+        setShowIndividualFile={setShowIndividualFile}
       />
       <SearchBarSection
         files={files}

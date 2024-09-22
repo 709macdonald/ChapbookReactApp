@@ -10,6 +10,8 @@ export default function SearchBarSection({
   const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
   const [predictiveTextWords, setPredictiveTextWords] = useState([]);
 
+  /* ASSISTED SEARCH */
+
   useEffect(() => {
     if (searchWord && isAssistedSearchEnabled) {
       fetchSimilarWords(searchWord);
@@ -36,6 +38,8 @@ export default function SearchBarSection({
     }
   };
 
+  /* PREDICTIVE TEXT */
+
   useEffect(() => {
     if (searchWord) {
       const allWords = new Set();
@@ -48,7 +52,7 @@ export default function SearchBarSection({
         word.startsWith(searchWord.toLowerCase())
       );
 
-      setPredictiveTextWords(filteredPredictiveTextWords.slice(0, 10)); // Limit to 10
+      setPredictiveTextWords(filteredPredictiveTextWords.slice(0, 10));
     } else {
       setPredictiveTextWords([]);
     }

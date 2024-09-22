@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { createFilesArray } from "../assets/utils/createFilesArray";
 
-export default function FileUploadSection({ setFiles, setIsLoadingFiles }) {
+export default function FileUploadSection({
+  setFiles,
+  setIsLoadingFiles,
+  resultsCount,
+  setShowAllFiles,
+  setShowIndividualFile,
+}) {
   const [folderName, setFolderName] = useState("Select Folder");
 
   const selectUserFiles = async (event) => {
@@ -31,6 +37,8 @@ export default function FileUploadSection({ setFiles, setIsLoadingFiles }) {
       setFiles([]);
       setFolderName("Select Folder");
       setIsLoadingFiles(false);
+      setShowIndividualFile(false);
+      setShowAllFiles(true);
       localStorage.removeItem("files");
     }
   };
@@ -67,6 +75,7 @@ export default function FileUploadSection({ setFiles, setIsLoadingFiles }) {
         <button onClick={handleReset} className="resetButton">
           Reset
         </button>
+        <p>{resultsCount}</p>
       </div>
     </div>
   );
