@@ -38,6 +38,7 @@ export default function IndividualFileScreen({
   };
 
   if (!showIndividualFile) return null;
+
   return (
     <div className="individualFileScreenDiv">
       <button onClick={backToAllFileView} className="backButton">
