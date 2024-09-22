@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import LoadingGear from "./LoadingGear";
-import AllFilesScreen from "./AllFilesScreen";
+import FileSearchScreen from "./FileSearchScreen";
 import IndividualFileScreen from "./IndividualFileScreen";
 
 export default function MainScreen({
@@ -12,6 +12,8 @@ export default function MainScreen({
   showIndividualFile,
   setShowIndividualFile,
   handleDeleteFile,
+  searchWord,
+  suggestions,
 }) {
   const [indvidualFile, setIndividualFile] = useState(null);
 
@@ -44,12 +46,14 @@ export default function MainScreen({
         </h2>
       </div>
       <LoadingGear isLoadingFiles={isLoadingFiles} />
-      <AllFilesScreen
+      <FileSearchScreen
         files={files}
         showAllFiles={showAllFiles}
         setShowIndividualFile={setShowIndividualFile}
         handleDeleteFile={handleDeleteFile}
         openIndividualFile={openIndividualFile}
+        searchWord={searchWord}
+        suggestions={suggestions}
       />
       <IndividualFileScreen
         file={indvidualFile}

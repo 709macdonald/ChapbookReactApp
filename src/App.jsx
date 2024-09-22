@@ -8,6 +8,9 @@ function App() {
   const [showAllFiles, setShowAllFiles] = useState(true);
   const [showIndividualFile, setShowIndividualFile] = useState(false);
 
+  const [searchWord, setSearchWord] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+
   /* LOCAL STORAGE */
 
   useEffect(() => {
@@ -65,9 +68,12 @@ function App() {
   return (
     <div className="containerDiv">
       <Sidebar
-        files={files}
         setFiles={setFiles}
         setIsLoadingFiles={setIsLoadingFiles}
+        searchWord={searchWord}
+        setSearchWord={setSearchWord}
+        suggestions={suggestions}
+        setSuggestions={setSuggestions}
       />
       <MainScreen
         files={files}
@@ -78,6 +84,8 @@ function App() {
         showIndividualFile={showIndividualFile}
         setShowIndividualFile={setShowIndividualFile}
         handleDeleteFile={handleDeleteFile}
+        searchWord={searchWord}
+        suggestions={suggestions}
       />
     </div>
   );

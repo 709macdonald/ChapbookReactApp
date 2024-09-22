@@ -2,7 +2,14 @@ import React from "react";
 import FileUploadSection from "./FileUploadSection";
 import SearchBarSection from "./SearchBarSection";
 
-export default function Sidebar({ files, setFiles, setIsLoadingFiles }) {
+export default function Sidebar({
+  setFiles,
+  setIsLoadingFiles,
+  searchWord,
+  setSearchWord,
+  suggestions,
+  setSuggestions,
+}) {
   return (
     <div className="sidebarDiv">
       <div className="sideBarLogoDiv">
@@ -14,7 +21,12 @@ export default function Sidebar({ files, setFiles, setIsLoadingFiles }) {
         setFiles={setFiles}
         setIsLoadingFiles={setIsLoadingFiles}
       />
-      <SearchBarSection />
+      <SearchBarSection
+        searchWord={searchWord}
+        setSearchWord={setSearchWord}
+        suggestions={suggestions}
+        setSuggestions={setSuggestions}
+      />
       <div className="creatorNameDiv">Created By Peter MacDonald</div>
     </div>
   );

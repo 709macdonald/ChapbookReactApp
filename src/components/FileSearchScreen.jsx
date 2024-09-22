@@ -1,16 +1,36 @@
 import React, { useState, useMemo } from "react";
 
-export default function AllFilesScreen({
+export default function FileSearchScreen({
   files,
   showAllFiles,
   handleDeleteFile,
   openIndividualFile,
+  searchWord,
+  suggestions,
 }) {
-  const filesWithText = useMemo(() => {
-    return files.filter((file) => file.text.trim() !== "");
-  }, [files]);
+  const filteredFilesWithText = useMemo(() => {
+    const allSearchTerms = [searchWord, ...suggestions].map((word) =>
+      word.toLowerCase()
+    );
 
-  console.log(filesWithText);
+    return files
+      .filter((file) => file.text.trim() !== "")
+      .map((file) => {
+        const matchedWords = allSearchTerms.filter(
+          (term) =>
+            file.text.toLowerCase().includes(term) ||
+            file.name.toLowerCase().includes(term) ||
+            (file.tags
+              ? file.tags.some((tag) => tag.toLowerCase().includes(term))
+              : false)
+        );
+
+        return matchedWords.length > 0 ? { ...file, matchedWords } : null;
+      })
+      .filter(Boolean); // Remove any null results (files with no matches)
+  }, [files, searchWord, suggestions]);
+
+  const isSearchActive = searchWord || suggestions.length > 0;
 
   const isPdf = (file) => file.type === "application/pdf";
   const isImage = (file) => file.type.startsWith("image/");
@@ -25,10 +45,11 @@ export default function AllFilesScreen({
   };
 
   if (!showAllFiles) return null;
+
   return (
     <div className="fileList">
-      {filesWithText.length > 0 ? (
-        filesWithText.map((file) => (
+      {filteredFilesWithText.length > 0 ? (
+        filteredFilesWithText.map((file) => (
           <div key={file.id} className="fileDisplay">
             {isPdf(file) ? (
               !renderErrors[file.blobUrl] ? (
@@ -61,7 +82,7 @@ export default function AllFilesScreen({
             <div className="fileDisplayText">
               <p className="pdfText">{file.name}</p>
               <p className="matchedWords">
-                {file.matchedWords.length > 0 ? (
+                {isSearchActive && file.matchedWords.length > 0 ? (
                   <>
                     Found:{" "}
                     <span className="showMatchedWords">
