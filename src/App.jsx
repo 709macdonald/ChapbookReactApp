@@ -54,11 +54,6 @@ function App() {
     }
   }, [files]);
 
-  /* SEE WHAT FILES ARRAY IS DOING FOR NOW */
-  useEffect(() => {
-    console.log("Updated files:", files);
-  }, [files]);
-
   /* DELETE FILES LOGIC */
 
   const handleDeleteFile = (id) => {
