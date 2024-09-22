@@ -3,12 +3,13 @@ import FileUploadSection from "./FileUploadSection";
 import SearchBarSection from "./SearchBarSection";
 
 export default function Sidebar({
+  files,
   setFiles,
   setIsLoadingFiles,
   searchWord,
   setSearchWord,
-  suggestions,
-  setSuggestions,
+  assistedSearchWords,
+  setAssistedSearchWords,
 }) {
   return (
     <div className="sidebarDiv">
@@ -22,10 +23,11 @@ export default function Sidebar({
         setIsLoadingFiles={setIsLoadingFiles}
       />
       <SearchBarSection
+        files={files}
         searchWord={searchWord}
         setSearchWord={setSearchWord}
-        suggestions={suggestions}
-        setSuggestions={setSuggestions}
+        assistedSearchWords={assistedSearchWords}
+        setAssistedSearchWords={setAssistedSearchWords}
       />
       <div className="creatorNameDiv">Created By Peter MacDonald</div>
     </div>

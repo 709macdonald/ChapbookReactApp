@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 
 export default function SearchBarSection({
+  files,
   searchWord,
   setSearchWord,
-  suggestions,
-  setSuggestions,
+  assistedSearchWords,
+  setAssistedSearchWords,
 }) {
-  /* ASSISTED SEARCH */
-
   const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
+  const [predictiveTextWords, setPredictiveTextWords] = useState([]);
 
   useEffect(() => {
     if (searchWord && isAssistedSearchEnabled) {
       fetchSimilarWords(searchWord);
     } else {
-      setSuggestions([]);
+      setAssistedSearchWords([]);
     }
   }, [searchWord, isAssistedSearchEnabled]);
 
@@ -23,7 +23,7 @@ export default function SearchBarSection({
       const response = await fetch(`https://api.datamuse.com/words?ml=${word}`);
       const data = await response.json();
       const similarWords = data.slice(0, 10).map((item) => item.word);
-      setSuggestions(similarWords);
+      setAssistedSearchWords(similarWords);
     } catch (error) {
       console.error("Error fetching similar words:", error);
     }
@@ -31,9 +31,31 @@ export default function SearchBarSection({
 
   const toggleAssistedSearch = () => {
     setIsAssistedSearchEnabled((prev) => !prev);
-    if (isAssistedSearchEnabled) {
-      setSuggestions([]);
+    if (!isAssistedSearchEnabled) {
+      setAssistedSearchWords([]);
     }
+  };
+
+  useEffect(() => {
+    if (searchWord) {
+      const allWords = new Set();
+      files.forEach((file) => {
+        const words = file.text.split(/\s+/);
+        words.forEach((word) => allWords.add(word.toLowerCase()));
+      });
+
+      const filteredPredictiveTextWords = Array.from(allWords).filter((word) =>
+        word.startsWith(searchWord.toLowerCase())
+      );
+
+      setPredictiveTextWords(filteredPredictiveTextWords.slice(0, 10)); // Limit to 10
+    } else {
+      setPredictiveTextWords([]);
+    }
+  }, [searchWord, files]);
+
+  const handleSuggestionClick = (word) => {
+    setSearchWord(word);
   };
 
   return (
@@ -54,11 +76,22 @@ export default function SearchBarSection({
           : "Enable Assisted Search"}
       </button>
 
-      {/* Display suggestions */}
-      <div className="suggestions">
-        {suggestions.map((suggestion, index) => (
+      <div className="predictiveTextWordsDiv">
+        {predictiveTextWords.map((predictiveTextWord, index) => (
+          <div
+            key={index}
+            className="suggestion-item"
+            onClick={() => handleSuggestionClick(predictiveTextWord)}
+          >
+            {predictiveTextWord}
+          </div>
+        ))}
+      </div>
+
+      <div className="assistedSearchWordsDiv">
+        {assistedSearchWords.map((assistedSearchWord, index) => (
           <div key={index} className="suggestion-item">
-            {suggestion}
+            {assistedSearchWord}
           </div>
         ))}
       </div>

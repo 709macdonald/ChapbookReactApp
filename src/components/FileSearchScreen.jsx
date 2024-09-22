@@ -6,10 +6,10 @@ export default function FileSearchScreen({
   handleDeleteFile,
   openIndividualFile,
   searchWord,
-  suggestions,
+  assistedSearchWords,
 }) {
   const filteredFilesWithText = useMemo(() => {
-    const allSearchTerms = [searchWord, ...suggestions].map((word) =>
+    const allSearchTerms = [searchWord, ...assistedSearchWords].map((word) =>
       word.toLowerCase()
     );
 
@@ -28,9 +28,9 @@ export default function FileSearchScreen({
         return matchedWords.length > 0 ? { ...file, matchedWords } : null;
       })
       .filter(Boolean); // Remove any null results (files with no matches)
-  }, [files, searchWord, suggestions]);
+  }, [files, searchWord, assistedSearchWords]);
 
-  const isSearchActive = searchWord || suggestions.length > 0;
+  const isSearchActive = searchWord || assistedSearchWords.length > 0;
 
   const isPdf = (file) => file.type === "application/pdf";
   const isImage = (file) => file.type.startsWith("image/");

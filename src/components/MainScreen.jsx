@@ -13,7 +13,7 @@ export default function MainScreen({
   setShowIndividualFile,
   handleDeleteFile,
   searchWord,
-  suggestions,
+  assistedSearchWords,
 }) {
   const [indvidualFile, setIndividualFile] = useState(null);
 
@@ -53,7 +53,7 @@ export default function MainScreen({
         handleDeleteFile={handleDeleteFile}
         openIndividualFile={openIndividualFile}
         searchWord={searchWord}
-        suggestions={suggestions}
+        assistedSearchWords={assistedSearchWords}
       />
       <IndividualFileScreen
         file={indvidualFile}

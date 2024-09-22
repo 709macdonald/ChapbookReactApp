@@ -9,7 +9,7 @@ function App() {
   const [showIndividualFile, setShowIndividualFile] = useState(false);
 
   const [searchWord, setSearchWord] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
+  const [assistedSearchWords, setAssistedSearchWords] = useState([]);
 
   /* LOCAL STORAGE */
 
@@ -68,12 +68,13 @@ function App() {
   return (
     <div className="containerDiv">
       <Sidebar
+        files={files}
         setFiles={setFiles}
         setIsLoadingFiles={setIsLoadingFiles}
         searchWord={searchWord}
         setSearchWord={setSearchWord}
-        suggestions={suggestions}
-        setSuggestions={setSuggestions}
+        assistedSearchWords={assistedSearchWords}
+        setAssistedSearchWords={setAssistedSearchWords}
       />
       <MainScreen
         files={files}
@@ -85,7 +86,7 @@ function App() {
         setShowIndividualFile={setShowIndividualFile}
         handleDeleteFile={handleDeleteFile}
         searchWord={searchWord}
-        suggestions={suggestions}
+        assistedSearchWords={assistedSearchWords}
       />
     </div>
   );
