@@ -48,37 +48,40 @@ export default function FileUploadSection({
 
   return (
     <div className="fileUploadSectionDiv">
+      <button onClick={handleReset} className="resetButton">
+        Reset
+      </button>
       <hr />
-      <input
-        type="file"
-        onChange={selectUserFiles}
-        accept="application/pdf, image/*, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword"
-        multiple
-        className="fileInput"
-        id="fileInputFiles"
-      />
-      <label htmlFor="fileInputFiles" className="fileInputLabel">
-        <i className="fa-solid fa-file folderIcon"></i> Select Files
-      </label>
+      <div className="fileInputDiv">
+        <input
+          type="file"
+          onChange={selectUserFiles}
+          accept="application/pdf, image/*, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword"
+          multiple
+          className="fileInput"
+          id="fileInputFiles"
+        />
+        <label htmlFor="fileInputFiles" className="fileInputLabel">
+          <i className="fa-solid fa-file folderIcon"></i> Select Files
+        </label>
+      </div>
       <hr />
-
-      <input
-        type="file"
-        onChange={selectUserFiles}
-        webkitdirectory=""
-        className="fileInput"
-        id="fileInputDirectory"
-      />
-      <label htmlFor="fileInputDirectory" className="fileInputLabel">
-        <i className="fa-solid fa-folder folderIcon"></i> Select Folder
-      </label>
+      <div className="fileInputDiv">
+        <input
+          type="file"
+          onChange={selectUserFiles}
+          webkitdirectory=""
+          className="fileInput"
+          id="fileInputDirectory"
+        />
+        <label htmlFor="fileInputDirectory" className="fileInputLabel">
+          <i className="fa-solid fa-folder folderIcon"></i> Select Folder
+        </label>
+      </div>
       <hr />
       <div className="folderNameDiv">
         <p className="folderName">{folderName}</p>
-        <button onClick={handleReset} className="resetButton">
-          Reset
-        </button>
-        <p>{resultsCount}</p>
+        <p className="resultsFound">{resultsCount} results found </p>
       </div>
     </div>
   );

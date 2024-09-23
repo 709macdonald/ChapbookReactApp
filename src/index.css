@@ -13,8 +13,9 @@
 
   --primary-font-size: 1.2rem;
   --secondary-font-size: 0.9rem;
+  --tertiary-font-size: 1rem;
   --font-color: rgba(255, 255, 255, 0.87);
-  --secondary-font-color: rgba(120, 118, 118, 0.87);
+  --secondary-font-color: rgba(193, 190, 190, 0.87);
 
   --hover-bg-color: #1f1f1f;
 }
@@ -106,7 +107,7 @@ body {
 
 .matchedWords {
   color: var(--secondary-font-color);
-  font-size: var(--secondary-font-size);
+  font-size: var (--tertiary-font-size);
   font-style: italic;
   position: absolute;
   left: 11rem;
@@ -153,4 +154,67 @@ body {
   height: 100vh;
   padding: 2rem;
   box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
+  font-size: var(--primary-font-size);
+}
+
+/* FILE INPUT SECTION */
+
+.resetButton {
+  background-color: var(--secondary-bg-color);
+  border: none;
+  border-radius: 0.4rem;
+  color: var(--font-color);
+  cursor: pointer;
+  margin: 1rem 0 0.5rem auto;
+  padding: 0.4rem;
+  font-size: var(--tertiary-font-size);
+}
+
+.resetButton:hover {
+  background-color: var(--hover-bg-color);
+  transform: scale(1.05);
+}
+
+.fileInputDiv {
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.fileInputDiv:hover {
+  background-color: var(--hover-bg-color);
+  transform: scale(1.05);
+}
+
+.fileInput {
+  display: none;
+}
+
+.folderIcon {
+  margin-right: 1rem;
+}
+
+.folderName {
+  font-size: var(--secondary-font-size);
+  font-style: italic;
+  color: var(--secondary-font-color);
+}
+
+.resultsFound {
+  font-size: var(--tertiary-font-size);
+  color: var(--secondary-font-color);
+  margin-top: 0;
+}
+
+/* SEARCH BAR SECTION */
+
+#searchBar {
+  height: 1.3rem;
+  font-size: 1.2rem;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+  background-color: rgb(246, 246, 246);
+  cursor: pointer;
+}
+
+#searchBar:hover {
+  background-color: white;
 }
