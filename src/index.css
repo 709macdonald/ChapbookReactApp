@@ -71,11 +71,12 @@ body {
 /* FILE DISPLAYS CSS */
 
 .fileDisplayDiv {
+  position: relative;
   background-color: var(--main-bg-color);
   margin: 0.5rem;
   padding: 1rem;
   width: 23rem;
-  min-height: 18rem;
+  height: 18rem;
   border-radius: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
 }
@@ -114,14 +115,28 @@ body {
 
 .fileName {
   font-size: var(--primary-font-size);
+  margin-left: 0.7rem;
 }
 
 .viewFileButton {
-  color: var(--secondary-font-color);
-  font-size: var(--secondary-font-size);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: transparent;
+  font-size: var(--primary-font-size);
   background-color: transparent;
+  padding: 0.5rem 1rem;
   border: none;
   cursor: pointer;
+  z-index: 10;
+  border-radius: 0.5rem;
+  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+}
+
+.fileDisplayDiv:hover .viewFileButton {
+  color: white; /* Show text when the fileDisplayDiv is hovered */
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 /* SIDEBAR CSS */
