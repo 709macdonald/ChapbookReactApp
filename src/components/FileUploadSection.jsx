@@ -15,6 +15,8 @@ export default function FileUploadSection({
 
     if (selectedUserFiles.length > 0) {
       setIsLoadingFiles(true);
+      setShowAllFiles(false);
+      setShowIndividualFile(false);
 
       const folderSelected = selectedUserFiles[0].webkitRelativePath
         ? selectedUserFiles[0].webkitRelativePath.split("/")[0]
@@ -25,6 +27,7 @@ export default function FileUploadSection({
       setFiles((prevFiles) => [...prevFiles, ...processedUserFiles]);
 
       setIsLoadingFiles(false);
+      setShowAllFiles(true);
     }
   };
 

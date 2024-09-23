@@ -11,6 +11,9 @@
   --main-bg-color: #302f2f;
   --secondary-bg-color: #242424;
   --font-color: rgba(255, 255, 255, 0.87);
+  --secondary-font-color: rgba(120, 118, 118, 0.87);
+
+  --hover-bg-color: #1f1f1f;
 }
 
 html,
@@ -62,11 +65,56 @@ body {
   justify-content: flex-start;
 }
 
+/* FILE DISPLAYS CSS */
+
+.fileDisplayDiv {
+  background-color: var(--main-bg-color);
+  margin: 0.5rem;
+  padding: 1rem;
+  width: 23rem;
+  height: 18rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
+}
+
+.fileDisplayDiv:hover {
+  background-color: var(--hover-bg-color);
+  transform: scale(1.05);
+}
+
+.fileDisplayTopDiv {
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  padding: 10px;
+  height: 12rem;
+}
+
+.deleteButtonAndMatchedWordsDiv {
+  flex: 1;
+}
+
+.fileDeleteButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.matchedWords {
+  color: var(--secondary-font-color);
+  font-style: italic;
+  position: absolute;
+  left: 11rem;
+  bottom: 0;
+}
+
 /* SIDEBAR CSS */
 
 .sidebarDiv {
+  position: relative;
+  z-index: 1;
   background-color: var(--main-bg-color);
   height: 100vh;
   padding: 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
 }
