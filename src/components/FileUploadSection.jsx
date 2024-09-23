@@ -11,6 +11,7 @@ export default function FileUploadSection({
 }) {
   const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
   const [folderName, setFolderName] = useState(savedFolderName);
+  const [folderInputKey, setFolderInputKey] = useState(0); // To reset the folder input
 
   /* FOLDER NAME LOCAL STORAGE */
 
@@ -18,7 +19,7 @@ export default function FileUploadSection({
     localStorage.setItem("folderName", folderName);
   }, [folderName]);
 
-  /* UPLOAD FiLES */
+  /* UPLOAD FILES */
 
   const selectUserFiles = async (event) => {
     const selectedUserFiles = Array.from(event.target.files);
@@ -32,7 +33,7 @@ export default function FileUploadSection({
       const folderSelected = selectedUserFiles[0].webkitRelativePath
         ? selectedUserFiles[0].webkitRelativePath.split("/")[0]
         : "Selected Files";
-      setFolderName(folderSelected);
+      setFolderName(folderSelected); // Set the folder name to display
 
       const processedUserFiles = await createFilesArray(selectedUserFiles);
       setFiles((prevFiles) => [...prevFiles, ...processedUserFiles]);
@@ -40,6 +41,9 @@ export default function FileUploadSection({
       setIsLoadingFiles(false);
       setBgLogoOn(true);
       setShowAllFiles(true);
+
+      // Reset the folder input field to allow re-uploading the same folder
+      setFolderInputKey((prevKey) => prevKey + 1);
     }
   };
 
@@ -83,6 +87,7 @@ export default function FileUploadSection({
       <hr />
       <div className="fileInputDiv">
         <input
+          key={folderInputKey} // Reset input on key change
           type="file"
           onChange={selectUserFiles}
           webkitdirectory=""
@@ -96,7 +101,7 @@ export default function FileUploadSection({
       <hr />
       <div className="folderNameDiv">
         <p className="folderName">{folderName}</p>
-        <p className="resultsFound">{resultsCount} results found </p>
+        <p className="resultsFound">{resultsCount} results found</p>
       </div>
     </div>
   );
