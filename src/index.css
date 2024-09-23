@@ -131,12 +131,17 @@ body {
   cursor: pointer;
   z-index: 10;
   border-radius: 0.5rem;
-  transition: color 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .fileDisplayDiv:hover .viewFileButton {
-  color: white; /* Show text when the fileDisplayDiv is hovered */
+  color: var(--font-color);
   background-color: rgba(0, 0, 0, 0.8);
+}
+
+.documentIcons {
+  font-size: 12rem;
+  color: var(--secondary-font-color);
 }
 
 /* SIDEBAR CSS */
