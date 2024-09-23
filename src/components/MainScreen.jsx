@@ -16,19 +16,23 @@ export default function MainScreen({
   handleDeleteFile,
   searchWord,
   assistedSearchWords,
+  bgLogoOn,
+  setBgLogoOn,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
 
   const openIndividualFile = (file) => {
     setIndividualFile(file);
     setShowAllFiles(false);
+    setBgLogoOn(false);
     setShowIndividualFile(true);
   };
 
   const backToAllFileView = () => {
     setIndividualFile(null);
-    setShowAllFiles(true);
     setShowIndividualFile(false);
+    setBgLogoOn(true);
+    setShowAllFiles(true);
   };
 
   const onUpdateFileTags = (updateFn) => {
@@ -42,7 +46,7 @@ export default function MainScreen({
 
   return (
     <div className="mainScreenDiv">
-      <BGLogo isLoadingFiles={isLoadingFiles} />
+      <BGLogo bgLogoOn={bgLogoOn} />
       <LoadingGear isLoadingFiles={isLoadingFiles} />
       <FileSearchScreen
         files={files}

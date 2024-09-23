@@ -42,34 +42,41 @@ export default function IndividualFileScreen({
   return (
     <div className="individualFileScreenDiv">
       <button onClick={backToAllFileView} className="backButton">
+        <i class="fa-solid fa-left-long backArrow"></i>
         Back
       </button>
-      <div className="fileDetails">
-        <h3>{file.name}</h3>
-        <p>Date Created: {new Date(file.date).toLocaleDateString()}</p>
-        <p>Word Count: {file.text.split(/\s+/).length}</p>
+      <h3 className="individualFileName">{file.name}</h3>
+      <div className="fileDetailsDiv">
+        <p className="fileDetail">
+          Date Created: {new Date(file.date).toLocaleDateString()}
+        </p>
+        <p className="fileDetail">
+          Word Count: {file.text.split(/\s+/).length}
+        </p>
+        <p className="fileDetail">Matched Words: {file.matchedWords}</p>
+        <div className="tagsInputDiv">
+          <i class="fa-solid fa-angle-down"></i>
+          <input
+            type="text"
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            placeholder="Add a tag"
+          />
+          <button onClick={handleAddTag}>Add Tag</button>
+          <div className="tagsList">
+            {(file.tags || []).map((tag, index) => (
+              <div key={index}>
+                {tag} <button onClick={() => handleRemoveTag(index)}>x</button>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
       <iframe
         src={file.blobUrl}
         title={file.name}
         style={{ width: "100%", height: "80vh" }}
       ></iframe>
-      <div className="tagsSection">
-        <input
-          type="text"
-          value={newTag}
-          onChange={(e) => setNewTag(e.target.value)}
-          placeholder="Add a tag"
-        />
-        <button onClick={handleAddTag}>Add Tag</button>
-        <div className="tagsList">
-          {(file.tags || []).map((tag, index) => (
-            <div key={index}>
-              {tag} <button onClick={() => handleRemoveTag(index)}>x</button>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

@@ -13,6 +13,7 @@ export default function Sidebar({
   setSearchWord,
   assistedSearchWords,
   setAssistedSearchWords,
+  setBgLogoOn,
 }) {
   return (
     <div className="sidebarDiv">
@@ -27,6 +28,7 @@ export default function Sidebar({
         resultsCount={resultsCount}
         setShowAllFiles={setShowAllFiles}
         setShowIndividualFile={setShowIndividualFile}
+        setBgLogoOn={setBgLogoOn}
       />
       <SearchBarSection
         files={files}

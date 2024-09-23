@@ -7,6 +7,7 @@ export default function FileUploadSection({
   resultsCount,
   setShowAllFiles,
   setShowIndividualFile,
+  setBgLogoOn,
 }) {
   const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
   const [folderName, setFolderName] = useState(savedFolderName);
@@ -24,6 +25,7 @@ export default function FileUploadSection({
 
     if (selectedUserFiles.length > 0) {
       setIsLoadingFiles(true);
+      setBgLogoOn(false);
       setShowAllFiles(false);
       setShowIndividualFile(false);
 
@@ -36,6 +38,7 @@ export default function FileUploadSection({
       setFiles((prevFiles) => [...prevFiles, ...processedUserFiles]);
 
       setIsLoadingFiles(false);
+      setBgLogoOn(true);
       setShowAllFiles(true);
     }
   };

@@ -8,6 +8,7 @@ function App() {
   const [resultsCount, setResultsCount] = useState(0);
   const [showAllFiles, setShowAllFiles] = useState(true);
   const [showIndividualFile, setShowIndividualFile] = useState(false);
+  const [bgLogoOn, setBgLogoOn] = useState(true);
 
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
@@ -74,6 +75,7 @@ function App() {
         setSearchWord={setSearchWord}
         assistedSearchWords={assistedSearchWords}
         setAssistedSearchWords={setAssistedSearchWords}
+        setBgLogoOn={setBgLogoOn}
       />
       <MainScreen
         files={files}
@@ -87,6 +89,8 @@ function App() {
         handleDeleteFile={handleDeleteFile}
         searchWord={searchWord}
         assistedSearchWords={assistedSearchWords}
+        bgLogoOn={bgLogoOn}
+        setBgLogoOn={setBgLogoOn}
       />
     </div>
   );
