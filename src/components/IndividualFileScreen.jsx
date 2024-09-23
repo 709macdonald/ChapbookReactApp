@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function IndividualFileScreen({
   file,
@@ -7,6 +7,8 @@ export default function IndividualFileScreen({
   onUpdateFileTags,
 }) {
   const [newTag, setNewTag] = useState("");
+  const [showTags, setShowTags] = useState(false);
+  const tagsRef = useRef(null);
 
   const handleAddTag = () => {
     onUpdateFileTags((prevFiles) =>
@@ -26,7 +28,7 @@ export default function IndividualFileScreen({
   const handleRemoveTag = (index) => {
     onUpdateFileTags((prevFiles) =>
       prevFiles.map((f) => {
-        if (f.url === file.url) {
+        if (f.id === file.id) {
           return {
             ...f,
             tags: (f.tags || []).filter((_, i) => i !== index),
@@ -37,12 +39,28 @@ export default function IndividualFileScreen({
     );
   };
 
+  /* CLOSE TAGS LIST WITH CLICK */
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (tagsRef.current && !tagsRef.current.contains(event.target)) {
+        setShowTags(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   if (!showIndividualFile) return null;
 
   return (
     <div className="individualFileScreenDiv">
       <button onClick={backToAllFileView} className="backButton">
-        <i class="fa-solid fa-left-long backArrow"></i>
+        <i className="fa-solid fa-left-long backButtonIcon"></i>
         Back
       </button>
       <h3 className="individualFileName">{file.name}</h3>
@@ -54,22 +72,43 @@ export default function IndividualFileScreen({
           Word Count: {file.text.split(/\s+/).length}
         </p>
         <p className="fileDetail">Matched Words: {file.matchedWords}</p>
-        <div className="tagsInputDiv">
-          <i class="fa-solid fa-angle-down"></i>
+        <div className="tagsInputDiv" ref={tagsRef}>
+          <button
+            className="toggleTagView"
+            onClick={() => setShowTags(!showTags)}
+          >
+            <i
+              className={`fa-solid tagDisplayArrow ${
+                showTags ? "fa-angle-up" : "fa-angle-down"
+              }`}
+            ></i>
+          </button>
           <input
             type="text"
             value={newTag}
             onChange={(e) => setNewTag(e.target.value)}
             placeholder="Add a tag"
+            className="addATagBar"
           />
-          <button onClick={handleAddTag}>Add Tag</button>
-          <div className="tagsList">
-            {(file.tags || []).map((tag, index) => (
-              <div key={index}>
-                {tag} <button onClick={() => handleRemoveTag(index)}>x</button>
-              </div>
-            ))}
-          </div>
+          <button className="addTagButton" onClick={handleAddTag}>
+            Add Tag
+          </button>
+
+          {showTags && (
+            <div className="tagsList">
+              {(file.tags || []).map((tag, index) => (
+                <div key={index}>
+                  <button
+                    className="tagDeleteButton"
+                    onClick={() => handleRemoveTag(index)}
+                  >
+                    x
+                  </button>
+                  {tag}{" "}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <iframe

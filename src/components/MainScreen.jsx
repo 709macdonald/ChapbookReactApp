@@ -38,7 +38,7 @@ export default function MainScreen({
   const onUpdateFileTags = (updateFn) => {
     setFiles((prevFiles) => {
       const updatedFiles = updateFn(prevFiles);
-      const updatedFile = updatedFiles.find((f) => f.id === indvidualFile.id);
+      const updatedFile = updatedFiles.find((f) => f.id === individualFile.id);
       setIndividualFile(updatedFile);
       return updatedFiles;
     });
