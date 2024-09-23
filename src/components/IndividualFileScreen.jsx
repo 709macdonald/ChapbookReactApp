@@ -111,11 +111,30 @@ export default function IndividualFileScreen({
           )}
         </div>
       </div>
-      <iframe
-        src={file.blobUrl}
-        title={file.name}
-        style={{ width: "100%", height: "80vh" }}
-      ></iframe>
+
+      {/* Conditional Rendering for PDF, Image, and Word documents */}
+      {file.type === "application/pdf" ? (
+        <iframe
+          src={file.blobUrl}
+          title={file.name}
+          style={{ width: "100%", height: "80vh" }}
+        ></iframe>
+      ) : file.type.startsWith("image/") ? (
+        <img
+          src={file.blobUrl}
+          alt={file.name}
+          style={{ width: "100%", height: "80vh" }}
+        />
+      ) : file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
+        <div className="wordDocPreview">
+          <h4>Document Preview</h4>
+          <p>{file.text}</p>{" "}
+          {/* Displaying the text content of the Word document */}
+        </div>
+      ) : (
+        <p>Unsupported file type</p>
+      )}
     </div>
   );
 }
