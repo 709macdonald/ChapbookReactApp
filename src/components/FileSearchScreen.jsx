@@ -9,6 +9,8 @@ export default function FileSearchScreen({
   searchWord,
   assistedSearchWords,
 }) {
+  const [hoveredFileId, setHoveredFileId] = useState(null);
+
   const filteredFilesWithText = useMemo(() => {
     const allSearchTerms = [searchWord, ...assistedSearchWords].map((word) =>
       word.toLowerCase()
@@ -34,6 +36,15 @@ export default function FileSearchScreen({
   useEffect(() => {
     setResultsCount(filteredFilesWithText.length);
   }, [filteredFilesWithText, setResultsCount]);
+
+  const handleMouseEnter = (fileId) => {
+    setHoveredFileId(fileId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredFileId(null);
+  };
+
   const isSearchActive = searchWord || assistedSearchWords.length > 0;
 
   const isPdf = (file) => file.type === "application/pdf";
@@ -57,6 +68,8 @@ export default function FileSearchScreen({
           <div
             key={file.id}
             className="fileDisplayDiv"
+            onMouseEnter={() => handleMouseEnter(file.id)}
+            onMouseLeave={handleMouseLeave}
             onClick={() => openIndividualFile(file)}
           >
             <div className="fileDisplayTopDiv">
@@ -110,15 +123,15 @@ export default function FileSearchScreen({
                 </p>
               </div>
             </div>
-            <p className="pdfText">{file.name}</p>
-            {isPdf(file) || isImage(file) || isWordDoc(file) ? (
+            <p className="fileName">{file.name}</p>
+            {(isPdf(file) || isImage(file) || isWordDoc(file)) && (
               <button
                 onClick={() => openIndividualFile(file)}
-                className="fileView"
+                className="viewFileButton"
               >
-                View File
+                {hoveredFileId === file.id ? "View File" : ""}
               </button>
-            ) : null}
+            )}
           </div>
         ))
       ) : (
