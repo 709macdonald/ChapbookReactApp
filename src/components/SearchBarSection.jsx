@@ -9,6 +9,7 @@ export default function SearchBarSection({
 }) {
   const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
   const [predictiveTextWords, setPredictiveTextWords] = useState([]);
+  const [predictiveTextClicked, setPredictiveTextClicked] = useState(false);
 
   /* ASSISTED SEARCH */
 
@@ -41,7 +42,8 @@ export default function SearchBarSection({
   /* PREDICTIVE TEXT */
 
   useEffect(() => {
-    if (searchWord) {
+    if (searchWord && !predictiveTextClicked) {
+      // Normal predictive text logic
       const allWords = new Set();
       files.forEach((file) => {
         const words = file.text.split(/\s+/);
@@ -54,12 +56,16 @@ export default function SearchBarSection({
 
       setPredictiveTextWords(filteredPredictiveTextWords.slice(0, 10));
     } else {
-      setPredictiveTextWords([]);
+      setPredictiveTextWords([]); // Clear predictive text when searchWord is empty or a suggestion is clicked
     }
-  }, [searchWord, files]);
+
+    // No longer needed since the flag resets on typing
+  }, [searchWord, files, predictiveTextClicked]);
 
   const handleSuggestionClick = (word) => {
     setSearchWord(word);
+    setPredictiveTextWords("");
+    setPredictiveTextClicked(true); // Set flag to avoid showing predictive text again immediately
   };
 
   return (
@@ -68,29 +74,32 @@ export default function SearchBarSection({
         type="text"
         id="searchBar"
         value={searchWord}
-        onChange={(e) => setSearchWord(e.target.value)}
+        onChange={(e) => {
+          setSearchWord(e.target.value);
+          setPredictiveTextClicked(false); // Reset flag when user types manually
+        }}
         placeholder="Search for Keywords"
       />
-      <button>
-        <i className="fa-solid fa-magnifying-glass"></i>
-      </button>
-      <button onClick={toggleAssistedSearch}>
+
+      {predictiveTextWords.length > 0 && (
+        <div className="predictiveTextWordsDiv">
+          {predictiveTextWords.map((predictiveTextWord, index) => (
+            <div
+              key={index}
+              className="predictiveTextWord"
+              onClick={() => handleSuggestionClick(predictiveTextWord)}
+            >
+              {predictiveTextWord}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <button className="assistedSearchButton" onClick={toggleAssistedSearch}>
         {isAssistedSearchEnabled
           ? "Disable Assisted Search"
           : "Enable Assisted Search"}
       </button>
-
-      <div className="predictiveTextWordsDiv">
-        {predictiveTextWords.map((predictiveTextWord, index) => (
-          <div
-            key={index}
-            className="suggestion-item"
-            onClick={() => handleSuggestionClick(predictiveTextWord)}
-          >
-            {predictiveTextWord}
-          </div>
-        ))}
-      </div>
 
       <div className="assistedSearchWordsDiv">
         {assistedSearchWords.map((assistedSearchWord, index) => (
