@@ -43,29 +43,30 @@ export default function SearchBarSection({
 
   useEffect(() => {
     if (searchWord && !predictiveTextClicked) {
-      // Normal predictive text logic
       const allWords = new Set();
       files.forEach((file) => {
         const words = file.text.split(/\s+/);
         words.forEach((word) => allWords.add(word.toLowerCase()));
       });
 
-      const filteredPredictiveTextWords = Array.from(allWords).filter((word) =>
-        word.startsWith(searchWord.toLowerCase())
-      );
+      const filteredPredictiveTextWords = Array.from(allWords)
+        .filter(
+          (word) =>
+            word.startsWith(searchWord.toLowerCase()) &&
+            word !== searchWord.toLowerCase()
+        )
+        .slice(0, 10);
 
-      setPredictiveTextWords(filteredPredictiveTextWords.slice(0, 10));
+      setPredictiveTextWords(filteredPredictiveTextWords);
     } else {
-      setPredictiveTextWords([]); // Clear predictive text when searchWord is empty or a suggestion is clicked
+      setPredictiveTextWords([]);
     }
-
-    // No longer needed since the flag resets on typing
   }, [searchWord, files, predictiveTextClicked]);
 
   const handleSuggestionClick = (word) => {
     setSearchWord(word);
     setPredictiveTextWords("");
-    setPredictiveTextClicked(true); // Set flag to avoid showing predictive text again immediately
+    setPredictiveTextClicked(true);
   };
 
   return (
@@ -76,7 +77,7 @@ export default function SearchBarSection({
         value={searchWord}
         onChange={(e) => {
           setSearchWord(e.target.value);
-          setPredictiveTextClicked(false); // Reset flag when user types manually
+          setPredictiveTextClicked(false);
         }}
         placeholder="Search for Keywords"
       />

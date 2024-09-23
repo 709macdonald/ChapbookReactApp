@@ -263,8 +263,8 @@ body {
 }
 
 .assistedSearchButton {
-  z-index: 1; /* Lower than the predictive text */
-  position: relative; /* Ensure stacking works correctly */
+  z-index: 1;
+  position: relative;
   background-color: var(--secondary-bg-color);
   color: var(--font-color);
   font-size: var(--tertiary-font-size);
