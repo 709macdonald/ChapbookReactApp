@@ -18,6 +18,7 @@
   --secondary-font-color: rgba(193, 190, 190, 0.87);
 
   --hover-bg-color: #1f1f1f;
+  --logo-2nd-color: rgba(110, 107, 107, 0.87);
 }
 
 html,
@@ -52,24 +53,21 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-  width: 200px;
-  height: 200px;
-  opacity: 0.2;
 }
 
 .fileSearchScreenDiv {
   z-index: 2;
-  width: auto;
-  height: 100vh;
   overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 25rem);
+  grid-auto-rows: 20rem;
+  gap: 1rem;
+  justify-items: center;
+  margin: 0;
+  padding: 2rem;
+  max-width: 100%;
+  max-height: 100vh;
 }
-
-/* FILE DISPLAYS CSS */
 
 .fileDisplayDiv {
   position: relative;
@@ -81,6 +79,8 @@ body {
   border-radius: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
 }
+
+/*File Displays */
 
 .fileDisplayDiv:hover {
   background-color: var(--hover-bg-color);
@@ -148,6 +148,10 @@ body {
 .documentIcons {
   font-size: 12rem;
   color: var(--secondary-font-color);
+}
+
+.noFilesToDisplayText {
+  align-items: center;
 }
 
 /* SIDEBAR CSS */
@@ -303,4 +307,67 @@ body {
   bottom: 6rem;
   font-size: var(--secondary-font-size);
   color: var(--secondary-font-color);
+}
+
+/* LOADING GEAR */
+
+.loadingScreenDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+  z-index: 20;
+  color: rgb(171, 169, 169);
+  position: absolute;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingGear {
+  font-size: 2rem;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  margin-left: 1rem;
+  font-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.loadingDots {
+  display: inline-block;
+  width: 20px;
+  text-align: left;
+}
+
+/* LOGO/BACKGROUND */
+
+.bgLogoDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chap {
+  font-size: 3rem;
+  color: var(--font-color);
+}
+
+.book {
+  color: var(--logo-2nd-color);
+}
+
+.sideBarLogoDiv {
+  display: flex;
+  width: 18rem;
+  justify-content: center;
+  align-items: center;
 }

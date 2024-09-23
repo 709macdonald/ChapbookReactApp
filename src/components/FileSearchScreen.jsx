@@ -138,7 +138,7 @@ export default function FileSearchScreen({
           </div>
         ))
       ) : (
-        <p className="noFilesToDisplayText">No files to display</p>
+        <div></div>
       )}
     </div>
   );

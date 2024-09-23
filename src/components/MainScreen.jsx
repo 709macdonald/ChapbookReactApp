@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LoadingGear from "./LoadingGear";
+import BGLogo from "./BGLogo";
 import FileSearchScreen from "./FileSearchScreen";
 import IndividualFileScreen from "./IndividualFileScreen";
 
@@ -16,7 +17,7 @@ export default function MainScreen({
   searchWord,
   assistedSearchWords,
 }) {
-  const [indvidualFile, setIndividualFile] = useState(null);
+  const [individualFile, setIndividualFile] = useState(null);
 
   const openIndividualFile = (file) => {
     setIndividualFile(file);
@@ -41,11 +42,7 @@ export default function MainScreen({
 
   return (
     <div className="mainScreenDiv">
-      <div className="bgLogoDiv">
-        <h2 className="chap">
-          Chap<span className="book">book</span>
-        </h2>
-      </div>
+      <BGLogo isLoadingFiles={isLoadingFiles} />
       <LoadingGear isLoadingFiles={isLoadingFiles} />
       <FileSearchScreen
         files={files}
@@ -58,7 +55,7 @@ export default function MainScreen({
         assistedSearchWords={assistedSearchWords}
       />
       <IndividualFileScreen
-        file={indvidualFile}
+        file={individualFile}
         showIndividualFile={showIndividualFile}
         setShowAllFiles={setShowAllFiles}
         backToAllFileView={backToAllFileView}
