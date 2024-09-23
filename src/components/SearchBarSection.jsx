@@ -102,13 +102,16 @@ export default function SearchBarSection({
           : "Enable Assisted Search"}
       </button>
 
-      <div className="assistedSearchWordsDiv">
-        {assistedSearchWords.map((assistedSearchWord, index) => (
-          <div key={index} className="suggestion-item">
-            {assistedSearchWord}
-          </div>
-        ))}
-      </div>
+      {isAssistedSearchEnabled && (
+        <div className="assistedSearchWordsDiv fade-in">
+          <p>Assisted Search Words</p>
+          {assistedSearchWords.map((assistedSearchWord, index) => (
+            <div key={index} className="assistedSearchWord fade-in">
+              {assistedSearchWord}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
