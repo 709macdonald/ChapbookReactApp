@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function SearchBarSection({
   files,
@@ -9,7 +9,7 @@ export default function SearchBarSection({
 }) {
   const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
   const [predictiveTextWords, setPredictiveTextWords] = useState([]);
-  const [predictiveTextClicked, setPredictiveTextClicked] = useState(false);
+  const searchRef = useRef(null);
 
   /* ASSISTED SEARCH */
 
@@ -42,7 +42,7 @@ export default function SearchBarSection({
   /* PREDICTIVE TEXT */
 
   useEffect(() => {
-    if (searchWord && !predictiveTextClicked) {
+    if (searchWord) {
       const allWords = new Set();
       files.forEach((file) => {
         const words = file.text.split(/\s+/);
@@ -61,24 +61,33 @@ export default function SearchBarSection({
     } else {
       setPredictiveTextWords([]);
     }
-  }, [searchWord, files, predictiveTextClicked]);
+  }, [searchWord, files]);
 
   const handleSuggestionClick = (word) => {
     setSearchWord(word);
-    setPredictiveTextWords("");
-    setPredictiveTextClicked(true);
+    setPredictiveTextWords([]);
   };
 
+  const handleClickOutside = (event) => {
+    if (searchRef.current && !searchRef.current.contains(event.target)) {
+      setPredictiveTextWords([]);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="searchSectionDiv">
+    <div className="searchSectionDiv" ref={searchRef}>
       <input
         type="text"
         id="searchBar"
         value={searchWord}
-        onChange={(e) => {
-          setSearchWord(e.target.value);
-          setPredictiveTextClicked(false);
-        }}
+        onChange={(e) => setSearchWord(e.target.value)}
         placeholder="Search for Keywords"
       />
 

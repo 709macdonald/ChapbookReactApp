@@ -8,7 +8,16 @@ export default function FileUploadSection({
   setShowAllFiles,
   setShowIndividualFile,
 }) {
-  const [folderName, setFolderName] = useState("Select Folder");
+  const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
+  const [folderName, setFolderName] = useState(savedFolderName);
+
+  /* FOLDER NAME LOCAL STORAGE */
+
+  useEffect(() => {
+    localStorage.setItem("folderName", folderName);
+  }, [folderName]);
+
+  /* UPLOAD FiLES */
 
   const selectUserFiles = async (event) => {
     const selectedUserFiles = Array.from(event.target.files);
@@ -31,6 +40,8 @@ export default function FileUploadSection({
     }
   };
 
+  /* RESET BUTTON */
+
   const handleReset = () => {
     const confirmReset = window.confirm(
       "Are you sure you want to clear all files from Chapbook's library?"
@@ -43,6 +54,7 @@ export default function FileUploadSection({
       setShowIndividualFile(false);
       setShowAllFiles(true);
       localStorage.removeItem("files");
+      localStorage.removeItem("folderName");
     }
   };
 
