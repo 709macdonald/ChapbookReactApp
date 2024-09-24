@@ -24,6 +24,7 @@ export default function IndividualFileScreen({
       })
     );
     setNewTag("");
+    setShowTags(true);
   };
 
   const handleRemoveTag = (index) => {
@@ -38,6 +39,12 @@ export default function IndividualFileScreen({
         return f;
       })
     );
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleAddTag();
+    }
   };
 
   /* CLOSE TAGS LIST WITH CLICK */
@@ -98,6 +105,7 @@ export default function IndividualFileScreen({
             onChange={(e) => setNewTag(e.target.value)}
             placeholder="Add a tag"
             className="addATagBar"
+            onKeyDown={handleKeyDown}
           />
           <button className="addTagButton" onClick={handleAddTag}>
             Add Tag
