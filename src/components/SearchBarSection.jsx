@@ -74,6 +74,12 @@ export default function SearchBarSection({
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      setPredictiveTextWords([]);
+    }
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -88,6 +94,7 @@ export default function SearchBarSection({
         id="searchBar"
         value={searchWord}
         onChange={(e) => setSearchWord(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder="Search for Keywords"
       />
 
