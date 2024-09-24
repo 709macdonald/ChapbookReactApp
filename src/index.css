@@ -316,6 +316,11 @@ body {
 
 /* INDIVIDUAL FILE SCREEN */
 
+.fileButtonsDiv {
+  display: flex;
+  justify-content: space-between;
+}
+
 .backButton {
   background-color: transparent;
   color: var(--font-color);
@@ -323,6 +328,19 @@ body {
   margin-right: 1rem;
   border: none;
   border-radius: 0.5rem;
+}
+
+.individualDeleteFileButton {
+  background-color: transparent;
+  border: none;
+  color: var(--font-color);
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+
+.individualDeleteFileButton:hover {
+  transform: scale(1.2);
+  background-color: var(--hover-bg-color);
 }
 
 .backButtonIcon {

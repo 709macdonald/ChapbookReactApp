@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 export default function IndividualFileScreen({
   file,
   showIndividualFile,
+  handleDeleteFile,
   backToAllFileView,
   onUpdateFileTags,
 }) {
@@ -59,10 +60,18 @@ export default function IndividualFileScreen({
 
   return (
     <div className="individualFileScreenDiv">
-      <button onClick={backToAllFileView} className="backButton">
-        <i className="fa-solid fa-left-long backButtonIcon"></i>
-        Back
-      </button>
+      <div div className="fileButtonsDiv">
+        <button onClick={backToAllFileView} className="backButton">
+          <i className="fa-solid fa-left-long backButtonIcon"></i>
+          Back
+        </button>
+        <button
+          onClick={() => handleDeleteFile(file.id)} // Call the delete function with the file ID
+          className="individualDeleteFileButton"
+        >
+          Delete File
+        </button>
+      </div>
       <h3 className="individualFileName">{file.name}</h3>
       <div className="fileDetailsDiv">
         <p className="fileDetail">

@@ -58,8 +58,17 @@ function App() {
   /* DELETE FILES LOGIC */
 
   const handleDeleteFile = (id) => {
-    const updatedFiles = files.filter((file) => file.id !== id);
-    setFiles(updatedFiles);
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this file?"
+    );
+
+    if (confirmDelete) {
+      const updatedFiles = files.filter((file) => file.id !== id);
+      setFiles(updatedFiles);
+      setShowIndividualFile(false);
+      setBgLogoOn(true);
+      setShowAllFiles(true);
+    }
   };
 
   return (
