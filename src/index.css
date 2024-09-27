@@ -3,22 +3,26 @@
   line-height: 1.5;
   font-weight: 400;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  --main-bg-color: #302f2f;
-  --secondary-bg-color: #242424;
-
+  --main-bg-color: #f5f5f5;
+  --secondary-bg-color: #edeaea;
   --primary-font-size: 1.2rem;
   --secondary-font-size: 0.9rem;
   --tertiary-font-size: 1rem;
+  --font-color: rgba(0, 0, 0, 0.87);
+  --secondary-font-color: rgba(50, 50, 50, 0.87);
+  --hover-bg-color: #e6e6e6;
+  --logo-2nd-color: rgba(80, 80, 80, 0.87);
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode {
+  --main-bg-color: #302f2f;
+  --secondary-bg-color: #242424;
   --font-color: rgba(255, 255, 255, 0.87);
   --secondary-font-color: rgba(193, 190, 190, 0.87);
-
   --hover-bg-color: #1f1f1f;
   --logo-2nd-color: rgba(110, 107, 107, 0.87);
+  --shadow: 0 2px 10px rgba(0, 0, 0, 1);
 }
 
 html,
@@ -83,7 +87,7 @@ body {
   width: 23rem;
   height: 18rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
+  box-shadow: var(--shadow);
 }
 
 .fileDisplayDiv:hover {
@@ -166,7 +170,7 @@ body {
   background-color: var(--main-bg-color);
   height: 100vh;
   padding: 2rem;
-  box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow);
   font-size: var(--primary-font-size);
 }
 
@@ -292,7 +296,7 @@ body {
   background-color: var(--secondary-bg-color);
   padding: 0.2rem 1rem 0.4rem 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
+  box-shadow: var(--shadow);
 }
 
 .assistedSearchWord:hover {

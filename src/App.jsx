@@ -9,18 +9,42 @@ function App() {
   const [showAllFiles, setShowAllFiles] = useState(true);
   const [showIndividualFile, setShowIndividualFile] = useState(false);
   const [bgLogoOn, setBgLogoOn] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false); // New state for dark mode
 
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
 
-  /* LOCAL STORAGE LOGiC */
+  /* LIGHT AND DARK MODE  */
+
+  const toggleTheme = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    const bodyClass = document.body.classList;
+
+    if (newMode) {
+      bodyClass.add("dark-mode");
+      localStorage.setItem("darkMode", "enabled");
+    } else {
+      bodyClass.remove("dark-mode");
+      localStorage.setItem("darkMode", "disabled");
+    }
+  };
+
+  useEffect(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    if (savedMode === "enabled") {
+      setIsDarkMode(true);
+      document.body.classList.add("dark-mode");
+    }
+  }, []);
+
+  /* LOCAL STORAGE */
 
   useEffect(() => {
     const storedFiles = localStorage.getItem("files");
     if (storedFiles) {
       try {
         const parsedFiles = JSON.parse(storedFiles);
-
         const updatedFiles = parsedFiles.map((file) => {
           const byteString = atob(file.fileContent.split(",")[1]);
           const mimeString = file.fileContent
@@ -39,7 +63,6 @@ function App() {
 
           return { ...file, blobUrl };
         });
-
         setFiles(updatedFiles);
       } catch (error) {
         console.error("Failed to parse files from local storage", error);
@@ -55,7 +78,7 @@ function App() {
     }
   }, [files]);
 
-  /* DELETE FILES LOGIC */
+  /* DELETE FILES */
 
   const handleDeleteFile = (id) => {
     const confirmDelete = window.confirm(
@@ -85,6 +108,8 @@ function App() {
         assistedSearchWords={assistedSearchWords}
         setAssistedSearchWords={setAssistedSearchWords}
         setBgLogoOn={setBgLogoOn}
+        toggleTheme={toggleTheme}
+        isDarkMode={isDarkMode}
       />
       <MainScreen
         files={files}

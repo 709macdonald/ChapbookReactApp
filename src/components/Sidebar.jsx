@@ -14,6 +14,8 @@ export default function Sidebar({
   assistedSearchWords,
   setAssistedSearchWords,
   setBgLogoOn,
+  toggleTheme,
+  isDarkMode,
 }) {
   return (
     <div className="sidebarDiv">
@@ -37,7 +39,17 @@ export default function Sidebar({
         assistedSearchWords={assistedSearchWords}
         setAssistedSearchWords={setAssistedSearchWords}
       />
-      <div className="creatorNameDiv">Created By Peter MacDonald</div>
+
+      <div className="creatorNameDiv">
+        Created By Peter MacDonald
+        <button className="themeToggleButton" onClick={toggleTheme}>
+          {isDarkMode ? (
+            <i className="fa-solid fa-sun sunIcon"></i> // Sun icon for light mode
+          ) : (
+            <i className="fa-solid fa-moon moonIcon"></i> // Moon icon for dark mode
+          )}
+        </button>
+      </div>
     </div>
   );
 }
