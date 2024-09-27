@@ -41,12 +41,12 @@ export default function Sidebar({
       />
 
       <div className="creatorNameDiv">
-        Created By Peter MacDonald
-        <button className="themeToggleButton" onClick={toggleTheme}>
+        <p>Created By Peter MacDonald</p>
+        <button className="toggleThemeButton" onClick={toggleTheme}>
           {isDarkMode ? (
-            <i className="fa-solid fa-sun sunIcon"></i> // Sun icon for light mode
+            <i className="fa-solid fa-sun sunIcon"></i>
           ) : (
-            <i className="fa-solid fa-moon moonIcon"></i> // Moon icon for dark mode
+            <i className="fa-solid fa-moon moonIcon"></i>
           )}
         </button>
       </div>

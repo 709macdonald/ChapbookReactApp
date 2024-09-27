@@ -150,7 +150,7 @@ body {
 
 .fileDisplayDiv:hover .viewFileButton {
   color: var(--font-color);
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--main-bg-color);
 }
 
 .documentIcons {
@@ -315,6 +315,22 @@ body {
   position: absolute;
   bottom: 6rem;
   font-size: var(--secondary-font-size);
+  color: var(--secondary-font-color);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggleThemeButton {
+  background-color: transparent;
+  border: none;
+}
+
+.moonIcon,
+.sunIcon {
+  margin-left: 3rem;
+  font-size: 1.2rem;
   color: var(--secondary-font-color);
 }
 
