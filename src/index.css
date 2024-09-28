@@ -77,6 +77,16 @@ body {
   width: 100%;
 }
 
+.sidebarDiv {
+  position: relative;
+  z-index: 1;
+  background-color: var(--main-bg-color);
+  height: 100%;
+  padding: 0 1rem 0 1rem;
+  box-shadow: var(--shadow);
+  font-size: var(--primary-font-size);
+}
+
 /* FILE DiSPLAYS */
 
 .fileDisplayDiv {
@@ -163,16 +173,6 @@ body {
 }
 
 /* SIDEBAR CSS */
-
-.sidebarDiv {
-  position: relative;
-  z-index: 1;
-  background-color: var(--main-bg-color);
-  height: 100vh;
-  padding: 2rem;
-  box-shadow: var(--shadow);
-  font-size: var(--primary-font-size);
-}
 
 /* FILE INPUT SECTION */
 
