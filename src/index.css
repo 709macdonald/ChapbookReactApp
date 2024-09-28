@@ -313,7 +313,8 @@ body {
 
 .creatorNameDiv {
   position: absolute;
-  bottom: 6rem;
+  bottom: 2rem;
+  margin-left: 1rem;
   font-size: var(--secondary-font-size);
   color: var(--secondary-font-color);
   display: flex;
@@ -329,7 +330,7 @@ body {
 
 .moonIcon,
 .sunIcon {
-  margin-left: 3rem;
+  margin-left: 1.2rem;
   font-size: 1.2rem;
   color: var(--secondary-font-color);
 }
