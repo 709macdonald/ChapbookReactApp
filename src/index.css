@@ -474,6 +474,15 @@ body {
   padding: 2rem;
 }
 
+.pdfContainer {
+  position: relative; /* Add this to position highlights correctly */
+}
+
+.pdfTextContainer {
+  position: absolute; /* Positioning for highlighting text */
+  pointer-events: none; /* Prevent interference with mouse events */
+}
+
 /* LOADING GEAR */
 
 .loadingScreenDiv {

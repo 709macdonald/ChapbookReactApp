@@ -25,11 +25,14 @@ export const createFilesArray = async (selectedUserFiles) => {
           blobUrl,
           text: "",
           matchedWords: [],
+          locations: [],
           tags: [],
         };
 
         if (file.type === "application/pdf") {
-          fileData.text = await PDFTextExtraction(file);
+          const { text, locations } = await PDFTextExtraction(fileData.blobUrl);
+          fileData.text = text;
+          fileData.locations = locations;
         } else if (file.type.startsWith("image/")) {
           fileData.text = await imageTextExtraction(file);
         } else if (
