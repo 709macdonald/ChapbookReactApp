@@ -2,7 +2,6 @@ import * as pdfjsLib from "pdfjs-dist";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
-// Assume this function extracts text and locations
 export const PDFTextExtraction = async (fileUrl) => {
   return new Promise((resolve, reject) => {
     const loadingTask = pdfjsLib.getDocument(fileUrl);
@@ -25,7 +24,7 @@ export const PDFTextExtraction = async (fileUrl) => {
               textLocations.push({
                 text: item.str,
                 transform: item.transform,
-                page: pageNumber, // Include the page number here
+                page: pageNumber,
               });
             });
 
