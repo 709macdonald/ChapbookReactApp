@@ -12,9 +12,18 @@ export default function IndividualFileScreen({
   searchWord,
 }) {
   // TAGS LOGIC
-
   const [newTag, setNewTag] = useState("");
   const [showTags, setShowTags] = useState(false);
+
+  // PDF RENDERING LOGIC
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [pdfDocument, setPdfDocument] = useState(null);
+  const [scale, setScale] = useState(1.5);
+  const [fileId, setFileId] = useState(null);
+
+  const canvasRef = useRef(null);
+  const tagsRef = useRef(null);
 
   const handleAddTag = () => {
     onUpdateFileTags((prevFiles) =>
@@ -52,6 +61,83 @@ export default function IndividualFileScreen({
     }
   };
 
+  const highlightSearchWord = (page, viewport, context) => {
+    if (!searchWord || !file.locations) return;
+
+    const lowerSearchWord = searchWord.toLowerCase();
+    const pageLocations = file.locations.filter(
+      (loc) => loc.page === currentPage
+    );
+
+    pageLocations.forEach((location) => {
+      const text = location.text.toLowerCase();
+      if (text.includes(lowerSearchWord)) {
+        const index = text.indexOf(lowerSearchWord);
+        const highlightWidth =
+          (location.width / location.text.length) * searchWord.length;
+        const highlightX = location.x;
+
+        const highlightY = location.y - location.height * 1;
+        const highlightHeight = location.height * 1.6;
+
+        context.fillStyle = "rgba(255, 255, 0, 0.3)";
+        context.fillRect(
+          highlightX * scale,
+          highlightY * scale,
+          highlightWidth * scale,
+          highlightHeight * scale
+        );
+
+        console.log("Highlighting:", {
+          text: location.text,
+          x: highlightX * scale,
+          y: highlightY * scale,
+          width: highlightWidth * scale,
+          height: highlightHeight * scale,
+          originalY: location.y,
+          viewportHeight: viewport.height,
+        });
+      }
+    });
+  };
+
+  const renderPage = async (pageNum) => {
+    if (!pdfDocument) return;
+
+    try {
+      const page = await pdfDocument.getPage(pageNum);
+      const canvas = canvasRef.current;
+      const context = canvas.getContext("2d");
+
+      const viewport = page.getViewport({ scale });
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      await page.render({
+        canvasContext: context,
+        viewport: viewport,
+      }).promise;
+
+      highlightSearchWord(page, viewport, context);
+    } catch (error) {
+      console.error("Error rendering PDF:", error);
+    }
+  };
+
+  const handlePageChange = (increment) => {
+    setCurrentPage((prevPage) => {
+      const newPage = prevPage + increment;
+      return newPage > 0 && newPage <= totalPages ? newPage : prevPage;
+    });
+  };
+
+  const handleZoom = (zoomIn) => {
+    setScale((prevScale) => {
+      const newScale = zoomIn ? prevScale * 1.2 : prevScale / 1.2;
+      return Math.max(0.5, Math.min(newScale, 3));
+    });
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (tagsRef.current && !tagsRef.current.contains(event.target)) {
@@ -65,126 +151,33 @@ export default function IndividualFileScreen({
     };
   }, []);
 
-  // RENDER PDF CANVAS
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [isRendering, setIsRendering] = useState(false);
-  const [highlights, setHighlights] = useState([]); // Ensure highlights is defined here
-
-  const canvasRef = useRef(null);
-  const tagsRef = useRef(null);
-
-  const highlightSearchWord = (textContent, viewport, context, searchWord) => {
-    if (!searchWord) return; // Return if no search word
-
-    textContent.items.forEach((item) => {
-      const text = item.str;
-      const index = text.toLowerCase().indexOf(searchWord.toLowerCase());
-
-      if (index !== -1) {
-        const transform = item.transform;
-        const fontSize = transform[0]; // Extract font size
-
-        // Calculate width and height for the highlight rectangle
-        const width = context.measureText(searchWord).width;
-        const height = fontSize;
-
-        // Correctly calculate the x and y coordinates
-        const x = transform[4] + width * (index / text.length); // Adjust for scaling
-        const y = viewport.height - (transform[5] + height); // Flip y-axis for canvas
-
-        // Draw highlight rectangle
-        context.fillStyle = "rgba(238, 170, 0, .3)";
-        context.fillRect(x, y, width, height);
+  useEffect(() => {
+    if (showIndividualFile && file && file.type === "application/pdf") {
+      // Check if it's a new file
+      if (file.id !== fileId) {
+        setCurrentPage(1); // Reset to page 1
+        setFileId(file.id); // Update the fileId
       }
-    });
-  };
 
-  const renderPDF = async () => {
-    if (file.type === "application/pdf" && !isRendering) {
-      setIsRendering(true);
-
-      try {
-        const canvas = canvasRef.current;
-        const context = canvas.getContext("2d");
-
-        // Load the PDF
-        const loadingTask = pdfjsLib.getDocument(file.blobUrl);
-        const pdf = await loadingTask.promise;
-
-        setTotalPages(pdf.numPages);
-        const page = await pdf.getPage(currentPage);
-
-        const desiredHeight = 600;
-        const viewport = page.getViewport({ scale: 1 });
-        const scale = desiredHeight / viewport.height;
-        const desiredWidth = viewport.width * scale;
-
-        // Set canvas dimensions
-        canvas.width = desiredWidth;
-        canvas.height = desiredHeight;
-
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Render the PDF page
-        await page.render({
-          canvasContext: context,
-          viewport: viewport.clone({ scale }),
-        }).promise;
-
-        // Get the text content for highlighting
-        const textContent = await page.getTextContent();
-
-        // Highlight the search word
-        highlightSearchWord(textContent, viewport, context, searchWord);
-
-        // Draw highlights
-        highlights.forEach((highlight) => {
-          const [scaleX, , , scaleY, offsetX, offsetY] = highlight.transform;
-
-          // Calculate highlight dimensions
-          const rectWidth = highlight.text.length * scaleX * scale; // Width based on text length and scale
-          const rectHeight = scaleY * scale; // Height based on scale
-
-          const x = offsetX * scale; // X position based on scale
-          const y = (offsetY - rectHeight) * scale; // Y position based on scale
-
-          context.fillStyle = "rgba(238, 170, 0, .2)";
-          context.fillRect(x, y, rectWidth, rectHeight); // Render the highlight
+      pdfjsLib
+        .getDocument(file.blobUrl)
+        .promise.then((pdf) => {
+          setPdfDocument(pdf);
+          setTotalPages(pdf.numPages);
+        })
+        .catch((error) => {
+          console.error("Error loading PDF:", error);
         });
-      } catch (error) {
-        console.error("Error rendering PDF:", error);
-      } finally {
-        setIsRendering(false);
-      }
     }
-  };
-
-  const handlePageChange = (increment) => {
-    setCurrentPage((prevPage) => {
-      const newPage = prevPage + increment;
-      if (newPage >= 1 && newPage <= totalPages) {
-        return newPage; // Return new page if within bounds
-      }
-      return prevPage; // Stay on the current page if out of bounds
-    });
-  };
+  }, [file, showIndividualFile, fileId]);
 
   useEffect(() => {
-    if (showIndividualFile && file) {
-      setCurrentPage(1);
-      renderPDF();
+    if (pdfDocument) {
+      renderPage(currentPage);
     }
-  }, [file, showIndividualFile]);
+  }, [currentPage, pdfDocument, searchWord, scale]);
 
-  useEffect(() => {
-    if (showIndividualFile && file) {
-      renderPDF();
-    }
-  }, [currentPage]);
-
-  if (!showIndividualFile) return null;
+  if (!showIndividualFile || !file) return null;
 
   return (
     <div className="individualFileScreenDiv">
@@ -194,7 +187,7 @@ export default function IndividualFileScreen({
           Back
         </button>
         <button
-          onClick={() => handleDeleteFile(file.id)} // Call the delete function with the file ID
+          onClick={() => handleDeleteFile(file.id)}
           className="individualDeleteFileButton"
         >
           Delete File
@@ -253,11 +246,15 @@ export default function IndividualFileScreen({
       </div>
       {file.type === "application/pdf" ? (
         <div className="pdfContainer">
+          <div>
+            <button onClick={() => handleZoom(false)}>Zoom Out</button>
+            <button onClick={() => handleZoom(true)}>Zoom In</button>
+          </div>
           <canvas ref={canvasRef} style={{ width: "80%", height: "80vh" }} />
           <div>
             <button
               disabled={currentPage === 1}
-              onClick={() => handlePageChange(-1)} // Decrement page number
+              onClick={() => handlePageChange(-1)}
             >
               Previous
             </button>
