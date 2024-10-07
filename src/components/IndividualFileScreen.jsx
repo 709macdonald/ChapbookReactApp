@@ -21,6 +21,7 @@ export default function IndividualFileScreen({
   const [pdfDocument, setPdfDocument] = useState(null);
   const [scale, setScale] = useState(1.5);
   const [fileId, setFileId] = useState(null);
+  const [renderTask, setRenderTask] = useState(null);
 
   const canvasRef = useRef(null);
   const tagsRef = useRef(null);
@@ -61,7 +62,7 @@ export default function IndividualFileScreen({
     }
   };
 
-  const highlightSearchWord = (page, viewport, context) => {
+  const highlightSearchWord = (page, viewport, context, currentScale) => {
     if (!searchWord || !file.locations) return;
 
     const lowerSearchWord = searchWord.toLowerCase();
@@ -82,45 +83,51 @@ export default function IndividualFileScreen({
 
         context.fillStyle = "rgba(255, 255, 0, 0.3)";
         context.fillRect(
-          highlightX * scale,
-          highlightY * scale,
-          highlightWidth * scale,
-          highlightHeight * scale
+          highlightX * currentScale,
+          highlightY * currentScale,
+          highlightWidth * currentScale,
+          highlightHeight * currentScale
         );
-
-        console.log("Highlighting:", {
-          text: location.text,
-          x: highlightX * scale,
-          y: highlightY * scale,
-          width: highlightWidth * scale,
-          height: highlightHeight * scale,
-          originalY: location.y,
-          viewportHeight: viewport.height,
-        });
       }
     });
   };
 
-  const renderPage = async (pageNum) => {
+  const renderPage = async (pageNum, currentScale = scale) => {
     if (!pdfDocument) return;
+
+    // Cancel any ongoing render task
+    if (renderTask) {
+      renderTask.cancel();
+    }
 
     try {
       const page = await pdfDocument.getPage(pageNum);
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
 
-      const viewport = page.getViewport({ scale });
+      const viewport = page.getViewport({ scale: currentScale });
       canvas.height = viewport.height;
       canvas.width = viewport.width;
 
-      await page.render({
+      const newRenderTask = page.render({
         canvasContext: context,
         viewport: viewport,
-      }).promise;
+      });
 
-      highlightSearchWord(page, viewport, context);
+      setRenderTask(newRenderTask);
+
+      await newRenderTask.promise;
+
+      // Only highlight if the render task wasn't cancelled
+      if (!newRenderTask.isCancelled) {
+        highlightSearchWord(page, viewport, context, currentScale);
+      }
     } catch (error) {
-      console.error("Error rendering PDF:", error);
+      if (error.name !== "RenderingCancelledException") {
+        console.error("Error rendering PDF:", error);
+      }
+    } finally {
+      setRenderTask(null);
     }
   };
 
@@ -134,7 +141,12 @@ export default function IndividualFileScreen({
   const handleZoom = (zoomIn) => {
     setScale((prevScale) => {
       const newScale = zoomIn ? prevScale * 1.2 : prevScale / 1.2;
-      return Math.max(0.5, Math.min(newScale, 3));
+      const clampedScale = Math.max(0.5, Math.min(newScale, 3));
+
+      // Render the page with the new scale
+      renderPage(currentPage, clampedScale);
+
+      return clampedScale;
     });
   };
 
@@ -153,10 +165,9 @@ export default function IndividualFileScreen({
 
   useEffect(() => {
     if (showIndividualFile && file && file.type === "application/pdf") {
-      // Check if it's a new file
       if (file.id !== fileId) {
-        setCurrentPage(1); // Reset to page 1
-        setFileId(file.id); // Update the fileId
+        setCurrentPage(1);
+        setFileId(file.id);
       }
 
       pdfjsLib
@@ -173,9 +184,9 @@ export default function IndividualFileScreen({
 
   useEffect(() => {
     if (pdfDocument) {
-      renderPage(currentPage);
+      renderPage(currentPage, scale);
     }
-  }, [currentPage, pdfDocument, searchWord, scale]);
+  }, [currentPage, pdfDocument, searchWord]);
 
   if (!showIndividualFile || !file) return null;
 
@@ -245,26 +256,55 @@ export default function IndividualFileScreen({
         </div>
       </div>
       {file.type === "application/pdf" ? (
-        <div className="pdfContainer">
-          <div>
-            <button onClick={() => handleZoom(false)}>Zoom Out</button>
-            <button onClick={() => handleZoom(true)}>Zoom In</button>
-          </div>
-          <canvas ref={canvasRef} style={{ width: "80%", height: "80vh" }} />
-          <div>
-            <button
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(-1)}
+        <div
+          className="pdfContainer"
+          style={{
+            backgroundColor: "#f0f0f0",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "80vh",
+            overflow: "auto",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              maxWidth: "100%",
+              maxHeight: "100%",
+            }}
+          >
+            <div style={{ marginBottom: "10px" }}>
+              <button onClick={() => handleZoom(false)}>Zoom Out</button>
+              <button onClick={() => handleZoom(true)}>Zoom In</button>
+            </div>
+            <div
+              style={{
+                maxWidth: "100%",
+                maxHeight: "calc(80vh - 100px)",
+                overflow: "auto",
+                border: "1px solid #ccc",
+              }}
             >
-              Previous
-            </button>
-            <span>{`Page ${currentPage} of ${totalPages}`}</span>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(1)}
-            >
-              Next
-            </button>
+              <canvas ref={canvasRef} style={{ display: "block" }} />
+            </div>
+            <div style={{ marginTop: "10px" }}>
+              <button
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(-1)}
+              >
+                Previous
+              </button>
+              <span>{`Page ${currentPage} of ${totalPages}`}</span>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(1)}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       ) : file.type.startsWith("image/") ? (
