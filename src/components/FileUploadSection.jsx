@@ -11,7 +11,7 @@ export default function FileUploadSection({
 }) {
   const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
   const [folderName, setFolderName] = useState(savedFolderName);
-  const [folderInputKey, setFolderInputKey] = useState(0); // To reset the folder input
+  const [folderInputKey, setFolderInputKey] = useState(0); 
 
   /* FOLDER NAME LOCAL STORAGE */
 

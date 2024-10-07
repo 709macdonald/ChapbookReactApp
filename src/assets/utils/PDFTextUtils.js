@@ -19,16 +19,32 @@ export const PDFTextExtraction = async (fileUrl) => {
             const page = await doc.getPage(pageNumber);
             const textContent = await page.getTextContent();
 
+            // Iterate over text items and extract words individually
             textContent.items.forEach((item) => {
-              allText += item.str + " ";
-              textLocations.push({
-                text: item.str,
-                transform: item.transform,
-                page: pageNumber,
-              });
-            });
+              const words = item.str.split(" "); // Split the line into words
 
-            allText += "\n";
+              // Track current X position for highlighting
+              let currentX = item.transform[4]; // Start position for this item
+
+              words.forEach((word) => {
+                allText += word + " ";
+
+                // Push each word with its corresponding position
+                textLocations.push({
+                  text: word,
+                  x: currentX, // Use current X position
+                  y: item.transform[5], // Y coordinate from transform
+                  page: pageNumber,
+                });
+
+                // Update currentX based on the width of the current word
+                const width =
+                  item.str.length > 0 ? item.width / item.str.length : 0; // Approximate width per character
+                currentX += width * word.length; // Move to next word's starting position
+              });
+
+              allText += "\n";
+            });
           }
 
           resolve({ text: allText.trim(), locations: textLocations });

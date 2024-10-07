@@ -9,6 +9,7 @@ export default function IndividualFileScreen({
   handleDeleteFile,
   backToAllFileView,
   onUpdateFileTags,
+  searchWord,
 }) {
   // TAGS LOGIC
 
@@ -69,8 +70,36 @@ export default function IndividualFileScreen({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isRendering, setIsRendering] = useState(false);
+  const [highlights, setHighlights] = useState([]); // Ensure highlights is defined here
+
   const canvasRef = useRef(null);
   const tagsRef = useRef(null);
+
+  const highlightSearchWord = (textContent, viewport, context, searchWord) => {
+    if (!searchWord) return; // Return if no search word
+
+    textContent.items.forEach((item) => {
+      const text = item.str;
+      const index = text.toLowerCase().indexOf(searchWord.toLowerCase());
+
+      if (index !== -1) {
+        const transform = item.transform;
+        const fontSize = transform[0]; // Extract font size
+
+        // Calculate width and height for the highlight rectangle
+        const width = context.measureText(searchWord).width;
+        const height = fontSize;
+
+        // Correctly calculate the x and y coordinates
+        const x = transform[4] + width * (index / text.length); // Adjust for scaling
+        const y = viewport.height - (transform[5] + height); // Flip y-axis for canvas
+
+        // Draw highlight rectangle
+        context.fillStyle = "rgba(238, 170, 0, .3)";
+        context.fillRect(x, y, width, height);
+      }
+    });
+  };
 
   const renderPDF = async () => {
     if (file.type === "application/pdf" && !isRendering) {
@@ -79,49 +108,51 @@ export default function IndividualFileScreen({
       try {
         const canvas = canvasRef.current;
         const context = canvas.getContext("2d");
+
+        // Load the PDF
         const loadingTask = pdfjsLib.getDocument(file.blobUrl);
         const pdf = await loadingTask.promise;
 
         setTotalPages(pdf.numPages);
         const page = await pdf.getPage(currentPage);
+
+        const desiredHeight = 600;
         const viewport = page.getViewport({ scale: 1 });
-
-        const desiredHeight = 600; // Set a fixed height
         const scale = desiredHeight / viewport.height;
-        const width = viewport.width * scale;
+        const desiredWidth = viewport.width * scale;
 
+        // Set canvas dimensions
+        canvas.width = desiredWidth;
         canvas.height = desiredHeight;
-        canvas.width = width;
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
+        // Render the PDF page
         await page.render({
           canvasContext: context,
           viewport: viewport.clone({ scale }),
         }).promise;
 
-        // Highlight matched words based on locations
-        context.fillStyle = "yellow"; // Set highlight color
+        // Get the text content for highlighting
+        const textContent = await page.getTextContent();
 
-        if (file.locations) {
-          file.locations.forEach((location) => {
-            const { text, transform, page: locPage } = location;
+        // Highlight the search word
+        highlightSearchWord(textContent, viewport, context, searchWord);
 
-            // Highlight only if the location matches the current page
-            if (file.matchedWords.includes(text) && locPage === currentPage) {
-              const [a, b, c, d, e, f] = transform;
+        // Draw highlights
+        highlights.forEach((highlight) => {
+          const [scaleX, , , scaleY, offsetX, offsetY] = highlight.transform;
 
-              const width = context.measureText(text).width;
-              const height = 12;
+          // Calculate highlight dimensions
+          const rectWidth = highlight.text.length * scaleX * scale; // Width based on text length and scale
+          const rectHeight = scaleY * scale; // Height based on scale
 
-              // Adjust x and y based on scale
-              const x = e * scale; // Adjust x for zoom
-              const y = f * scale - height; // Adjust y for zoom
+          const x = offsetX * scale; // X position based on scale
+          const y = (offsetY - rectHeight) * scale; // Y position based on scale
 
-              context.fillRect(x, y, width, height);
-            }
-          });
-        }
+          context.fillStyle = "rgba(238, 170, 0, .2)";
+          context.fillRect(x, y, rectWidth, rectHeight); // Render the highlight
+        });
       } catch (error) {
         console.error("Error rendering PDF:", error);
       } finally {
@@ -233,7 +264,7 @@ export default function IndividualFileScreen({
             <span>{`Page ${currentPage} of ${totalPages}`}</span>
             <button
               disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(1)} // Increment page number
+              onClick={() => handlePageChange(1)}
             >
               Next
             </button>

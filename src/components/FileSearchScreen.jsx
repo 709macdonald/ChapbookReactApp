@@ -105,7 +105,7 @@ export default function FileSearchScreen({
               <div className="deleteButtonAndMatchedWordsDiv">
                 <span
                   onClick={(event) => {
-                    event.stopPropagation(); // Prevent click event from bubbling up
+                    event.stopPropagation(); 
                     handleDeleteFile(file.id);
                   }}
                   className="fileDeleteButton"
