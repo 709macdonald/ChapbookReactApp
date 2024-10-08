@@ -46,7 +46,7 @@ export const createFilesArray = async (selectedUserFiles) => {
 
         return fileData;
       } catch (error) {
-        alert(`Failed to extract text from file: ${file.name}`);
+        console.error(`Failed to extract text from file: ${file.name}`, error);
         return null;
       }
     })

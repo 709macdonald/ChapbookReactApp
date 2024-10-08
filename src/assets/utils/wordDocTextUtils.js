@@ -8,8 +8,8 @@ export const wordTextExtraction = (file) => {
       const arrayBuffer = event.target.result;
 
       try {
-        const { value: text } = await mammoth.extractRawText({ arrayBuffer });
-        resolve(text);
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        resolve(result.value);
       } catch (error) {
         reject(error);
       }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import PDFRenderer from "./PDFRenderer";
 import ImageRenderer from "./ImageRenderer";
+import WordDocRenderer from "./WordDocRenderer";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
@@ -171,10 +172,11 @@ export default function IndividualFileScreen({
         />
       ) : file.type ===
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
-        <div className="wordDocPreview">
-          <h4>Document Preview</h4>
-          <p>{file.text}</p>{" "}
-        </div>
+        <WordDocRenderer
+          file={file}
+          searchWord={searchWord}
+          assistedSearchWords={assistedSearchWords}
+        />
       ) : (
         <p>Unsupported file type</p>
       )}
