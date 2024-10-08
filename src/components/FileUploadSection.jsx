@@ -11,7 +11,7 @@ export default function FileUploadSection({
 }) {
   const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
   const [folderName, setFolderName] = useState(savedFolderName);
-  const [folderInputKey, setFolderInputKey] = useState(0); 
+  const [folderInputKey, setFolderInputKey] = useState(0);
 
   /* FOLDER NAME LOCAL STORAGE */
 
@@ -59,6 +59,7 @@ export default function FileUploadSection({
       setFolderName("Select Folder");
       setIsLoadingFiles(false);
       setShowIndividualFile(false);
+      setBgLogoOn(true);
       setShowAllFiles(true);
       localStorage.removeItem("files");
       localStorage.removeItem("folderName");
