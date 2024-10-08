@@ -63,6 +63,7 @@ export default function MainScreen({
         showIndividualFile={showIndividualFile}
         setShowAllFiles={setShowAllFiles}
         searchWord={searchWord}
+        assistedSearchWords={assistedSearchWords}
         handleDeleteFile={handleDeleteFile}
         backToAllFileView={backToAllFileView}
         onUpdateFileTags={onUpdateFileTags}

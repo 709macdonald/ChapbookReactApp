@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import * as pdfjsLib from "pdfjs-dist";
 import PDFRenderer from "./PDFRenderer";
+import ImageRenderer from "./ImageRenderer";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
@@ -11,7 +12,27 @@ export default function IndividualFileScreen({
   backToAllFileView,
   onUpdateFileTags,
   searchWord,
+  assistedSearchWords,
 }) {
+  // MATCHED WORDS LOGIC
+
+  const matchedWords = useMemo(() => {
+    if (!file) return [];
+
+    const allSearchTerms = [searchWord, ...assistedSearchWords].map((word) =>
+      word.toLowerCase()
+    );
+
+    return allSearchTerms.filter(
+      (term) =>
+        file.text.toLowerCase().includes(term) ||
+        file.name.toLowerCase().includes(term) ||
+        (file.tags
+          ? file.tags.some((tag) => tag.toLowerCase().includes(term))
+          : false)
+    );
+  }, [file, searchWord, assistedSearchWords]);
+
   // TAGS LOGIC
   const [newTag, setNewTag] = useState("");
   const [showTags, setShowTags] = useState(false);
@@ -92,7 +113,8 @@ export default function IndividualFileScreen({
           Word Count: {file.text.split(/\s+/).length}
         </p>
         <p className="fileDetail">
-          Matched Words: {file.matchedWords.join(", ")}
+          Matched Words:{" "}
+          {matchedWords.length > 0 ? matchedWords.join(", ") : "None"}
         </p>
         <div className="tagsInputDiv" ref={tagsRef}>
           <button
@@ -141,11 +163,7 @@ export default function IndividualFileScreen({
           searchWord={searchWord}
         />
       ) : file.type.startsWith("image/") ? (
-        <img
-          src={file.blobUrl}
-          alt={file.name}
-          style={{ width: "100%", height: "80vh" }}
-        />
+        <ImageRenderer file={file} searchWord={searchWord} />
       ) : file.type ===
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
         <div className="wordDocPreview">

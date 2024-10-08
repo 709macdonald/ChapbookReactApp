@@ -34,7 +34,9 @@ export const createFilesArray = async (selectedUserFiles) => {
           fileData.text = text;
           fileData.locations = locations;
         } else if (file.type.startsWith("image/")) {
-          fileData.text = await imageTextExtraction(file);
+          const { text, locations } = await imageTextExtraction(file);
+          fileData.text = text;
+          fileData.locations = locations;
         } else if (
           file.type ===
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
