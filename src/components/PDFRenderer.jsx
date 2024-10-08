@@ -3,7 +3,12 @@ import * as pdfjsLib from "pdfjs-dist";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
-export default function PDFRenderer({ file, searchWord, showIndividualFile }) {
+export default function PDFRenderer({
+  file,
+  searchWord,
+  assistedSearchWords,
+  showIndividualFile,
+}) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [pdfDocument, setPdfDocument] = useState(null);
@@ -13,40 +18,45 @@ export default function PDFRenderer({ file, searchWord, showIndividualFile }) {
 
   const canvasRef = useRef(null);
 
-  const highlightSearchWord = (page, viewport, context, currentScale) => {
-    if (!searchWord || !file.locations) return;
+  const highlightMatchedWords = (page, viewport, context, currentScale) => {
+    if (!file.locations) return;
 
-    const lowerSearchWord = searchWord.toLowerCase();
+    const searchTerms = [searchWord, ...assistedSearchWords]
+      .filter(Boolean)
+      .map((term) => term.toLowerCase());
+
     const pageLocations = file.locations.filter(
       (loc) => loc.page === currentPage
     );
 
     pageLocations.forEach((location) => {
       const text = location.text.toLowerCase();
-      if (text.includes(lowerSearchWord)) {
-        const index = text.indexOf(lowerSearchWord);
-        const highlightWidth =
-          (location.width / location.text.length) * searchWord.length;
-        const highlightX = location.x;
+      searchTerms.forEach((term) => {
+        if (text.includes(term)) {
+          const index = text.indexOf(term);
+          const highlightWidth =
+            (location.width / location.text.length) * term.length;
+          const highlightX =
+            location.x + (location.width / location.text.length) * index;
 
-        const highlightY = location.y - location.height * 1;
-        const highlightHeight = location.height * 1.6;
+          const highlightY = location.y - location.height * 1;
+          const highlightHeight = location.height * 1.6;
 
-        context.fillStyle = "rgba(255, 255, 0, 0.3)";
-        context.fillRect(
-          highlightX * currentScale,
-          highlightY * currentScale,
-          highlightWidth * currentScale,
-          highlightHeight * currentScale
-        );
-      }
+          context.fillStyle = "rgba(255, 255, 0, 0.3)";
+          context.fillRect(
+            highlightX * currentScale,
+            highlightY * currentScale,
+            highlightWidth * currentScale,
+            highlightHeight * currentScale
+          );
+        }
+      });
     });
   };
 
   const renderPage = async (pageNum, currentScale = scale) => {
     if (!pdfDocument) return;
 
-    // Cancel any ongoing render task
     if (renderTask) {
       renderTask.cancel();
     }
@@ -69,9 +79,8 @@ export default function PDFRenderer({ file, searchWord, showIndividualFile }) {
 
       await newRenderTask.promise;
 
-      // Only highlight if the render task wasn't cancelled
       if (!newRenderTask.isCancelled) {
-        highlightSearchWord(page, viewport, context, currentScale);
+        highlightMatchedWords(page, viewport, context, currentScale);
       }
     } catch (error) {
       if (error.name !== "RenderingCancelledException") {
@@ -94,7 +103,6 @@ export default function PDFRenderer({ file, searchWord, showIndividualFile }) {
       const newScale = zoomIn ? prevScale * 1.2 : prevScale / 1.2;
       const clampedScale = Math.max(0.5, Math.min(newScale, 3));
 
-      // Render the page with the new scale
       renderPage(currentPage, clampedScale);
 
       return clampedScale;
@@ -124,7 +132,7 @@ export default function PDFRenderer({ file, searchWord, showIndividualFile }) {
     if (pdfDocument) {
       renderPage(currentPage, scale);
     }
-  }, [currentPage, pdfDocument, searchWord]);
+  }, [currentPage, pdfDocument, searchWord, assistedSearchWords]);
 
   return (
     <div

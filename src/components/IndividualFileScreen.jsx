@@ -161,9 +161,14 @@ export default function IndividualFileScreen({
           file={file}
           showIndividualFile={showIndividualFile}
           searchWord={searchWord}
+          assistedSearchWords={assistedSearchWords}
         />
       ) : file.type.startsWith("image/") ? (
-        <ImageRenderer file={file} searchWord={searchWord} />
+        <ImageRenderer
+          file={file}
+          searchWord={searchWord}
+          assistedSearchWords={assistedSearchWords}
+        />
       ) : file.type ===
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
         <div className="wordDocPreview">
