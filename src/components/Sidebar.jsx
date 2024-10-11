@@ -17,10 +17,17 @@ export default function Sidebar({
   toggleTheme,
   isDarkMode,
 }) {
+  const goToMainScreen = () => {
+    setIsLoadingFiles(false);
+    setShowIndividualFile(false);
+    setBgLogoOn(true);
+    setShowAllFiles(true);
+  };
+
   return (
     <div className="sidebarDiv">
       <div className="sideBarLogoDiv">
-        <h2 className="chap">
+        <h2 onClick={goToMainScreen} className="chap">
           Chap<span className="book">book</span>
         </h2>
       </div>

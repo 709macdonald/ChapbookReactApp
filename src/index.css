@@ -544,4 +544,91 @@ body {
   width: 18rem;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+}
+
+/* PDF CONTAINER */
+
+.pdfContainerDiv {
+  background-color: var(--hover-bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  flex-direction: column;
+  position: relative;
+}
+
+.zoomButtonIcon {
+  color: var(--font-color);
+  font-size: 1.6rem;
+  margin: 0 1rem 0 1rem;
+}
+
+.zoomButton:hover {
+  transform: scale(1.05);
+  background-color: var(--hover-bg-color);
+  border-radius: 1rem;
+}
+
+.pdfDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  max-height: 100%;
+  min-height: 56rem;
+}
+
+.zoomButton {
+  background-color: transparent;
+  border: none;
+  margin: 1rem 0 1rem 0;
+  padding-top: 1rem;
+  cursor: pointer;
+}
+
+.pdfCanvas {
+  max-width: 100%;
+  max-height: calc(80vh - 100px);
+  overflow: auto;
+  border: 1px solid #ccc;
+}
+
+.nextAndPreviousButtonsDiv {
+  margin: 1.2rem 0 1.2rem 0;
+  position: absolute;
+  bottom: 0;
+}
+
+.previousPageButton {
+  background-color: var(--main-bg-color);
+  border: none;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: var(--font-color);
+  margin-right: 1rem;
+  border-radius: 1rem;
+}
+
+.previousPageButton:hover {
+  transform: scale(1.05);
+  background-color: var(--hover-bg-color);
+}
+
+.nextPageButton {
+  background-color: var(--main-bg-color);
+  border: none;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: var(--font-color);
+  margin-left: 1rem;
+  border-radius: 1rem;
+}
+
+.nextPageButton:hover {
+  transform: scale(1.05);
+  background-color: var(--hover-bg-color);
 }

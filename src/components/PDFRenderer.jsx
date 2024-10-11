@@ -135,31 +135,18 @@ export default function PDFRenderer({
   }, [currentPage, pdfDocument, searchWord, assistedSearchWords]);
 
   return (
-    <div
-      className="pdfContainer"
-      style={{
-        backgroundColor: "#f0f0f0",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "80vh",
-        overflow: "auto",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          maxWidth: "100%",
-          maxHeight: "100%",
-        }}
-      >
-        <div style={{ marginBottom: "10px" }}>
-          <button onClick={() => handleZoom(false)}>Zoom Out</button>
-          <button onClick={() => handleZoom(true)}>Zoom In</button>
-        </div>
+    <div className="pdfContainerDiv">
+      <div style={{ marginBottom: "10px" }}>
+        <button className="zoomButton" onClick={() => handleZoom(false)}>
+          <i className="fa-solid fa-magnifying-glass-minus zoomButtonIcon"></i>
+        </button>
+        <button className="zoomButton" onClick={() => handleZoom(true)}>
+          <i className="fa-solid fa-magnifying-glass-plus zoomButtonIcon"></i>
+        </button>
+      </div>
+      <div className="pdfDiv">
         <div
+          className="pdfCanvas"
           style={{
             maxWidth: "100%",
             maxHeight: "calc(80vh - 100px)",
@@ -169,21 +156,23 @@ export default function PDFRenderer({
         >
           <canvas ref={canvasRef} style={{ display: "block" }} />
         </div>
-        <div style={{ marginTop: "10px" }}>
-          <button
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(-1)}
-          >
-            Previous
-          </button>
-          <span>{`Page ${currentPage} of ${totalPages}`}</span>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => handlePageChange(1)}
-          >
-            Next
-          </button>
-        </div>
+      </div>
+      <div className="nextAndPreviousButtonsDiv">
+        <button
+          className="previousPageButton"
+          disabled={currentPage === 1}
+          onClick={() => handlePageChange(-1)}
+        >
+          Previous
+        </button>
+        <span>{` Page ${currentPage} of ${totalPages} `}</span>
+        <button
+          className="nextPageButton"
+          disabled={currentPage === totalPages}
+          onClick={() => handlePageChange(1)}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
