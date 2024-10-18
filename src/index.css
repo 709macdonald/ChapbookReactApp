@@ -75,6 +75,10 @@ body {
 
 .individualFileScreenDiv {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .sidebarDiv {
@@ -335,9 +339,73 @@ body {
   color: var(--secondary-font-color);
 }
 
+/* LOADING GEAR */
+
+.loadingScreenDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: cover;
+  z-index: 20;
+  color: rgb(171, 169, 169);
+  position: absolute;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingGear {
+  font-size: 2rem;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  margin-left: 1rem;
+  font-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.loadingDots {
+  display: inline-block;
+  width: 20px;
+  text-align: left;
+}
+
+/* LOGO/BACKGROUND */
+
+.bgLogoDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chap {
+  font-size: 3rem;
+  color: var(--font-color);
+}
+
+.book {
+  color: var(--logo-2nd-color);
+}
+
+.sideBarLogoDiv {
+  display: flex;
+  width: 18rem;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
 /* INDIVIDUAL FILE SCREEN */
 
-.fileButtonsDiv {
+.individualFileScreenDiv .fileButtonsDiv {
   display: flex;
   justify-content: space-between;
 }
@@ -474,89 +542,33 @@ body {
   padding: 2rem;
 }
 
+.pdfDiv {
+  overflow: auto;
+}
+
 .pdfContainer {
-  position: relative; /* Add this to position highlights correctly */
+  position: relative;
 }
 
 .pdfTextContainer {
-  position: absolute; /* Positioning for highlighting text */
-  pointer-events: none; /* Prevent interference with mouse events */
-}
-
-/* LOADING GEAR */
-
-.loadingScreenDiv {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  object-fit: cover;
-  z-index: 20;
-  color: rgb(171, 169, 169);
   position: absolute;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.loadingGear {
-  font-size: 2rem;
-  animation: spin 1s linear infinite;
-}
-
-.loadingText {
-  margin-left: 1rem;
-  font-size: 2rem;
-  display: inline-flex;
-  align-items: center;
-}
-
-.loadingDots {
-  display: inline-block;
-  width: 20px;
-  text-align: left;
-}
-
-/* LOGO/BACKGROUND */
-
-.bgLogoDiv {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.chap {
-  font-size: 3rem;
-  color: var(--font-color);
-}
-
-.book {
-  color: var(--logo-2nd-color);
-}
-
-.sideBarLogoDiv {
-  display: flex;
-  width: 18rem;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+  pointer-events: none;
 }
 
 /* PDF CONTAINER */
 
-.pdfContainerDiv {
-  background-color: var(--hover-bg-color);
+.individualFileScreenTopDiv {
+  background-color: var(--main-bg-color);
+  padding: 1.2rem 4rem 1rem 4rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.zoomButtonsDiv {
   display: flex;
-  justify-content: center;
   align-items: center;
-  overflow: auto;
-  flex-direction: column;
-  position: relative;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
 .zoomButtonIcon {
@@ -575,15 +587,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 100%;
-  max-height: 100%;
-  min-height: 56rem;
+  padding-bottom: 1rem;
 }
 
 .zoomButton {
   background-color: transparent;
   border: none;
-  margin: 1rem 0 1rem 0;
   padding-top: 1rem;
   cursor: pointer;
 }
@@ -595,10 +604,17 @@ body {
   border: 1px solid #ccc;
 }
 
-.nextAndPreviousButtonsDiv {
-  margin: 1.2rem 0 1.2rem 0;
-  position: absolute;
+.pageControlsDiv {
   bottom: 0;
+  justify-self: center;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.2rem 0 1.2rem 0;
+  background-color: var(--secondary-bg-color);
+  border-radius: 1rem;
+  padding: 0.2rem;
 }
 
 .previousPageButton {

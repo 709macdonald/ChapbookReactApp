@@ -15,7 +15,10 @@ export default function IndividualFileScreen({
   searchWord,
   assistedSearchWords,
 }) {
-  // MATCHED WORDS LOGIC
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [scale, setScale] = useState(1.5);
+  const [pdfDocument, setPdfDocument] = useState(null);
 
   const matchedWords = useMemo(() => {
     if (!file) return [];
@@ -34,7 +37,6 @@ export default function IndividualFileScreen({
     );
   }, [file, searchWord, assistedSearchWords]);
 
-  // TAGS LOGIC
   const [newTag, setNewTag] = useState("");
   const [showTags, setShowTags] = useState(false);
 
@@ -89,84 +91,125 @@ export default function IndividualFileScreen({
     };
   }, []);
 
+  useEffect(() => {
+    if (showIndividualFile && file && file.type === "application/pdf") {
+      pdfjsLib
+        .getDocument(file.blobUrl)
+        .promise.then((pdf) => {
+          setPdfDocument(pdf);
+          setTotalPages(pdf.numPages);
+        })
+        .catch((error) => {
+          console.error("Error loading PDF:", error);
+        });
+    }
+  }, [file, showIndividualFile]);
+
+  const handlePageChange = (increment) => {
+    setCurrentPage((prevPage) => {
+      const newPage = prevPage + increment;
+      return newPage > 0 && newPage <= totalPages ? newPage : prevPage;
+    });
+  };
+
+  const handleZoom = (zoomIn) => {
+    setScale((prevScale) => {
+      const newScale = zoomIn ? prevScale * 1.2 : prevScale / 1.2;
+      return Math.max(0.5, Math.min(newScale, 3));
+    });
+  };
+
   if (!showIndividualFile || !file) return null;
 
   return (
     <div className="individualFileScreenDiv">
-      <div className="fileButtonsDiv">
-        <button onClick={backToAllFileView} className="backButton">
-          <i className="fa-solid fa-left-long backButtonIcon"></i>
-          Back
-        </button>
-        <button
-          onClick={() => handleDeleteFile(file.id)}
-          className="individualDeleteFileButton"
-        >
-          Delete File
-        </button>
-      </div>
-      <h3 className="individualFileName">{file.name}</h3>
-      <div className="fileDetailsDiv">
-        <p className="fileDetail">
-          Date Created: {new Date(file.date).toLocaleDateString()}
-        </p>
-        <p className="fileDetail">
-          Word Count: {file.text.split(/\s+/).length}
-        </p>
-        <p className="fileDetail">
-          Matched Words:{" "}
-          {matchedWords.length > 0 ? matchedWords.join(", ") : "None"}
-        </p>
-        <div className="tagsInputDiv" ref={tagsRef}>
+      <div className="individualFileScreenTopDiv">
+        <div className="fileButtonsDiv">
+          <button onClick={backToAllFileView} className="backButton">
+            <i className="fa-solid fa-left-long backButtonIcon"></i>
+            Back
+          </button>
           <button
-            className="toggleTagView"
-            onClick={() => setShowTags(!showTags)}
+            onClick={() => handleDeleteFile(file.id)}
+            className="individualDeleteFileButton"
           >
-            <i
-              className={`fa-solid tagDisplayArrow ${
-                showTags ? "fa-angle-up" : "fa-angle-down"
-              }`}
-            ></i>
+            Delete File
           </button>
-          <input
-            type="text"
-            value={newTag}
-            onChange={(e) => setNewTag(e.target.value)}
-            placeholder="Add a tag"
-            className="addATagBar"
-            onKeyDown={handleKeyDown}
-          />
-          <button className="addTagButton" onClick={handleAddTag}>
-            Add Tag
-          </button>
-
-          {showTags && (
-            <div className="tagsList">
-              {(file.tags || []).map((tag, index) => (
-                <div key={index}>
-                  <button
-                    className="tagDeleteButton"
-                    onClick={() => handleRemoveTag(index)}
-                  >
-                    x
-                  </button>
-                  {tag}{" "}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
+        <h3 className="individualFileName">{file.name}</h3>
+        <div className="fileDetailsDiv">
+          <p className="fileDetail">
+            Date Created: {new Date(file.date).toLocaleDateString()}
+          </p>
+          <p className="fileDetail">
+            Word Count: {file.text.split(/\s+/).length}
+          </p>
+          <p className="fileDetail">
+            Matched Words:{" "}
+            {matchedWords.length > 0 ? matchedWords.join(", ") : "None"}
+          </p>
+          <div className="tagsInputDiv" ref={tagsRef}>
+            <button
+              className="toggleTagView"
+              onClick={() => setShowTags(!showTags)}
+            >
+              <i
+                className={`fa-solid tagDisplayArrow ${
+                  showTags ? "fa-angle-up" : "fa-angle-down"
+                }`}
+              ></i>
+            </button>
+            <input
+              type="text"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              placeholder="Add a tag"
+              className="addATagBar"
+              onKeyDown={handleKeyDown}
+            />
+            <button className="addTagButton" onClick={handleAddTag}>
+              Add Tag
+            </button>
+
+            {showTags && (
+              <div className="tagsList">
+                {(file.tags || []).map((tag, index) => (
+                  <div key={index}>
+                    <button
+                      className="tagDeleteButton"
+                      onClick={() => handleRemoveTag(index)}
+                    >
+                      x
+                    </button>
+                    {tag}{" "}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="zoomButtonsDiv">
+        <button className="zoomButton" onClick={() => handleZoom(false)}>
+          <i className="fa-solid fa-magnifying-glass-minus zoomButtonIcon"></i>
+        </button>
+        <button className="zoomButton" onClick={() => handleZoom(true)}>
+          <i className="fa-solid fa-magnifying-glass-plus zoomButtonIcon"></i>
+        </button>
       </div>
       {file.type === "application/pdf" ? (
         <PDFRenderer
           file={file}
-          showIndividualFile={showIndividualFile}
+          pdfDocument={pdfDocument}
+          currentPage={currentPage}
+          scale={scale}
           searchWord={searchWord}
           assistedSearchWords={assistedSearchWords}
         />
       ) : file.type.startsWith("image/") ? (
         <ImageRenderer
           file={file}
+          scale={scale}
           searchWord={searchWord}
           assistedSearchWords={assistedSearchWords}
         />
@@ -174,11 +217,31 @@ export default function IndividualFileScreen({
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
         <WordDocRenderer
           file={file}
+          scale={scale}
           searchWord={searchWord}
           assistedSearchWords={assistedSearchWords}
         />
       ) : (
         <p>Unsupported file type</p>
+      )}
+      {file.type === "application/pdf" && (
+        <div className="pageControlsDiv">
+          <button
+            className="previousPageButton"
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(-1)}
+          >
+            Previous
+          </button>
+          <span>{` Page ${currentPage} of ${totalPages} `}</span>
+          <button
+            className="nextPageButton"
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(1)}
+          >
+            Next
+          </button>
+        </div>
       )}
     </div>
   );
