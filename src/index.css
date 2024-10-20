@@ -668,3 +668,37 @@ body {
   transform: scale(1.05);
   background-color: var(--hover-bg-color);
 }
+
+/* TEXT EDIOTR PAGE */
+
+.editor-wrapper .public-DraftEditor-content {
+  min-height: 100px;
+}
+
+.editor-wrapper .align-left > * {
+  text-align: left !important;
+  display: block;
+}
+
+.editor-wrapper .align-center > * {
+  text-align: center !important;
+  display: block;
+}
+
+.editor-wrapper .align-right > * {
+  text-align: right !important;
+  display: block;
+}
+
+.editor-wrapper .public-DraftStyleDefault-ltr {
+  text-align: inherit;
+}
+
+.editor-wrapper .DraftEditor-root {
+  line-height: 1.5;
+}
+
+.editor-wrapper .public-DraftStyleDefault-block {
+  margin-top: 0;
+  margin-bottom: 0;
+}
