@@ -1,6 +1,15 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import { Editor, EditorState, RichUtils, Modifier } from "draft-js";
 import "draft-js/dist/Draft.css";
+
+const COLORS = [
+  { label: "Black", style: "BLACK" },
+  { label: "Red", style: "RED" },
+  { label: "Green", style: "GREEN" },
+  { label: "Blue", style: "BLUE" },
+  { label: "Purple", style: "PURPLE" },
+  { label: "Orange", style: "ORANGE" },
+];
 
 const NewDocumentPage = ({
   newDocumentPage,
@@ -11,7 +20,7 @@ const NewDocumentPage = ({
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
-  const editorRef = useRef(null);
+  const [currentColor, setCurrentColor] = useState("BLACK");
 
   const backToAllFileView = () => {
     setBgLogoOn(true);
@@ -19,7 +28,7 @@ const NewDocumentPage = ({
     setNewDocumentPage(false);
   };
 
-  const handleKeyCommand = (command, editorState) => {
+  const handleKeyCommand = (command) => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
       setEditorState(newState);
@@ -31,7 +40,6 @@ const NewDocumentPage = ({
   const toggleInlineStyle = (inlineStyle, e) => {
     e.preventDefault();
     setEditorState(RichUtils.toggleInlineStyle(editorState, inlineStyle));
-    editorRef.current.focus();
   };
 
   const toggleAlignment = (alignment, e) => {
@@ -56,25 +64,82 @@ const NewDocumentPage = ({
     );
 
     setEditorState(newEditorState);
-    editorRef.current.focus();
   };
 
   const onUndoClick = (e) => {
     e.preventDefault();
     setEditorState(EditorState.undo(editorState));
-    editorRef.current.focus();
   };
 
   const onRedoClick = (e) => {
     e.preventDefault();
     setEditorState(EditorState.redo(editorState));
-    editorRef.current.focus();
   };
 
-  const styleMap = {
-    STRIKETHROUGH: {
-      textDecoration: "line-through",
+  const applyColor = useCallback(
+    (color) => {
+      const selection = editorState.getSelection();
+      const nextContentState = COLORS.reduce((contentState, c) => {
+        return Modifier.removeInlineStyle(contentState, selection, c.style);
+      }, editorState.getCurrentContent());
+
+      let nextEditorState = EditorState.push(
+        editorState,
+        Modifier.applyInlineStyle(nextContentState, selection, color),
+        "change-inline-style"
+      );
+
+      if (selection.isCollapsed()) {
+        // If no text is selected, set up the editor to apply the style to the next character
+        nextEditorState = EditorState.forceSelection(
+          nextEditorState,
+          selection
+        );
+      }
+
+      setEditorState(nextEditorState);
+      setCurrentColor(color);
     },
+    [editorState]
+  );
+
+  const handleBeforeInput = useCallback(
+    (chars, editorState) => {
+      const currentStyle = editorState.getCurrentInlineStyle();
+
+      // If the current style doesn't include the current color, add it
+      if (!currentStyle.has(currentColor)) {
+        setEditorState(RichUtils.toggleInlineStyle(editorState, currentColor));
+      }
+      return "not-handled";
+    },
+    [currentColor]
+  );
+
+  const onChange = useCallback(
+    (newEditorState) => {
+      const selection = newEditorState.getSelection();
+      if (selection.isCollapsed()) {
+        const currentStyle = newEditorState.getCurrentInlineStyle();
+        if (!currentStyle.has(currentColor)) {
+          newEditorState = RichUtils.toggleInlineStyle(
+            newEditorState,
+            currentColor
+          );
+        }
+      }
+      setEditorState(newEditorState);
+    },
+    [currentColor]
+  );
+
+  const styleMap = {
+    BLACK: { color: "black" },
+    RED: { color: "red" },
+    GREEN: { color: "green" },
+    BLUE: { color: "blue" },
+    PURPLE: { color: "purple" },
+    ORANGE: { color: "orange" },
   };
 
   const blockStyleFn = (contentBlock) => {
@@ -123,16 +188,6 @@ const NewDocumentPage = ({
           <i className="fas fa-underline"></i>
         </button>
         <button
-          onMouseDown={(e) => toggleInlineStyle("STRIKETHROUGH", e)}
-          className={`p-2 border rounded ${
-            editorState.getCurrentInlineStyle().has("STRIKETHROUGH")
-              ? "bg-gray-300"
-              : ""
-          }`}
-        >
-          <i className="fas fa-strikethrough"></i>
-        </button>
-        <button
           onMouseDown={(e) => toggleAlignment("left", e)}
           className="p-2 border rounded"
         >
@@ -156,14 +211,32 @@ const NewDocumentPage = ({
         <button onMouseDown={onRedoClick} className="p-2 border rounded">
           <i className="fas fa-redo"></i>
         </button>
+
+        {COLORS.map((color) => (
+          <button
+            key={color.style}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              applyColor(color.style);
+            }}
+            className={`p-2 border rounded ${
+              currentColor === color.style ? "ring-2 ring-offset-2" : ""
+            }`}
+            style={{
+              backgroundColor: color.style.toLowerCase(),
+              width: "30px",
+              height: "30px",
+            }}
+            title={color.label}
+          />
+        ))}
       </div>
       <div className="border border-gray-300 min-h-[300px] p-4 rounded editor-wrapper">
         <Editor
-          ref={editorRef}
           editorState={editorState}
-          onChange={setEditorState}
+          onChange={onChange}
           handleKeyCommand={handleKeyCommand}
-          placeholder="Start typing your document..."
+          handleBeforeInput={handleBeforeInput}
           customStyleMap={styleMap}
           blockStyleFn={blockStyleFn}
         />
