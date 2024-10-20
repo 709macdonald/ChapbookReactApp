@@ -2,9 +2,7 @@ import Tesseract from "tesseract.js";
 
 export const imageTextExtraction = (file) => {
   return new Promise((resolve, reject) => {
-    Tesseract.recognize(file, "eng", {
-      logger: (m) => console.log(m), // Optional: for logging progress
-    })
+    Tesseract.recognize(file, "eng", {})
       .then(({ data }) => {
         let allText = "";
         const textLocations = [];

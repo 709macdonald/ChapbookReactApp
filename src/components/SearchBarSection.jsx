@@ -8,6 +8,7 @@ export default function SearchBarSection({
   setAssistedSearchWords,
 }) {
   const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
+  const [showAssistedSearchWords, setShowAssistedSearchWords] = useState(false);
   const [predictiveTextWords, setPredictiveTextWords] = useState([]);
   const searchRef = useRef(null);
 
@@ -37,6 +38,10 @@ export default function SearchBarSection({
     if (!isAssistedSearchEnabled) {
       setAssistedSearchWords([]);
     }
+  };
+
+  const toggleShowAssistedSearchWords = () => {
+    setShowAssistedSearchWords((prev) => !prev);
   };
 
   /* PREDICTIVE TEXT */
@@ -111,23 +116,33 @@ export default function SearchBarSection({
           ))}
         </div>
       )}
-
-      <button className="assistedSearchButton" onClick={toggleAssistedSearch}>
-        {isAssistedSearchEnabled
-          ? "Disable Assisted Search"
-          : "Enable Assisted Search"}
-      </button>
-
-      {isAssistedSearchEnabled && searchWord && (
-        <div className="assistedSearchWordsDiv fade-in">
-          <p>Assisted Search Words</p>
-          {assistedSearchWords.map((assistedSearchWord, index) => (
-            <div key={index} className="assistedSearchWord fade-in">
-              {assistedSearchWord}
-            </div>
-          ))}
+      <div className="AssistedSearchDiv">
+        <p className="assistedSearchTitle">Assisted Search</p>
+        <div className="assistedSearchButtonsDiv">
+          <button
+            className="assistedSearchButton"
+            onClick={toggleAssistedSearch}
+          >
+            {isAssistedSearchEnabled ? "Disable" : "Enable"} Assistant
+          </button>
+          <button
+            className="assistedSearchButton"
+            onClick={toggleShowAssistedSearchWords}
+          >
+            {showAssistedSearchWords ? "Hide" : "Show"} Words
+          </button>
         </div>
-      )}
+        {showAssistedSearchWords && isAssistedSearchEnabled && searchWord && (
+          <div className="assistedSearchWordsDiv fade-in">
+            <p>Assisted Search Words</p>
+            {assistedSearchWords.map((assistedSearchWord, index) => (
+              <div key={index} className="assistedSearchWord fade-in">
+                {assistedSearchWord}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

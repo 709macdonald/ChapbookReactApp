@@ -68,9 +68,9 @@ body {
   gap: 1rem;
   justify-items: center;
   margin: 0;
-  padding: 4rem 2rem 4rem 2rem;
+  padding: 0w;
   max-width: 100%;
-  max-height: 100vh;
+  height: 100%;
 }
 
 .individualFileScreenDiv {
@@ -265,6 +265,24 @@ body {
   border-radius: 1rem;
 }
 
+.AssistedSearchDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.assistedSearchTitle {
+  font-size: var(--secondary-font-size);
+  margin: 1rem 0 0 0;
+}
+
+.assistedSearchButtonsDiv {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .predictiveTextWordsDiv {
   position: absolute;
   width: 15rem;
@@ -284,7 +302,7 @@ body {
   position: relative;
   background-color: var(--secondary-bg-color);
   color: var(--font-color);
-  font-size: var(--tertiary-font-size);
+  font-size: var(--secondary-font-size);
   margin: 1.1rem auto 1rem auto;
   padding: 0.4rem;
   border: none;
@@ -301,6 +319,8 @@ body {
   padding: 0.2rem 1rem 0.4rem 1rem;
   border-radius: 0.5rem;
   box-shadow: var(--shadow);
+  font-size: 0.9rem;
+  width: 90%;
 }
 
 .assistedSearchWord:hover {
