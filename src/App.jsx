@@ -15,6 +15,11 @@ function App() {
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
 
+  // Polyfill for 'global' in browsers
+  if (typeof global === "undefined") {
+    var global = window;
+  }
+
   /* LIGHT AND DARK MODE  */
 
   const toggleTheme = () => {
