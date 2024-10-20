@@ -1,15 +1,26 @@
-import React, { useState, useCallback } from "react";
-import { Editor, EditorState, RichUtils, Modifier } from "draft-js";
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import {
+  Editor,
+  EditorState,
+  RichUtils,
+  Modifier,
+  convertToRaw,
+  convertFromRaw,
+} from "draft-js";
 import "draft-js/dist/Draft.css";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const COLORS = [
-  { label: "Black", style: "BLACK" },
-  { label: "Red", style: "RED" },
-  { label: "Green", style: "GREEN" },
-  { label: "Blue", style: "BLUE" },
-  { label: "Purple", style: "PURPLE" },
-  { label: "Orange", style: "ORANGE" },
+  { label: "Black", style: "BLACK", hex: "#000000" },
+  { label: "Red", style: "RED", hex: "#FF0000" },
+  { label: "Green", style: "GREEN", hex: "#008000" },
+  { label: "Blue", style: "BLUE", hex: "#0000FF" },
+  { label: "Purple", style: "PURPLE", hex: "#800080" },
+  { label: "Orange", style: "ORANGE", hex: "#FFA500" },
 ];
+
+const STORAGE_KEY = "myEditorContent";
 
 const NewDocumentPage = ({
   newDocumentPage,
@@ -17,15 +28,54 @@ const NewDocumentPage = ({
   setShowAllFiles,
   setBgLogoOn,
 }) => {
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createEmpty()
-  );
+  const [editorState, setEditorState] = useState(() => {
+    const savedContent = localStorage.getItem(STORAGE_KEY);
+    if (savedContent) {
+      return EditorState.createWithContent(
+        convertFromRaw(JSON.parse(savedContent))
+      );
+    }
+    return EditorState.createEmpty();
+  });
+
   const [currentColor, setCurrentColor] = useState("BLACK");
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const editorRef = useRef(null);
+
+  useEffect(() => {
+    const content = editorState.getCurrentContent();
+    const rawContent = convertToRaw(content);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(rawContent));
+  }, [editorState]);
 
   const backToAllFileView = () => {
     setBgLogoOn(true);
     setShowAllFiles(true);
     setNewDocumentPage(false);
+  };
+
+  const saveAsPDF = async () => {
+    if (editorRef.current) {
+      const canvas = await html2canvas(editorRef.current);
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF();
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("document.pdf");
+    }
+  };
+
+  const deleteDocument = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this document? This action cannot be undone."
+      )
+    ) {
+      localStorage.removeItem(STORAGE_KEY);
+      setEditorState(EditorState.createEmpty());
+    }
   };
 
   const handleKeyCommand = (command) => {
@@ -90,7 +140,6 @@ const NewDocumentPage = ({
       );
 
       if (selection.isCollapsed()) {
-        // If no text is selected, set up the editor to apply the style to the next character
         nextEditorState = EditorState.forceSelection(
           nextEditorState,
           selection
@@ -107,7 +156,6 @@ const NewDocumentPage = ({
     (chars, editorState) => {
       const currentStyle = editorState.getCurrentInlineStyle();
 
-      // If the current style doesn't include the current color, add it
       if (!currentStyle.has(currentColor)) {
         setEditorState(RichUtils.toggleInlineStyle(editorState, currentColor));
       }
@@ -133,6 +181,16 @@ const NewDocumentPage = ({
     [currentColor]
   );
 
+  const toggleColorPicker = (e) => {
+    e.preventDefault();
+    setShowColorPicker(!showColorPicker);
+  };
+
+  const selectColor = (color) => {
+    applyColor(color.style);
+    setShowColorPicker(false);
+  };
+
   const styleMap = {
     BLACK: { color: "black" },
     RED: { color: "red" },
@@ -151,12 +209,26 @@ const NewDocumentPage = ({
 
   return (
     <div className="p-4">
-      <button
-        onClick={backToAllFileView}
-        className="mb-4 px-4 py-2 bg-gray-200 rounded"
-      >
-        Back
-      </button>
+      <div className="flex space-x-2 mb-4">
+        <button
+          onClick={backToAllFileView}
+          className="px-4 py-2 bg-gray-200 rounded"
+        >
+          Back
+        </button>
+        <button
+          onClick={saveAsPDF}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Save as PDF
+        </button>
+        <button
+          onClick={deleteDocument}
+          className="px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Delete Document
+        </button>
+      </div>
       <h1 className="text-2xl font-bold mb-4">New Document</h1>
       <div className="mb-2 space-x-2">
         <button
@@ -212,26 +284,37 @@ const NewDocumentPage = ({
           <i className="fas fa-redo"></i>
         </button>
 
-        {COLORS.map((color) => (
+        <div className="relative inline-block">
           <button
-            key={color.style}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              applyColor(color.style);
-            }}
-            className={`p-2 border rounded ${
-              currentColor === color.style ? "ring-2 ring-offset-2" : ""
-            }`}
-            style={{
-              backgroundColor: color.style.toLowerCase(),
-              width: "30px",
-              height: "30px",
-            }}
-            title={color.label}
-          />
-        ))}
+            onMouseDown={toggleColorPicker}
+            className="p-2 border rounded"
+            style={{ color: COLORS.find((c) => c.style === currentColor).hex }}
+          >
+            <i className="fas fa-palette"></i>
+          </button>
+          {showColorPicker && (
+            <div className="absolute mt-1 bg-white border rounded shadow-lg">
+              {COLORS.map((color) => (
+                <button
+                  key={color.style}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    selectColor(color);
+                  }}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                  style={{ color: color.hex }}
+                >
+                  {color.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-      <div className="border border-gray-300 min-h-[300px] p-4 rounded editor-wrapper">
+      <div
+        ref={editorRef}
+        className="border border-gray-300 min-h-[300px] p-4 rounded editor-wrapper"
+      >
         <Editor
           editorState={editorState}
           onChange={onChange}
