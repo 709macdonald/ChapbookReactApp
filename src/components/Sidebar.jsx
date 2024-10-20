@@ -16,12 +16,14 @@ export default function Sidebar({
   setBgLogoOn,
   toggleTheme,
   isDarkMode,
+  setNewDocumentPage,
 }) {
   const goToMainScreen = () => {
     setIsLoadingFiles(false);
     setShowIndividualFile(false);
     setBgLogoOn(true);
     setShowAllFiles(true);
+    setNewDocumentPage(false);
   };
 
   return (
@@ -38,6 +40,7 @@ export default function Sidebar({
         setShowAllFiles={setShowAllFiles}
         setShowIndividualFile={setShowIndividualFile}
         setBgLogoOn={setBgLogoOn}
+        setNewDocumentPage={setNewDocumentPage}
       />
       <SearchBarSection
         files={files}

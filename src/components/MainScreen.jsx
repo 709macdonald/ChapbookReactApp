@@ -3,6 +3,7 @@ import LoadingGear from "./LoadingGear";
 import BGLogo from "./BGLogo";
 import FileSearchScreen from "./FileSearchScreen";
 import IndividualFileScreen from "./IndividualFileScreen";
+import NewDocumentPage from "./NewDocumentPage";
 
 export default function MainScreen({
   files,
@@ -18,6 +19,8 @@ export default function MainScreen({
   assistedSearchWords,
   bgLogoOn,
   setBgLogoOn,
+  newDocumentPage,
+  setNewDocumentPage,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
 
@@ -67,6 +70,12 @@ export default function MainScreen({
         handleDeleteFile={handleDeleteFile}
         backToAllFileView={backToAllFileView}
         onUpdateFileTags={onUpdateFileTags}
+      />
+      <NewDocumentPage
+        newDocumentPage={newDocumentPage}
+        setNewDocumentPage={setNewDocumentPage}
+        setShowAllFiles={setShowAllFiles}
+        setBgLogoOn={setBgLogoOn}
       />
     </div>
   );

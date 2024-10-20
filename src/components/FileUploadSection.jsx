@@ -8,6 +8,7 @@ export default function FileUploadSection({
   setShowAllFiles,
   setShowIndividualFile,
   setBgLogoOn,
+  setNewDocumentPage,
 }) {
   const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
   const [folderName, setFolderName] = useState(savedFolderName);
@@ -61,9 +62,18 @@ export default function FileUploadSection({
       setShowIndividualFile(false);
       setBgLogoOn(true);
       setShowAllFiles(true);
+      setNewDocumentPage(false);
       localStorage.removeItem("files");
       localStorage.removeItem("folderName");
     }
+  };
+
+  const showNewDocumentPage = () => {
+    setNewDocumentPage(true);
+    setIsLoadingFiles(false);
+    setShowIndividualFile(false);
+    setBgLogoOn(false);
+    setShowAllFiles(false);
   };
 
   return (
@@ -102,8 +112,13 @@ export default function FileUploadSection({
       <hr />
       <div className="folderNameDiv">
         <p className="folderName">{folderName}</p>
-        <p className="resultsFound">{resultsCount} results found</p>
       </div>
+      <div className="newDocumentDiv">
+        <hr />
+        <button onClick={showNewDocumentPage}>Create New Document</button>
+        <hr />
+      </div>
+      <p className="resultsFound">{resultsCount} results found</p>
     </div>
   );
 }

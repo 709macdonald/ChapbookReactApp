@@ -9,7 +9,8 @@ function App() {
   const [showAllFiles, setShowAllFiles] = useState(true);
   const [showIndividualFile, setShowIndividualFile] = useState(false);
   const [bgLogoOn, setBgLogoOn] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(false); // New state for dark mode
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [newDocumentPage, setNewDocumentPage] = useState(false);
 
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
@@ -110,6 +111,7 @@ function App() {
         setBgLogoOn={setBgLogoOn}
         toggleTheme={toggleTheme}
         isDarkMode={isDarkMode}
+        setNewDocumentPage={setNewDocumentPage}
       />
       <MainScreen
         files={files}
@@ -125,6 +127,8 @@ function App() {
         assistedSearchWords={assistedSearchWords}
         bgLogoOn={bgLogoOn}
         setBgLogoOn={setBgLogoOn}
+        newDocumentPage={newDocumentPage}
+        setNewDocumentPage={setNewDocumentPage}
       />
     </div>
   );
