@@ -743,25 +743,44 @@ body {
 }
 
 .colorButtonDiv {
+  position: relative;
+  display: flex;
   align-items: center;
   justify-content: center;
-  display: flex;
 }
 
 .colorsDiv {
-  z-index: 2;
   position: absolute;
-  margin-bottom: 4rem;
+  top: 100%;
+  left: 0;
+  background-color: var(--main-bg-color);
+  border-radius: 0.3rem;
   box-shadow: var(--shadow);
-  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 100px;
+  z-index: 100;
 }
 
 .colorButton {
+  width: 100%;
+  padding: 0.5rem;
+  text-align: left;
   background-color: var(--main-bg-color);
-  border-radius: 0.2rem;
   border: 1px solid var(--font-color);
-  font-size: 0.7rem;
-  padding: 0.2rem;
+  border-radius: 0.2rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.colorButton:hover {
+  background-color: var(--hover-bg-color);
 }
 
 .saveAndDeleteButtonsDiv {

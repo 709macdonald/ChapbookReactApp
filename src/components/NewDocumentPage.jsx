@@ -408,12 +408,22 @@ const NewDocumentPage = ({
           <div className="colorButtonDiv">
             <button
               onMouseDown={toggleColorPicker}
-              className=" editStyleButton"
+              className="editStyleButton"
               style={{
-                color: COLORS.find((c) => c.style === currentColor).hex,
+                color:
+                  COLORS.find((c) => c.style === currentColor)?.hex ||
+                  "#000000",
               }}
+              title="Text Color"
             >
-              <i className="fas fa-palette colorPickerIcon"></i>
+              <i
+                className="fas fa-palette"
+                style={{
+                  color:
+                    COLORS.find((c) => c.style === currentColor)?.hex ||
+                    "#000000",
+                }}
+              />
             </button>
             {showColorPicker && (
               <div className="colorsDiv">
@@ -422,12 +432,13 @@ const NewDocumentPage = ({
                     key={color.style}
                     onMouseDown={(e) => {
                       e.preventDefault();
+                      e.stopPropagation();
                       selectColor(color);
                     }}
                     className="colorButton"
-                    style={{ color: color.hex }}
                   >
-                    {color.label}
+                    <i className="fas fa-circle" style={{ color: color.hex }} />
+                    <span style={{ color: color.hex }}>{color.label}</span>
                   </button>
                 ))}
               </div>
