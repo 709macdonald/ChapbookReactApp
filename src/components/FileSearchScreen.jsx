@@ -15,7 +15,6 @@ export default function FileSearchScreen({
     const allSearchTerms = [searchWord, ...assistedSearchWords].map((word) =>
       word.toLowerCase()
     );
-
     return files
       .filter((file) => file.text.trim() !== "")
       .map((file) => {
@@ -105,7 +104,7 @@ export default function FileSearchScreen({
               <div className="deleteButtonAndMatchedWordsDiv">
                 <span
                   onClick={(event) => {
-                    event.stopPropagation(); 
+                    event.stopPropagation();
                     handleDeleteFile(file.id);
                   }}
                   className="fileDeleteButton"
