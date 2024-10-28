@@ -38,7 +38,7 @@ body {
   color: var(--font-color);
 }
 
-/* MAIN SCREEN CSS */
+/* MAIN SCREEN STYLES*/
 
 .mainScreenDiv {
   background-color: var(--secondary-bg-color);
@@ -59,7 +59,7 @@ body {
   z-index: 1;
 }
 
-/* LOADING GEAR */
+/* LOADING GEAR STYLES */
 
 .loadingScreenDiv {
   display: flex;
@@ -96,4 +96,21 @@ body {
   display: inline-block;
   width: 20px;
   text-align: left;
+}
+
+/* LOGO SIDEBAR/BACKGROUND STYLES */
+
+.bgLogoDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chap {
+  font-size: 3rem;
+  color: var(--font-color);
+}
+
+.book {
+  color: var(--logo-2nd-color);
 }

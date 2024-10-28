@@ -12,7 +12,8 @@
   height: 100%;
 }
 
-/* FILE DISPLAYS */
+/* FILE DISPLAYS STYLES*/
+
 .fileDisplayDiv {
   position: relative;
   background-color: var(--main-bg-color);

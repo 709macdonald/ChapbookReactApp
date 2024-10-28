@@ -8,7 +8,7 @@
 
 .newFileTopDiv {
   background-color: var(--main-bg-color);
-  padding: 2em 4rem 2rem 4rem;
+  padding: 1rem 4rem 2rem 4rem;
   border-radius: 1rem;
   box-shadow: var(--shadow);
   position: sticky;

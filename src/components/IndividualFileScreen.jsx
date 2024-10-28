@@ -137,6 +137,7 @@ export default function IndividualFileScreen({
           </button>
         </div>
         <h3 className="individualFileName">{file.name}</h3>
+        <hr />
         <div className="fileDetailsDiv">
           <p className="fileDetail">
             Date Created: {new Date(file.date).toLocaleDateString()}
