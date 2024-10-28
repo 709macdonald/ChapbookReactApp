@@ -92,11 +92,8 @@ export default function FileUploadSection({
           id="fileInputFiles"
         />
         <label htmlFor="fileInputFiles" className="fileInputLabel">
-          <i className="fa-solid fa-file folderIcon"></i> Select Files
+          <i className="fa-solid fa-file folderIcon"></i>
         </label>
-      </div>
-      <hr />
-      <div className="fileInputDiv">
         <input
           key={folderInputKey} // Reset input on key change
           type="file"
@@ -106,18 +103,15 @@ export default function FileUploadSection({
           id="fileInputDirectory"
         />
         <label htmlFor="fileInputDirectory" className="fileInputLabel">
-          <i className="fa-solid fa-folder folderIcon"></i> Select Folder
+          <i className="fa-solid fa-folder folderIcon"></i>
         </label>
+        <button className="newDocumentButton" onClick={showNewDocumentPage}>
+          <i className="fa-solid fa-file-circle-plus "></i>
+        </button>
       </div>
+      <p className="folderName">{folderName}</p>
+
       <hr />
-      <div className="folderNameDiv">
-        <p className="folderName">{folderName}</p>
-      </div>
-      <div className="newDocumentDiv">
-        <hr />
-        <button onClick={showNewDocumentPage}>Create New Document</button>
-        <hr />
-      </div>
       <p className="resultsFound">{resultsCount} results found</p>
     </div>
   );
