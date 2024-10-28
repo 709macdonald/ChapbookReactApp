@@ -27,7 +27,6 @@ const STORAGE_KEY = "myEditorContent";
 const TITLE_STORAGE_KEY = "documentTitle";
 
 const createEmptyContentState = (numberOfLines = 40) => {
-  // Create array of empty content blocks
   const blocks = Array(numberOfLines)
     .fill()
     .map(
@@ -44,7 +43,6 @@ const createEmptyContentState = (numberOfLines = 40) => {
   return ContentState.createFromBlockArray(blocks);
 };
 
-// Define alignment styles as constants
 const ALIGNMENTS = {
   LEFT: "left",
   CENTER: "center",
@@ -69,13 +67,14 @@ const NewDocumentPage = ({
         convertFromRaw(JSON.parse(savedContent))
       );
     }
-    // Create empty editor state with 40 empty lines
     return EditorState.createWithContent(createEmptyContentState(40));
   });
 
   const [currentColor, setCurrentColor] = useState("BLACK");
   const [showColorPicker, setShowColorPicker] = useState(false);
   const editorRef = useRef(null);
+
+  /* LOCAL STORAGE */
 
   useEffect(() => {
     const content = editorState.getCurrentContent();
@@ -91,7 +90,8 @@ const NewDocumentPage = ({
     setDocumentTitle(e.target.value);
   };
 
-  // Improved alignment handling
+  /* STYLING AND FUNCTIONALITY */
+
   const getCurrentAlignment = (editorState) => {
     const selection = editorState.getSelection();
     const currentContent = editorState.getCurrentContent();
@@ -192,7 +192,6 @@ const NewDocumentPage = ({
     [currentColor]
   );
 
-  // Improved block style function
   const blockStyleFn = (contentBlock) => {
     const alignment = contentBlock.getData().get("alignment");
     switch (alignment) {
@@ -207,7 +206,6 @@ const NewDocumentPage = ({
     }
   };
 
-  // Rest of the existing functions...
   const backToAllFileView = () => {
     setBgLogoOn(true);
     setShowAllFiles(true);
@@ -272,7 +270,8 @@ const NewDocumentPage = ({
     [currentColor]
   );
 
-  // Color handling functions
+  /* COLOR PICKER */
+
   const toggleColorPicker = (e) => {
     e.preventDefault();
     setShowColorPicker(!showColorPicker);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import FileUploadSection from "./FileUploadSection";
 import SearchBarSection from "./SearchBarSection";
 
@@ -29,8 +29,25 @@ export default function Sidebar({
     setHideSearchSection(false);
   };
 
+  const [toggleSideBar, setToggleSideBar] = useState(true);
+
+  const handleToggleSideBar = () => {
+    setToggleSideBar(!toggleSideBar);
+  };
+
+  if (!toggleSideBar) {
+    return (
+      <button className="sideBarButton" onClick={handleToggleSideBar}>
+        <i className="fa-solid fa-bars"></i>
+      </button>
+    );
+  }
+
   return (
     <div className="sidebarDiv">
+      <button className="sideBarButton" onClick={handleToggleSideBar}>
+        <i className="fa-solid fa-bars"></i>
+      </button>
       <div className="sideBarLogoDiv">
         <h2 onClick={goToMainScreen} className="chap">
           Chap<span className="book">book</span>

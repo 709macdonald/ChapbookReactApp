@@ -258,3 +258,115 @@
   transform: scale(1.05);
   background-color: var(--hover-bg-color);
 }
+
+/* Original CSS remains the same, add these media queries at the bottom */
+@media screen and (max-width: 833px) {
+  .individualFileScreenDiv {
+    width: 100%;
+    height: -webkit-fill-available;
+    padding: 0.5rem;
+  }
+
+  .individualFileScreenTopDiv {
+    padding: 1rem;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .individualFileName {
+    font-size: 1.5rem;
+    text-align: center;
+    word-break: break-word;
+  }
+
+  .fileDetailsDiv {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .fileDetail {
+    margin-right: 0;
+    font-size: 0.9rem;
+  }
+
+  /* Tags input adjustments */
+  .tagsInputDiv {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .addATagBar {
+    width: 100%;
+    max-width: none;
+    margin-right: 0;
+  }
+
+  /* PDF viewer adjustments */
+  .pdfDiv {
+    width: 100%;
+    height: calc(100vh - 200px);
+    padding: 0.5rem;
+  }
+
+  .pdfCanvas {
+    width: 100%;
+    max-height: calc(100vh - 250px);
+  }
+
+  /* Zoom controls adjustments */
+  .zoomButtonsDiv {
+    margin: 0.5rem;
+  }
+
+  .zoomButtonIcon {
+    font-size: 1.2rem;
+    margin: 0 0.5rem;
+  }
+
+  /* Page controls adjustments */
+  .pageControlsDiv {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    margin: 0;
+    padding: 0.5rem;
+  }
+
+  .previousPageButton,
+  .nextPageButton {
+    padding: 0.3rem;
+    margin: 0 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Word doc preview adjustment */
+  .wordDocPreview {
+    height: calc(100vh - 200px);
+    padding: 1rem;
+    width: 100%;
+    overflow-y: auto;
+  }
+
+  /* File buttons adjustment */
+  .individualFileScreenDiv .fileButtonsDiv {
+    width: 100%;
+    padding: 0.5rem;
+    justify-content: space-between;
+  }
+
+  .backButton,
+  .individualDeleteFileButton {
+    font-size: 0.9rem;
+    padding: 0.3rem;
+    margin: 0 2rem 0 2rem;
+  }
+
+  .backButtonIcon {
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+  }
+}

@@ -1,16 +1,33 @@
 /* SIDEBAR CSS */
 
 .sidebarDiv {
-  position: relative;
+  position: relative; /* Back to relative for desktop */
   z-index: 1;
   background-color: var(--main-bg-color);
-  height: 100%;
+  height: 100vh;
   padding: 0 1rem 0 1rem;
   box-shadow: var(--shadow);
   font-size: var(--primary-font-size);
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.sideBarButton {
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 10;
+  font-size: 2rem;
+  color: var(--font-color);
+  cursor: pointer;
+  display: none;
+}
+
+.sideBarButton:hover {
+  transform: scale(1.05);
 }
 
 .sideBarLogoDiv {
@@ -20,7 +37,7 @@
   align-items: center;
   cursor: pointer;
   height: 4rem;
-  margin-top: 2rem;
+  margin-top: 4rem;
 }
 
 .resetButton {
@@ -218,7 +235,6 @@
 .creatorNameDiv {
   position: absolute;
   bottom: 2rem;
-  margin-left: 1rem;
   font-size: var(--secondary-font-size);
   color: var(--secondary-font-color);
   display: flex;
@@ -239,19 +255,20 @@
   color: var(--secondary-font-color);
 }
 
-/* LOGO/BACKGROUND */
-
-.bgLogoDiv {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Tablet */
+@media screen and (max-width: 1231px) {
+  .sideBarButton {
+    display: block;
+  }
 }
 
-.chap {
-  font-size: 3rem;
-  color: var(--font-color);
-}
-
-.book {
-  color: var(--logo-2nd-color);
+@media screen and (max-width: 833px) {
+  .sidebarDiv {
+    position: fixed; /* Changes to fixed only on mobile */
+    left: 0;
+    top: 0;
+    width: 280px;
+    height: -webkit-fill-available;
+    z-index: 9;
+  }
 }
