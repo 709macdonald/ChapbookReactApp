@@ -126,9 +126,9 @@ export default function SearchBarSection({
             onClick={toggleAssistedSearch}
           >
             {isAssistedSearchEnabled ? (
-              <i className="fa-solid fa-square-xmark"></i>
-            ) : (
               <i className="fa-solid fa-square-check"></i>
+            ) : (
+              <i className="fa-solid fa-square-xmark"></i>
             )}
           </button>
         </div>
@@ -140,7 +140,7 @@ export default function SearchBarSection({
         </button>
         {showAssistedSearchWords && isAssistedSearchEnabled && searchWord && (
           <div className="assistedSearchWordsDiv fade-in">
-            <p>Assisted Search Words</p>
+            <p className="assistedSearchTableTitle">Assisted Search Words:</p>
             {assistedSearchWords.map((assistedSearchWord, index) => (
               <div key={index} className="assistedSearchWord fade-in">
                 {assistedSearchWord}

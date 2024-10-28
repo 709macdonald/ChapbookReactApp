@@ -76,6 +76,7 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
+  color: var(--font-color);
 }
 
 .newDocumentButtonIcon {
@@ -125,6 +126,12 @@
   margin: 0 0 0 0.2rem;
 }
 
+/* PREDICTIVE TEXT STYLES */
+
+.predictiveTextWord:hover {
+  transform: scale(1.01);
+}
+
 /* ASSISTED SEARCH STYLES */
 
 .assistedSearchDiv {
@@ -159,6 +166,7 @@
   border-radius: 0.5rem;
   font-size: 1rem;
   margin: 0 0 0 0.4rem;
+  cursor: pointer;
 }
 
 .assistedSearchButton:hover {
@@ -167,19 +175,30 @@
 }
 
 .showAssistedSearchButton {
+  margin: 0.8rem 0 0.8rem 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  color: var(--font-color);
 }
 
-.predictiveTextWord:hover {
-  transform: scale(1.01);
+.showAssistedSearchButton:hover {
+  transform: scale(1.05);
+  background-color: var(--hover-bg-color);
 }
 
 .assistedSearchWordsDiv {
   background-color: var(--secondary-bg-color);
-  padding: 0.2rem 1rem 0.4rem 1rem;
+  padding: 0.2rem 1rem 1rem 1rem;
   border-radius: 0.5rem;
   box-shadow: var(--shadow);
   font-size: 0.9rem;
   width: 90%;
+}
+
+.assistedSearchTableTitle {
+  font-size: 1rem;
 }
 
 .assistedSearchWord:hover {
