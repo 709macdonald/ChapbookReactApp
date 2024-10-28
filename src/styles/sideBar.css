@@ -38,6 +38,8 @@
   transform: scale(1.05);
 }
 
+/* FILE INPUT STYLES */
+
 .sideBarButtonsDiv {
   display: flex;
   align-items: center;
@@ -91,10 +93,10 @@
   font-size: var(--secondary-font-size);
   font-style: italic;
   color: var(--secondary-font-color);
-  margin: 0 0 0 2rem;
+  margin: 0.5rem 0 0 2rem;
 }
 
-/* SEARCH BAR SECTION */
+/* SEARCH BAR STYLES */
 
 .searchSectionDiv {
   width: 17rem;
@@ -123,22 +125,20 @@
   margin: 0 0 0 0.2rem;
 }
 
-.AssistedSearchDiv {
+/* ASSISTED SEARCH STYLES */
+
+.assistedSearchDiv {
+}
+
+.assistedSearchTitleAndButtonDiv {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  margin-top: 1rem;
 }
 
 .assistedSearchTitle {
   font-size: var(--secondary-font-size);
-  margin: 1rem 0 0 0;
-}
-
-.assistedSearchButtonsDiv {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+  margin: 0;
 }
 
 .predictiveTextWordsDiv {
@@ -151,25 +151,26 @@
   cursor: pointer;
 }
 
-.predictiveTextWord:hover {
-  transform: scale(1.01);
-}
-
 .assistedSearchButton {
-  z-index: 1;
-  position: relative;
-  background-color: var(--secondary-bg-color);
+  background-color: transparent;
   color: var(--font-color);
   font-size: var(--secondary-font-size);
-  margin: 1.1rem auto 1rem auto;
-  padding: 0.4rem;
   border: none;
   border-radius: 0.5rem;
+  font-size: 1rem;
+  margin: 0 0 0 0.4rem;
 }
 
 .assistedSearchButton:hover {
   transform: scale(1.05);
   background-color: var(--hover-bg-color);
+}
+
+.showAssistedSearchButton {
+}
+
+.predictiveTextWord:hover {
+  transform: scale(1.01);
 }
 
 .assistedSearchWordsDiv {
@@ -192,6 +193,8 @@
 .assistedSearchWord:nth-child(even) {
   background-color: var(--hover-bg-color);
 }
+
+/* CREATOR NAME STYLES */
 
 .creatorNameDiv {
   position: absolute;

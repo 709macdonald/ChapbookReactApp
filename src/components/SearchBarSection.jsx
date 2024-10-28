@@ -118,22 +118,26 @@ export default function SearchBarSection({
           ))}
         </div>
       )}
-      <div className="AssistedSearchDiv">
-        <p className="assistedSearchTitle">Assisted Search</p>
-        <div className="assistedSearchButtonsDiv">
+      <div className="assistedSearchDiv">
+        <div className="assistedSearchTitleAndButtonDiv">
+          <p className="assistedSearchTitle">Assisted Search</p>
           <button
             className="assistedSearchButton"
             onClick={toggleAssistedSearch}
           >
-            {isAssistedSearchEnabled ? "Disable" : "Enable"} Assistant
-          </button>
-          <button
-            className="assistedSearchButton"
-            onClick={toggleShowAssistedSearchWords}
-          >
-            {showAssistedSearchWords ? "Hide" : "Show"} Words
+            {isAssistedSearchEnabled ? (
+              <i className="fa-solid fa-square-xmark"></i>
+            ) : (
+              <i className="fa-solid fa-square-check"></i>
+            )}
           </button>
         </div>
+        <button
+          className="showAssistedSearchButton"
+          onClick={toggleShowAssistedSearchWords}
+        >
+          {showAssistedSearchWords ? "Hide" : "Show"} Words
+        </button>
         {showAssistedSearchWords && isAssistedSearchEnabled && searchWord && (
           <div className="assistedSearchWordsDiv fade-in">
             <p>Assisted Search Words</p>
