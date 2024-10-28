@@ -343,6 +343,7 @@ const NewDocumentPage = ({
             placeholder="Enter document name"
           />
         </div>
+        <hr />
         <div className="styleButtonsDiv">
           <button
             onMouseDown={(e) => toggleInlineStyle("BOLD", e)}
