@@ -36,7 +36,6 @@ export default function Sidebar({
       <FileUploadSection
         setFiles={setFiles}
         setIsLoadingFiles={setIsLoadingFiles}
-        resultsCount={resultsCount}
         setShowAllFiles={setShowAllFiles}
         setShowIndividualFile={setShowIndividualFile}
         setBgLogoOn={setBgLogoOn}
@@ -44,12 +43,12 @@ export default function Sidebar({
       />
       <SearchBarSection
         files={files}
+        resultsCount={resultsCount}
         searchWord={searchWord}
         setSearchWord={setSearchWord}
         assistedSearchWords={assistedSearchWords}
         setAssistedSearchWords={setAssistedSearchWords}
       />
-
       <div className="creatorNameDiv">
         <p>Created By Peter MacDonald</p>
         <button className="toggleThemeButton" onClick={toggleTheme}>

@@ -4,7 +4,6 @@ import { createFilesArray } from "../assets/utils/createFilesArray";
 export default function FileUploadSection({
   setFiles,
   setIsLoadingFiles,
-  resultsCount,
   setShowAllFiles,
   setShowIndividualFile,
   setBgLogoOn,
@@ -82,29 +81,33 @@ export default function FileUploadSection({
         Reset
       </button>
       <hr />
-      <div className="fileInputDiv">
-        <input
-          type="file"
-          onChange={selectUserFiles}
-          accept="application/pdf, image/*, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword"
-          multiple
-          className="fileInput"
-          id="fileInputFiles"
-        />
-        <label htmlFor="fileInputFiles" className="fileInputLabel">
-          <i className="fa-solid fa-file folderIcon"></i>
-        </label>
-        <input
-          key={folderInputKey} // Reset input on key change
-          type="file"
-          onChange={selectUserFiles}
-          webkitdirectory=""
-          className="fileInput"
-          id="fileInputDirectory"
-        />
-        <label htmlFor="fileInputDirectory" className="fileInputLabel">
-          <i className="fa-solid fa-folder folderIcon"></i>
-        </label>
+      <div className="sideBarButtons">
+        <div className="fileInputDiv">
+          <input
+            type="file"
+            onChange={selectUserFiles}
+            accept="application/pdf, image/*, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword"
+            multiple
+            className="fileInput"
+            id="fileInputFiles"
+          />
+          <label htmlFor="fileInputFiles" className="fileInputLabel">
+            <i className="fa-solid fa-file folderIcon"></i>
+          </label>
+        </div>
+        <div className="fileInputDiv">
+          <input
+            key={folderInputKey} // Reset input on key change
+            type="file"
+            onChange={selectUserFiles}
+            webkitdirectory=""
+            className="fileInput"
+            id="fileInputDirectory"
+          />
+          <label htmlFor="fileInputDirectory" className="fileInputLabel">
+            <i className="fa-solid fa-folder folderIcon"></i>
+          </label>
+        </div>
         <button className="newDocumentButton" onClick={showNewDocumentPage}>
           <i className="fa-solid fa-file-circle-plus "></i>
         </button>
@@ -112,7 +115,6 @@ export default function FileUploadSection({
       <p className="folderName">{folderName}</p>
 
       <hr />
-      <p className="resultsFound">{resultsCount} results found</p>
     </div>
   );
 }

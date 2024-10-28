@@ -6,6 +6,7 @@ export default function SearchBarSection({
   setSearchWord,
   assistedSearchWords,
   setAssistedSearchWords,
+  resultsCount,
 }) {
   const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
   const [showAssistedSearchWords, setShowAssistedSearchWords] = useState(false);
@@ -102,6 +103,7 @@ export default function SearchBarSection({
         onKeyDown={handleKeyDown}
         placeholder="Search for Keywords"
       />
+      <p className="resultsFound">{resultsCount} results found</p>
 
       {predictiveTextWords.length > 0 && (
         <div className="predictiveTextWordsDiv">
