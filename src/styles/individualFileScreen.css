@@ -1,5 +1,3 @@
-/* INDIVIDUAL FILE SCREEN */
-
 .individualFileScreenDiv {
   width: 100%;
   height: 100%;
@@ -51,6 +49,8 @@
   font-size: 2rem;
   margin: 1rem 0 0 0;
 }
+
+/* FILE DETAILS STYLES */
 
 .fileDetailsDiv {
   display: flex;
@@ -116,6 +116,13 @@
   border-radius: 0.5rem;
 }
 
+.individualFileScreenTopDiv {
+  background-color: var(--main-bg-color);
+  padding: 1.2rem 4rem 1rem 4rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
 .tagDeleteButton {
   margin-right: 1rem;
   background-color: transparent;
@@ -140,11 +147,15 @@
   transform: scale(1.01);
 }
 
+/* WORD DOC STYLES */
+
 .wordDocPreview {
   height: 45rem;
   background-color: var(--main-bg-color);
   padding: 2rem;
 }
+
+/* PDF STYLES */
 
 .pdfDiv {
   overflow: auto;
@@ -159,14 +170,21 @@
   pointer-events: none;
 }
 
-/* PDF CONTAINER */
-
-.individualFileScreenTopDiv {
-  background-color: var(--main-bg-color);
-  padding: 1.2rem 4rem 1rem 4rem;
-  border-radius: 1rem;
-  box-shadow: var(--shadow);
+.pdfDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 1rem;
 }
+
+.pdfCanvas {
+  max-width: 100%;
+  max-height: calc(80vh - 100px);
+  overflow: auto;
+  border: 1px solid #ccc;
+}
+
+/* PAGE CONTROLS STYLES */
 
 .zoomButtonsDiv {
   display: flex;
@@ -193,20 +211,6 @@
   background-color: var(--hover-bg-color);
   border-radius: 1rem;
   box-shadow: var(--shadow);
-}
-
-.pdfDiv {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 1rem;
-}
-
-.pdfCanvas {
-  max-width: 100%;
-  max-height: calc(80vh - 100px);
-  overflow: auto;
-  border: 1px solid #ccc;
 }
 
 .pageControlsDiv {
