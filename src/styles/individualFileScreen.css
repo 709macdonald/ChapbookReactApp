@@ -1,0 +1,256 @@
+/* INDIVIDUAL FILE SCREEN */
+
+.individualFileScreenDiv {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.individualFileScreenDiv .fileButtonsDiv {
+  display: flex;
+  justify-content: space-between;
+}
+
+.backButton {
+  background-color: transparent;
+  color: var(--font-color);
+  font-size: 1rem;
+  margin-right: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+.individualDeleteFileButton {
+  background-color: transparent;
+  border: none;
+  color: var(--font-color);
+  cursor: pointer;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.individualDeleteFileButton:hover {
+  transform: scale(1.2);
+  background-color: var(--hover-bg-color);
+}
+
+.backButtonIcon {
+  color: var(--font-color);
+  font-size: 1rem;
+  margin-right: 1rem;
+}
+
+.backButton:hover {
+  transform: scale(1.2);
+  background-color: var(--hover-bg-color);
+}
+
+.individualFileName {
+  font-size: 2rem;
+  margin: 1rem 0 0 0;
+}
+
+.fileDetailsDiv {
+  display: flex;
+  align-items: center;
+}
+
+.fileDetail {
+  font-size: var(--tertiary-font-size);
+  margin-right: 2rem;
+}
+
+.tagsInputDiv {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.toggleTagView {
+  background-color: transparent;
+  border: none;
+  margin-right: 0.4rem;
+  cursor: pointer;
+}
+
+.toggleTagView:hover {
+  transform: scale(1.2);
+}
+
+.tagDisplayArrow {
+  color: var(--font-color);
+  font-size: 1.2rem;
+}
+
+.addATagBar {
+  width: 15rem;
+  height: 1.5rem;
+  padding: 0 1rem 0 1rem;
+  margin-right: 1rem;
+  border-radius: 0.5rem;
+}
+
+.addTagButton {
+  background-color: transparent;
+  border: none;
+  color: var(--font-color);
+  font-size: var(--tertiary-font-size);
+}
+
+.addTagButton:hover {
+  transform: scale(1.2);
+  background-color: var(--hover-bg-color);
+  border-radius: 0.5rem;
+}
+
+.tagsList {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  background-color: var(--secondary-bg-color);
+  z-index: 999;
+  overflow-y: auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+}
+
+.tagDeleteButton {
+  margin-right: 1rem;
+  background-color: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--font-color);
+  cursor: pointer;
+}
+
+.tagDeleteButton:hover {
+  transform: scale(1.3);
+}
+
+.tagsList div {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.tagsList div:hover {
+  background-color: var(--hover-bg-color);
+  transform: scale(1.01);
+}
+
+.wordDocPreview {
+  height: 45rem;
+  background-color: var(--main-bg-color);
+  padding: 2rem;
+}
+
+.pdfDiv {
+  overflow: auto;
+}
+
+.pdfContainer {
+  position: relative;
+}
+
+.pdfTextContainer {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* PDF CONTAINER */
+
+.individualFileScreenTopDiv {
+  background-color: var(--main-bg-color);
+  padding: 1.2rem 4rem 1rem 4rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.zoomButtonsDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+}
+
+.zoomButtonIcon {
+  color: var(--font-color);
+  font-size: 1.6rem;
+  margin: 0 1rem 0 1rem;
+}
+
+.zoomButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.zoomButton:hover {
+  transform: scale(1.05);
+  background-color: var(--hover-bg-color);
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.pdfDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 1rem;
+}
+
+.pdfCanvas {
+  max-width: 100%;
+  max-height: calc(80vh - 100px);
+  overflow: auto;
+  border: 1px solid #ccc;
+}
+
+.pageControlsDiv {
+  bottom: 0;
+  justify-self: center;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.2rem 0 1.2rem 0;
+  background-color: var(--secondary-bg-color);
+  border-radius: 1rem;
+  padding: 0.2rem;
+  box-shadow: var(--shadow);
+}
+
+.previousPageButton {
+  background-color: var(--main-bg-color);
+  border: none;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: var(--font-color);
+  margin-right: 1rem;
+  border-radius: 1rem;
+}
+
+.previousPageButton:hover {
+  transform: scale(1.05);
+  background-color: var(--hover-bg-color);
+}
+
+.nextPageButton {
+  background-color: var(--main-bg-color);
+  border: none;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: var(--font-color);
+  margin-left: 1rem;
+  border-radius: 1rem;
+}
+
+.nextPageButton:hover {
+  transform: scale(1.05);
+  background-color: var(--hover-bg-color);
+}
