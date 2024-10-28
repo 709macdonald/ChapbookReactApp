@@ -7,6 +7,7 @@ export default function SearchBarSection({
   assistedSearchWords,
   setAssistedSearchWords,
   resultsCount,
+  hideSearchSection,
 }) {
   const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
   const [showAssistedSearchWords, setShowAssistedSearchWords] = useState(false);
@@ -92,6 +93,8 @@ export default function SearchBarSection({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  if (hideSearchSection) return <div></div>;
 
   return (
     <div className="searchSectionDiv" ref={searchRef}>

@@ -56,6 +56,7 @@ const NewDocumentPage = ({
   setNewDocumentPage,
   setShowAllFiles,
   setBgLogoOn,
+  setHideSearchSection,
 }) => {
   const [documentTitle, setDocumentTitle] = useState(() => {
     return localStorage.getItem(TITLE_STORAGE_KEY) || "New Document";
@@ -211,6 +212,7 @@ const NewDocumentPage = ({
     setBgLogoOn(true);
     setShowAllFiles(true);
     setNewDocumentPage(false);
+    setHideSearchSection(false);
   };
 
   const saveAsPDF = async () => {
@@ -345,68 +347,88 @@ const NewDocumentPage = ({
         </div>
         <hr />
         <div className="styleButtonsDiv">
-          <button
-            onMouseDown={(e) => toggleInlineStyle("BOLD", e)}
-            className={`boldButton editStyleButton ${
-              editorState.getCurrentInlineStyle().has("BOLD")
-                ? "bg-gray-300"
-                : ""
-            }`}
-          >
-            <i className="fas fa-bold"></i>
-          </button>
-          <button
-            onMouseDown={(e) => toggleInlineStyle("ITALIC", e)}
-            className={`italicButton editStyleButton ${
-              editorState.getCurrentInlineStyle().has("ITALIC")
-                ? "bg-gray-300"
-                : ""
-            }`}
-          >
-            <i className="fas fa-italic"></i>
-          </button>
-          <button
-            onMouseDown={(e) => toggleInlineStyle("UNDERLINE", e)}
-            className={`underLineButton editStyleButton ${
-              editorState.getCurrentInlineStyle().has("UNDERLINE")
-                ? "bg-gray-300"
-                : ""
-            }`}
-          >
-            <i className="fas fa-underline"></i>
-          </button>
+          <div className="tooltip-wrapper">
+            <span className="tooltip">Bold</span>
+            <button
+              onMouseDown={(e) => toggleInlineStyle("BOLD", e)}
+              className={`boldButton editStyleButton ${
+                editorState.getCurrentInlineStyle().has("BOLD")
+                  ? "bg-gray-300"
+                  : ""
+              }`}
+            >
+              <i className="fas fa-bold"></i>
+            </button>
+          </div>
+
+          <div className="tooltip-wrapper">
+            <span className="tooltip">Italic</span>
+            <button
+              onMouseDown={(e) => toggleInlineStyle("ITALIC", e)}
+              className={`italicButton editStyleButton ${
+                editorState.getCurrentInlineStyle().has("ITALIC")
+                  ? "bg-gray-300"
+                  : ""
+              }`}
+            >
+              <i className="fas fa-italic"></i>
+            </button>
+          </div>
+
+          <div className="tooltip-wrapper">
+            <span className="tooltip">Underline</span>
+            <button
+              onMouseDown={(e) => toggleInlineStyle("UNDERLINE", e)}
+              className={`underLineButton editStyleButton ${
+                editorState.getCurrentInlineStyle().has("UNDERLINE")
+                  ? "bg-gray-300"
+                  : ""
+              }`}
+            >
+              <i className="fas fa-underline"></i>
+            </button>
+          </div>
 
           {/* Alignment buttons */}
-          <button
-            onMouseDown={(e) => toggleAlignment(ALIGNMENTS.LEFT, e)}
-            className={`leftAlignButton editStyleButton ${
-              currentAlignment === ALIGNMENTS.LEFT ? "bg-gray-300" : ""
-            }`}
-            title="Align Left"
-          >
-            <i className="fas fa-align-left"></i>
-          </button>
-          <button
-            onMouseDown={(e) => toggleAlignment(ALIGNMENTS.CENTER, e)}
-            className={`centerAlignButton editStyleButton ${
-              currentAlignment === ALIGNMENTS.CENTER ? "bg-gray-300" : ""
-            }`}
-            title="Align Center"
-          >
-            <i className="fas fa-align-center"></i>
-          </button>
-          <button
-            onMouseDown={(e) => toggleAlignment(ALIGNMENTS.RIGHT, e)}
-            className={`rightAlignButton editStyleButton ${
-              currentAlignment === ALIGNMENTS.RIGHT ? "bg-gray-300" : ""
-            }`}
-            title="Align Right"
-          >
-            <i className="fas fa-align-right"></i>
-          </button>
+          <div className="tooltip-wrapper">
+            <span className="tooltip">Align Left</span>
+            <button
+              onMouseDown={(e) => toggleAlignment(ALIGNMENTS.LEFT, e)}
+              className={`leftAlignButton editStyleButton ${
+                currentAlignment === ALIGNMENTS.LEFT ? "bg-gray-300" : ""
+              }`}
+            >
+              <i className="fas fa-align-left"></i>
+            </button>
+          </div>
+
+          <div className="tooltip-wrapper">
+            <span className="tooltip">Center Align</span>
+            <button
+              onMouseDown={(e) => toggleAlignment(ALIGNMENTS.CENTER, e)}
+              className={`centerAlignButton editStyleButton ${
+                currentAlignment === ALIGNMENTS.CENTER ? "bg-gray-300" : ""
+              }`}
+            >
+              <i className="fas fa-align-center"></i>
+            </button>
+          </div>
+
+          <div className="tooltip-wrapper">
+            <span className="tooltip">Align Right</span>
+            <button
+              onMouseDown={(e) => toggleAlignment(ALIGNMENTS.RIGHT, e)}
+              className={`rightAlignButton editStyleButton ${
+                currentAlignment === ALIGNMENTS.RIGHT ? "bg-gray-300" : ""
+              }`}
+            >
+              <i className="fas fa-align-right"></i>
+            </button>
+          </div>
 
           {/* Color picker */}
-          <div className="colorButtonDiv">
+          <div className="colorButtonDiv tooltip-wrapper">
+            <span className="tooltip">Text Color</span>
             <button
               onMouseDown={toggleColorPicker}
               className="editStyleButton"
@@ -415,7 +437,6 @@ const NewDocumentPage = ({
                   COLORS.find((c) => c.style === currentColor)?.hex ||
                   "#000000",
               }}
-              title="Text Color"
             >
               <i
                 className="fas fa-palette"
@@ -447,12 +468,19 @@ const NewDocumentPage = ({
           </div>
 
           <div className="saveAndDeleteButtonsDiv">
-            <button onClick={saveAsPDF} className="editStyleButton">
-              <i className="fa-solid fa-file-arrow-up"></i>
-            </button>
-            <button onClick={deleteDocument} className="editStyleButton">
-              <i className="fa-solid fa-file-excel"></i>
-            </button>
+            <div className="tooltip-wrapper">
+              <span className="tooltip">Save as PDF</span>
+              <button onClick={saveAsPDF} className="editStyleButton">
+                <i className="fa-solid fa-file-arrow-up"></i>
+              </button>
+            </div>
+
+            <div className="tooltip-wrapper">
+              <span className="tooltip">Delete Document</span>
+              <button onClick={deleteDocument} className="editStyleButton">
+                <i className="fa-solid fa-file-excel"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

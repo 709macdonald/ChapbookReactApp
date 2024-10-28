@@ -150,16 +150,21 @@ export default function IndividualFileScreen({
             {matchedWords.length > 0 ? matchedWords.join(", ") : "None"}
           </p>
           <div className="tagsInputDiv" ref={tagsRef}>
-            <button
-              className="toggleTagView"
-              onClick={() => setShowTags(!showTags)}
-            >
-              <i
-                className={`fa-solid tagDisplayArrow ${
-                  showTags ? "fa-angle-up" : "fa-angle-down"
-                }`}
-              ></i>
-            </button>
+            <div className="tooltip-wrapper">
+              <span className="tooltip">
+                {showTags ? "Hide tags list" : "Show tags list"}
+              </span>
+              <button
+                className="toggleTagView"
+                onClick={() => setShowTags(!showTags)}
+              >
+                <i
+                  className={`fa-solid tagDisplayArrow ${
+                    showTags ? "fa-angle-up" : "fa-angle-down"
+                  }`}
+                ></i>
+              </button>
+            </div>
             <input
               type="text"
               value={newTag}

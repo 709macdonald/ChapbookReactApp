@@ -17,6 +17,8 @@ export default function Sidebar({
   toggleTheme,
   isDarkMode,
   setNewDocumentPage,
+  setHideSearchSection,
+  hideSearchSection,
 }) {
   const goToMainScreen = () => {
     setIsLoadingFiles(false);
@@ -24,6 +26,7 @@ export default function Sidebar({
     setBgLogoOn(true);
     setShowAllFiles(true);
     setNewDocumentPage(false);
+    setHideSearchSection(false);
   };
 
   return (
@@ -40,6 +43,7 @@ export default function Sidebar({
         setShowIndividualFile={setShowIndividualFile}
         setBgLogoOn={setBgLogoOn}
         setNewDocumentPage={setNewDocumentPage}
+        setHideSearchSection={setHideSearchSection}
       />
       <SearchBarSection
         files={files}
@@ -48,6 +52,7 @@ export default function Sidebar({
         setSearchWord={setSearchWord}
         assistedSearchWords={assistedSearchWords}
         setAssistedSearchWords={setAssistedSearchWords}
+        hideSearchSection={hideSearchSection}
       />
       <div className="creatorNameDiv">
         <p>Created By Peter MacDonald</p>

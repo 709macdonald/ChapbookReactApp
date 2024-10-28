@@ -21,6 +21,7 @@ export default function MainScreen({
   setBgLogoOn,
   newDocumentPage,
   setNewDocumentPage,
+  setHideSearchSection,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
 
@@ -76,6 +77,7 @@ export default function MainScreen({
         setNewDocumentPage={setNewDocumentPage}
         setShowAllFiles={setShowAllFiles}
         setBgLogoOn={setBgLogoOn}
+        setHideSearchSection={setHideSearchSection}
       />
     </div>
   );
