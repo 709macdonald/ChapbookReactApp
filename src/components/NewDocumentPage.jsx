@@ -329,20 +329,17 @@ const NewDocumentPage = ({
   return (
     <div className="textEditorScreenDiv">
       <div className="newFileTopDiv">
-        <div className="newFileTopButtonsDiv">
-          <button
-            onClick={backToAllFileView}
-            className="px-4 py-2 bg-gray-200 rounded"
-          >
-            Back
-          </button>
-        </div>
-        <div className="DocumentNameDiv flex items-center gap-2">
+        <button className="backButton">
+          <i className="fa-solid fa-left-long backButtonIcon"></i>
+          Back
+        </button>
+
+        <div className="documentNameDiv">
           <input
             type="text"
             value={documentTitle}
             onChange={handleTitleChange}
-            className="px-3 py-2 border rounded text-xl font-semibold w-64"
+            className="documentNameInput"
             placeholder="Enter document name"
           />
         </div>
@@ -411,15 +408,15 @@ const NewDocumentPage = ({
           <div className="colorButtonDiv">
             <button
               onMouseDown={toggleColorPicker}
-              className="colorButton editStyleButton"
+              className=" editStyleButton"
               style={{
                 color: COLORS.find((c) => c.style === currentColor).hex,
               }}
             >
-              <i className="fas fa-palette"></i>
+              <i className="fas fa-palette colorPickerIcon"></i>
             </button>
             {showColorPicker && (
-              <div className="absolute mt-1 bg-white border rounded shadow-lg">
+              <div className="colorsDiv">
                 {COLORS.map((color) => (
                   <button
                     key={color.style}
@@ -427,7 +424,7 @@ const NewDocumentPage = ({
                       e.preventDefault();
                       selectColor(color);
                     }}
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    className="colorButton"
                     style={{ color: color.hex }}
                   >
                     {color.label}
@@ -438,17 +435,11 @@ const NewDocumentPage = ({
           </div>
 
           <div className="saveAndDeleteButtonsDiv">
-            <button
-              onClick={saveAsPDF}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              Save as PDF
+            <button onClick={saveAsPDF} className="editStyleButton">
+              <i className="fa-solid fa-file-arrow-up"></i>
             </button>
-            <button
-              onClick={deleteDocument}
-              className="px-4 py-2 bg-red-500 text-white rounded"
-            >
-              Delete Document
+            <button onClick={deleteDocument} className="editStyleButton">
+              <i className="fa-solid fa-file-excel"></i>
             </button>
           </div>
         </div>
