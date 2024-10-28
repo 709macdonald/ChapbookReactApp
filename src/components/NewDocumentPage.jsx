@@ -329,7 +329,7 @@ const NewDocumentPage = ({
   return (
     <div className="textEditorScreenDiv">
       <div className="newFileTopDiv">
-        <button className="backButton">
+        <button className="backButton" onClick={backToAllFileView}>
           <i className="fa-solid fa-left-long backButtonIcon"></i>
           Back
         </button>
