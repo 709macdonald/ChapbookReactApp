@@ -671,34 +671,101 @@ body {
 
 /* TEXT EDIOTR PAGE */
 
-.editor-wrapper .public-DraftEditor-content {
-  min-height: 100px;
+/* Root container - make it fill the viewport */
+.textEditorScreenDiv {
+  height: 100vh; /* Use viewport height instead of 100% */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden; /* Prevent scrolling on the container itself */
 }
 
-.editor-wrapper .align-left > * {
+/* Fixed header */
+.newFileTopDiv {
+  background-color: var(--main-bg-color);
+  padding: 2em 4rem 2rem 4rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+  position: sticky; /* Make it stick to the top */
+  top: 0;
+  z-index: 10; /* Ensure it stays above the content */
+}
+
+/* Scrollable editor container */
+.textEditorDiv {
+  background-color: var(--main-bg-color);
+  flex: 1; /* Take up remaining space */
+  padding: 4rem;
+  width: 50rem;
+  margin: 2rem auto; /* Center the editor and add margin */
+  overflow-y: auto; /* Allow scrolling */
+  border-radius: 0.5rem;
+  height: calc(100vh - 200px); /* Subtract approximate header height */
+}
+
+/* Keep your existing button and alignment styles */
+.newFileTopButtonsDiv {
+  display: flex;
+}
+
+.styleButtonsDiv {
+  display: flex;
+}
+
+.editStyleButton {
+  width: 2rem;
+  height: 2rem;
+  background-color: transparent;
+  border-radius: 0.2rem;
+  border: 1px solid black;
+  margin: 0 0.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leftAlignButton {
+  margin-left: 2rem;
+}
+
+.rightAlignButton {
+  margin-right: 2rem;
+}
+
+.editStyleButton:hover {
+  background-color: #f0f0f0;
+}
+
+.editStyleButton.bg-gray-300 {
+  background-color: #d1d5db;
+}
+
+/* Alignment styles */
+.align-left {
   text-align: left !important;
-  display: block;
 }
 
-.editor-wrapper .align-center > * {
+.align-center {
   text-align: center !important;
-  display: block;
 }
 
-.editor-wrapper .align-right > * {
+.align-right {
   text-align: right !important;
-  display: block;
 }
 
-.editor-wrapper .public-DraftStyleDefault-ltr {
-  text-align: inherit;
+/* Draft.js specific styles */
+.public-DraftStyleDefault-ltr {
+  text-align: inherit !important;
 }
 
-.editor-wrapper .DraftEditor-root {
-  line-height: 1.5;
+.DraftEditor-root {
+  width: 100%;
+  height: 100%;
 }
 
-.editor-wrapper .public-DraftStyleDefault-block {
-  margin-top: 0;
-  margin-bottom: 0;
+/* Ensure the editor content takes up the full height */
+.DraftEditor-editorContainer,
+.public-DraftEditor-content {
+  height: 100%;
 }

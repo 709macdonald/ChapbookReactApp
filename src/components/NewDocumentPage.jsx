@@ -6,6 +6,9 @@ import {
   Modifier,
   convertToRaw,
   convertFromRaw,
+  ContentState,
+  ContentBlock,
+  genKey,
 } from "draft-js";
 import "draft-js/dist/Draft.css";
 import html2canvas from "html2canvas";
@@ -21,6 +24,32 @@ const COLORS = [
 ];
 
 const STORAGE_KEY = "myEditorContent";
+const TITLE_STORAGE_KEY = "documentTitle";
+
+const createEmptyContentState = (numberOfLines = 40) => {
+  // Create array of empty content blocks
+  const blocks = Array(numberOfLines)
+    .fill()
+    .map(
+      () =>
+        new ContentBlock({
+          key: genKey(),
+          text: "",
+          type: "unstyled",
+          characterList: [],
+        })
+    );
+
+  // Create content state with empty blocks
+  return ContentState.createFromBlockArray(blocks);
+};
+
+// Define alignment styles as constants
+const ALIGNMENTS = {
+  LEFT: "left",
+  CENTER: "center",
+  RIGHT: "right",
+};
 
 const NewDocumentPage = ({
   newDocumentPage,
@@ -28,6 +57,10 @@ const NewDocumentPage = ({
   setShowAllFiles,
   setBgLogoOn,
 }) => {
+  const [documentTitle, setDocumentTitle] = useState(() => {
+    return localStorage.getItem(TITLE_STORAGE_KEY) || "New Document";
+  });
+
   const [editorState, setEditorState] = useState(() => {
     const savedContent = localStorage.getItem(STORAGE_KEY);
     if (savedContent) {
@@ -35,7 +68,8 @@ const NewDocumentPage = ({
         convertFromRaw(JSON.parse(savedContent))
       );
     }
-    return EditorState.createEmpty();
+    // Create empty editor state with 40 empty lines
+    return EditorState.createWithContent(createEmptyContentState(40));
   });
 
   const [currentColor, setCurrentColor] = useState("BLACK");
@@ -48,6 +82,131 @@ const NewDocumentPage = ({
     localStorage.setItem(STORAGE_KEY, JSON.stringify(rawContent));
   }, [editorState]);
 
+  useEffect(() => {
+    localStorage.setItem(TITLE_STORAGE_KEY, documentTitle);
+  }, [documentTitle]);
+
+  const handleTitleChange = (e) => {
+    setDocumentTitle(e.target.value);
+  };
+
+  // Improved alignment handling
+  const getCurrentAlignment = (editorState) => {
+    const selection = editorState.getSelection();
+    const currentContent = editorState.getCurrentContent();
+    const currentBlock = currentContent.getBlockForKey(selection.getStartKey());
+    return currentBlock.getData().get("alignment") || ALIGNMENTS.LEFT;
+  };
+
+  const toggleAlignment = (alignment, e) => {
+    e.preventDefault();
+
+    const selection = editorState.getSelection();
+    const currentContent = editorState.getCurrentContent();
+
+    // Get all selected blocks
+    const startKey = selection.getStartKey();
+    const endKey = selection.getEndKey();
+    const blockMap = currentContent.getBlockMap();
+
+    let newContentState = currentContent;
+
+    // If selection is collapsed, only apply to current block
+    if (selection.isCollapsed()) {
+      const currentBlock = currentContent.getBlockForKey(startKey);
+      const blockData = currentBlock.getData().merge({ alignment });
+      newContentState = Modifier.setBlockData(
+        currentContent,
+        selection.merge({
+          anchorKey: startKey,
+          focusKey: startKey,
+          anchorOffset: 0,
+          focusOffset: currentBlock.getLength(),
+        }),
+        blockData
+      );
+    } else {
+      // Apply alignment to all blocks in selection
+      blockMap
+        .skipUntil((_, k) => k === startKey)
+        .takeUntil((_, k) => k === endKey)
+        .concat([[endKey, blockMap.get(endKey)]])
+        .forEach((block, blockKey) => {
+          const blockData = block.getData().merge({ alignment });
+          newContentState = Modifier.setBlockData(
+            newContentState,
+            selection.merge({
+              anchorKey: blockKey,
+              focusKey: blockKey,
+              anchorOffset: 0,
+              focusOffset: block.getLength(),
+            }),
+            blockData
+          );
+        });
+    }
+
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      "change-block-data"
+    );
+
+    setEditorState(EditorState.forceSelection(newEditorState, selection));
+  };
+
+  const handleReturn = (e) => {
+    const selection = editorState.getSelection();
+    const contentState = editorState.getCurrentContent();
+    const currentBlock = contentState.getBlockForKey(selection.getStartKey());
+    const blockData = currentBlock.getData();
+
+    // Create a new block with the same alignment as the current block
+    const newContentState = Modifier.splitBlock(contentState, selection);
+    const newKey = newContentState
+      .getBlockAfter(currentBlock.getKey())
+      .getKey();
+    const newEditorState = EditorState.push(
+      editorState,
+      Modifier.setBlockData(
+        newContentState,
+        newContentState.getSelectionAfter(),
+        blockData
+      ),
+      "split-block"
+    );
+
+    setEditorState(newEditorState);
+    return "handled";
+  };
+
+  const handleBeforeInput = useCallback(
+    (chars, editorState) => {
+      const currentStyle = editorState.getCurrentInlineStyle();
+      if (!currentStyle.has(currentColor)) {
+        setEditorState(RichUtils.toggleInlineStyle(editorState, currentColor));
+      }
+      return "not-handled";
+    },
+    [currentColor]
+  );
+
+  // Improved block style function
+  const blockStyleFn = (contentBlock) => {
+    const alignment = contentBlock.getData().get("alignment");
+    switch (alignment) {
+      case ALIGNMENTS.LEFT:
+        return "align-left";
+      case ALIGNMENTS.CENTER:
+        return "align-center";
+      case ALIGNMENTS.RIGHT:
+        return "align-right";
+      default:
+        return "align-left"; // Default alignment
+    }
+  };
+
+  // Rest of the existing functions...
   const backToAllFileView = () => {
     setBgLogoOn(true);
     setShowAllFiles(true);
@@ -63,7 +222,7 @@ const NewDocumentPage = ({
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("document.pdf");
+      pdf.save(`${documentTitle}.pdf`);
     }
   };
 
@@ -74,7 +233,9 @@ const NewDocumentPage = ({
       )
     ) {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(TITLE_STORAGE_KEY);
       setEditorState(EditorState.createEmpty());
+      setDocumentTitle("New Document");
     }
   };
 
@@ -91,78 +252,6 @@ const NewDocumentPage = ({
     e.preventDefault();
     setEditorState(RichUtils.toggleInlineStyle(editorState, inlineStyle));
   };
-
-  const toggleAlignment = (alignment, e) => {
-    e.preventDefault();
-    const selection = editorState.getSelection();
-    const currentContent = editorState.getCurrentContent();
-    const blockKey = selection.getStartKey();
-    const blockData = currentContent
-      .getBlockForKey(blockKey)
-      .getData()
-      .merge({ textAlign: alignment });
-
-    const newContentState = Modifier.setBlockData(
-      currentContent,
-      selection,
-      blockData
-    );
-    const newEditorState = EditorState.push(
-      editorState,
-      newContentState,
-      "change-block-data"
-    );
-
-    setEditorState(newEditorState);
-  };
-
-  const onUndoClick = (e) => {
-    e.preventDefault();
-    setEditorState(EditorState.undo(editorState));
-  };
-
-  const onRedoClick = (e) => {
-    e.preventDefault();
-    setEditorState(EditorState.redo(editorState));
-  };
-
-  const applyColor = useCallback(
-    (color) => {
-      const selection = editorState.getSelection();
-      const nextContentState = COLORS.reduce((contentState, c) => {
-        return Modifier.removeInlineStyle(contentState, selection, c.style);
-      }, editorState.getCurrentContent());
-
-      let nextEditorState = EditorState.push(
-        editorState,
-        Modifier.applyInlineStyle(nextContentState, selection, color),
-        "change-inline-style"
-      );
-
-      if (selection.isCollapsed()) {
-        nextEditorState = EditorState.forceSelection(
-          nextEditorState,
-          selection
-        );
-      }
-
-      setEditorState(nextEditorState);
-      setCurrentColor(color);
-    },
-    [editorState]
-  );
-
-  const handleBeforeInput = useCallback(
-    (chars, editorState) => {
-      const currentStyle = editorState.getCurrentInlineStyle();
-
-      if (!currentStyle.has(currentColor)) {
-        setEditorState(RichUtils.toggleInlineStyle(editorState, currentColor));
-      }
-      return "not-handled";
-    },
-    [currentColor]
-  );
 
   const onChange = useCallback(
     (newEditorState) => {
@@ -181,6 +270,7 @@ const NewDocumentPage = ({
     [currentColor]
   );
 
+  // Color handling functions
   const toggleColorPicker = (e) => {
     e.preventDefault();
     setShowColorPicker(!showColorPicker);
@@ -191,6 +281,38 @@ const NewDocumentPage = ({
     setShowColorPicker(false);
   };
 
+  const applyColor = useCallback(
+    (color) => {
+      const selection = editorState.getSelection();
+      const nextContentState = COLORS.reduce((contentState, c) => {
+        return Modifier.removeInlineStyle(contentState, selection, c.style);
+      }, editorState.getCurrentContent());
+
+      let nextEditorState = EditorState.push(
+        editorState,
+        nextContentState,
+        "change-inline-style"
+      );
+
+      nextEditorState = EditorState.push(
+        nextEditorState,
+        Modifier.applyInlineStyle(nextContentState, selection, color),
+        "change-inline-style"
+      );
+
+      if (selection.isCollapsed()) {
+        nextEditorState = EditorState.forceSelection(
+          nextEditorState,
+          selection
+        );
+      }
+
+      setEditorState(nextEditorState);
+      setCurrentColor(color);
+    },
+    [editorState]
+  );
+
   const styleMap = {
     BLACK: { color: "black" },
     RED: { color: "red" },
@@ -200,125 +322,151 @@ const NewDocumentPage = ({
     ORANGE: { color: "orange" },
   };
 
-  const blockStyleFn = (contentBlock) => {
-    const textAlign = contentBlock.getData().get("textAlign");
-    return textAlign ? `align-${textAlign}` : "";
-  };
-
   if (!newDocumentPage) return null;
 
-  return (
-    <div className="p-4">
-      <div className="flex space-x-2 mb-4">
-        <button
-          onClick={backToAllFileView}
-          className="px-4 py-2 bg-gray-200 rounded"
-        >
-          Back
-        </button>
-        <button
-          onClick={saveAsPDF}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Save as PDF
-        </button>
-        <button
-          onClick={deleteDocument}
-          className="px-4 py-2 bg-red-500 text-white rounded"
-        >
-          Delete Document
-        </button>
-      </div>
-      <h1 className="text-2xl font-bold mb-4">New Document</h1>
-      <div className="mb-2 space-x-2">
-        <button
-          onMouseDown={(e) => toggleInlineStyle("BOLD", e)}
-          className={`p-2 border rounded ${
-            editorState.getCurrentInlineStyle().has("BOLD") ? "bg-gray-300" : ""
-          }`}
-        >
-          <i className="fas fa-bold"></i>
-        </button>
-        <button
-          onMouseDown={(e) => toggleInlineStyle("ITALIC", e)}
-          className={`p-2 border rounded ${
-            editorState.getCurrentInlineStyle().has("ITALIC")
-              ? "bg-gray-300"
-              : ""
-          }`}
-        >
-          <i className="fas fa-italic"></i>
-        </button>
-        <button
-          onMouseDown={(e) => toggleInlineStyle("UNDERLINE", e)}
-          className={`p-2 border rounded ${
-            editorState.getCurrentInlineStyle().has("UNDERLINE")
-              ? "bg-gray-300"
-              : ""
-          }`}
-        >
-          <i className="fas fa-underline"></i>
-        </button>
-        <button
-          onMouseDown={(e) => toggleAlignment("left", e)}
-          className="p-2 border rounded"
-        >
-          <i className="fas fa-align-left"></i>
-        </button>
-        <button
-          onMouseDown={(e) => toggleAlignment("center", e)}
-          className="p-2 border rounded"
-        >
-          <i className="fas fa-align-center"></i>
-        </button>
-        <button
-          onMouseDown={(e) => toggleAlignment("right", e)}
-          className="p-2 border rounded"
-        >
-          <i className="fas fa-align-right"></i>
-        </button>
-        <button onMouseDown={onUndoClick} className="p-2 border rounded">
-          <i className="fas fa-undo"></i>
-        </button>
-        <button onMouseDown={onRedoClick} className="p-2 border rounded">
-          <i className="fas fa-redo"></i>
-        </button>
+  const currentAlignment = getCurrentAlignment(editorState);
 
-        <div className="relative inline-block">
+  return (
+    <div className="textEditorScreenDiv">
+      <div className="newFileTopDiv">
+        <div className="newFileTopButtonsDiv">
           <button
-            onMouseDown={toggleColorPicker}
-            className="p-2 border rounded"
-            style={{ color: COLORS.find((c) => c.style === currentColor).hex }}
+            onClick={backToAllFileView}
+            className="px-4 py-2 bg-gray-200 rounded"
           >
-            <i className="fas fa-palette"></i>
+            Back
           </button>
-          {showColorPicker && (
-            <div className="absolute mt-1 bg-white border rounded shadow-lg">
-              {COLORS.map((color) => (
-                <button
-                  key={color.style}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    selectColor(color);
-                  }}
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                  style={{ color: color.hex }}
-                >
-                  {color.label}
-                </button>
-              ))}
-            </div>
-          )}
+        </div>
+        <div className="DocumentNameDiv flex items-center gap-2">
+          <input
+            type="text"
+            value={documentTitle}
+            onChange={handleTitleChange}
+            className="px-3 py-2 border rounded text-xl font-semibold w-64"
+            placeholder="Enter document name"
+          />
+        </div>
+        <div className="styleButtonsDiv">
+          <button
+            onMouseDown={(e) => toggleInlineStyle("BOLD", e)}
+            className={`boldButton editStyleButton ${
+              editorState.getCurrentInlineStyle().has("BOLD")
+                ? "bg-gray-300"
+                : ""
+            }`}
+          >
+            <i className="fas fa-bold"></i>
+          </button>
+          <button
+            onMouseDown={(e) => toggleInlineStyle("ITALIC", e)}
+            className={`italicButton editStyleButton ${
+              editorState.getCurrentInlineStyle().has("ITALIC")
+                ? "bg-gray-300"
+                : ""
+            }`}
+          >
+            <i className="fas fa-italic"></i>
+          </button>
+          <button
+            onMouseDown={(e) => toggleInlineStyle("UNDERLINE", e)}
+            className={`underLineButton editStyleButton ${
+              editorState.getCurrentInlineStyle().has("UNDERLINE")
+                ? "bg-gray-300"
+                : ""
+            }`}
+          >
+            <i className="fas fa-underline"></i>
+          </button>
+
+          {/* Alignment buttons */}
+          <button
+            onMouseDown={(e) => toggleAlignment(ALIGNMENTS.LEFT, e)}
+            className={`leftAlignButton editStyleButton ${
+              currentAlignment === ALIGNMENTS.LEFT ? "bg-gray-300" : ""
+            }`}
+            title="Align Left"
+          >
+            <i className="fas fa-align-left"></i>
+          </button>
+          <button
+            onMouseDown={(e) => toggleAlignment(ALIGNMENTS.CENTER, e)}
+            className={`centerAlignButton editStyleButton ${
+              currentAlignment === ALIGNMENTS.CENTER ? "bg-gray-300" : ""
+            }`}
+            title="Align Center"
+          >
+            <i className="fas fa-align-center"></i>
+          </button>
+          <button
+            onMouseDown={(e) => toggleAlignment(ALIGNMENTS.RIGHT, e)}
+            className={`rightAlignButton editStyleButton ${
+              currentAlignment === ALIGNMENTS.RIGHT ? "bg-gray-300" : ""
+            }`}
+            title="Align Right"
+          >
+            <i className="fas fa-align-right"></i>
+          </button>
+
+          {/* Color picker */}
+          <div className="colorButtonDiv">
+            <button
+              onMouseDown={toggleColorPicker}
+              className="colorButton editStyleButton"
+              style={{
+                color: COLORS.find((c) => c.style === currentColor).hex,
+              }}
+            >
+              <i className="fas fa-palette"></i>
+            </button>
+            {showColorPicker && (
+              <div className="absolute mt-1 bg-white border rounded shadow-lg">
+                {COLORS.map((color) => (
+                  <button
+                    key={color.style}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      selectColor(color);
+                    }}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    style={{ color: color.hex }}
+                  >
+                    {color.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="saveAndDeleteButtonsDiv">
+            <button
+              onClick={saveAsPDF}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Save as PDF
+            </button>
+            <button
+              onClick={deleteDocument}
+              className="px-4 py-2 bg-red-500 text-white rounded"
+            >
+              Delete Document
+            </button>
+          </div>
         </div>
       </div>
-      <div
-        ref={editorRef}
-        className="border border-gray-300 min-h-[300px] p-4 rounded editor-wrapper"
-      >
+
+      <div ref={editorRef} className="textEditorDiv">
+        <style>
+          {`
+          .align-left { text-align: left; }
+          .align-center { text-align: center; }
+          .align-right { text-align: right; }
+        `}
+        </style>
         <Editor
           editorState={editorState}
           onChange={onChange}
           handleKeyCommand={handleKeyCommand}
+          handleReturn={handleReturn}
           handleBeforeInput={handleBeforeInput}
           customStyleMap={styleMap}
           blockStyleFn={blockStyleFn}
