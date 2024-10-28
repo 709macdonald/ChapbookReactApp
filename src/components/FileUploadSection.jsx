@@ -33,7 +33,7 @@ export default function FileUploadSection({
       const folderSelected = selectedUserFiles[0].webkitRelativePath
         ? selectedUserFiles[0].webkitRelativePath.split("/")[0]
         : "Selected Files";
-      setFolderName(folderSelected); // Set the folder name to display
+      setFolderName(folderSelected);
 
       const processedUserFiles = await createFilesArray(selectedUserFiles);
       setFiles((prevFiles) => [...prevFiles, ...processedUserFiles]);
@@ -42,12 +42,11 @@ export default function FileUploadSection({
       setBgLogoOn(true);
       setShowAllFiles(true);
 
-      // Reset the folder input field to allow re-uploading the same folder
       setFolderInputKey((prevKey) => prevKey + 1);
     }
   };
 
-  /* RESET BUTTON */
+  /* RESET CHAPBOOK */
 
   const handleReset = () => {
     const confirmReset = window.confirm(
@@ -82,7 +81,8 @@ export default function FileUploadSection({
       </button>
       <hr />
       <div className="sideBarButtonsDiv">
-        <div className="fileInputDiv">
+        <div className="fileInputDiv tooltip-wrapper">
+          <span className="tooltip">Upload Files</span>
           <input
             type="file"
             onChange={selectUserFiles}
@@ -95,9 +95,10 @@ export default function FileUploadSection({
             <i className="fa-solid fa-file folderIcon"></i>
           </label>
         </div>
-        <div className="fileInputDiv">
+        <div className="fileInputDiv tooltip-wrapper">
+          <span className="tooltip">Upload Folder</span>
           <input
-            key={folderInputKey} // Reset input on key change
+            key={folderInputKey}
             type="file"
             onChange={selectUserFiles}
             webkitdirectory=""
@@ -108,12 +109,14 @@ export default function FileUploadSection({
             <i className="fa-solid fa-folder folderIcon"></i>
           </label>
         </div>
-        <button className="newDocumentButton" onClick={showNewDocumentPage}>
-          <i className="fa-solid fa-file-circle-plus newDocumentButtonIcon"></i>
-        </button>
+        <div className="tooltip-wrapper">
+          <span className="tooltip">New Document</span>
+          <button className="newDocumentButton" onClick={showNewDocumentPage}>
+            <i className="fa-solid fa-file-circle-plus newDocumentButtonIcon"></i>
+          </button>
+        </div>
       </div>
       <p className="folderName">{folderName}</p>
-
       <hr />
     </div>
   );
