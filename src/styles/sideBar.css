@@ -8,19 +8,29 @@
   padding: 0 1rem 0 1rem;
   box-shadow: var(--shadow);
   font-size: var(--primary-font-size);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* FILE INPUT SECTION */
+.sideBarLogoDiv {
+  display: flex;
+  width: 18rem;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 4rem;
+  margin-top: 2rem;
+}
 
 .resetButton {
-  background-color: var(--secondary-bg-color);
+  background-color: transparent;
   border: none;
   border-radius: 0.4rem;
   color: var(--font-color);
   cursor: pointer;
-  margin: 1rem 0 0.5rem auto;
-  padding: 0.4rem;
-  font-size: var(--tertiary-font-size);
+  font-size: 0.7rem;
+  margin: 0 2rem 0 2rem;
 }
 
 .resetButton:hover {
@@ -28,34 +38,60 @@
   transform: scale(1.05);
 }
 
+.sideBarButtonsDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem 0 2rem;
+  font-size: 2rem;
+  width: 14rem;
+}
+
 .fileInputDiv {
   background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fileInputLabel {
   cursor: pointer;
 }
 
 .fileInputDiv:hover {
   background-color: var(--hover-bg-color);
   transform: scale(1.05);
+  border-radius: 0.5rem;
+  padding: 0 0.3rem 0 0.3rem;
 }
 
 .fileInput {
   display: none;
 }
 
-.folderIcon {
-  margin-right: 1rem;
+.newDocumentButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.newDocumentButtonIcon {
+  font-size: 2rem;
+}
+
+.newDocumentButtonIcon:hover {
+  background-color: var(--hover-bg-color);
+  transform: scale(1.05);
+  border-radius: 0.5rem;
+  padding: 0.4rem;
 }
 
 .folderName {
   font-size: var(--secondary-font-size);
   font-style: italic;
   color: var(--secondary-font-color);
-}
-
-.resultsFound {
-  font-size: var(--tertiary-font-size);
-  color: var(--secondary-font-color);
-  margin-top: 0;
+  margin: 0 0 0 2rem;
 }
 
 /* SEARCH BAR SECTION */
@@ -73,28 +109,18 @@
   background-color: rgb(246, 246, 246);
   cursor: pointer;
   border-radius: 0.5rem;
+  margin: 1rem 0 1rem 0;
 }
 
 #searchBar:hover {
   background-color: white;
 }
 
-.searchButton {
-  background-color: transparent;
-  border: none;
-}
-
-.searchIcon {
-  font-size: 1.4rem;
-  padding-left: 0.2rem;
-  cursor: pointer;
-  color: var(--font-color);
-}
-
-.searchIcon:hover {
-  transform: scale(1.05);
-  background-color: var(--hover-bg-color);
-  border-radius: 1rem;
+.resultsFound {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--secondary-font-color);
+  margin: 0 0 0 0.2rem;
 }
 
 .AssistedSearchDiv {
@@ -206,12 +232,4 @@
 
 .book {
   color: var(--logo-2nd-color);
-}
-
-.sideBarLogoDiv {
-  display: flex;
-  width: 18rem;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 }

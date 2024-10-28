@@ -104,7 +104,7 @@ export default function SearchBarSection({
         placeholder="Search for Keywords"
       />
       <p className="resultsFound">{resultsCount} results found</p>
-
+      <hr />
       {predictiveTextWords.length > 0 && (
         <div className="predictiveTextWordsDiv">
           {predictiveTextWords.map((predictiveTextWord, index) => (

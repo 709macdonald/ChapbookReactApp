@@ -81,7 +81,7 @@ export default function FileUploadSection({
         Reset
       </button>
       <hr />
-      <div className="sideBarButtons">
+      <div className="sideBarButtonsDiv">
         <div className="fileInputDiv">
           <input
             type="file"
@@ -109,7 +109,7 @@ export default function FileUploadSection({
           </label>
         </div>
         <button className="newDocumentButton" onClick={showNewDocumentPage}>
-          <i className="fa-solid fa-file-circle-plus "></i>
+          <i className="fa-solid fa-file-circle-plus newDocumentButtonIcon"></i>
         </button>
       </div>
       <p className="folderName">{folderName}</p>
