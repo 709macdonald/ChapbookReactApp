@@ -4,6 +4,7 @@ import App from "./App.jsx";
 import "./styles/index.css";
 import "./styles/sideBar.css";
 import "./styles/individualFileScreen.css";
+import "./styles/newDocumentPage.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
