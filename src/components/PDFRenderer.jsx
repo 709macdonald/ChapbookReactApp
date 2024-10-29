@@ -92,16 +92,8 @@ export default function PDFRenderer({
 
   return (
     <div className="pdfDiv">
-      <div
-        className="pdfCanvas"
-        style={{
-          maxWidth: "100%",
-          maxHeight: "calc(80vh - 100px)",
-          overflow: "auto",
-          border: "1px solid #ccc",
-        }}
-      >
-        <canvas ref={canvasRef} style={{ display: "block" }} />
+      <div className="pdfCanvas">
+        <canvas ref={canvasRef} />
       </div>
     </div>
   );

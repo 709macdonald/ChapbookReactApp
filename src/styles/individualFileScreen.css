@@ -48,6 +48,7 @@
 .individualFileName {
   font-size: 2rem;
   margin: 1rem 0 0 0;
+  pointer-events: none;
 }
 
 /* FILE DETAILS STYLES */
@@ -156,9 +157,13 @@
 }
 
 /* PDF STYLES */
-
 .pdfDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 1rem;
   overflow: auto;
+  width: 100%;
 }
 
 .pdfContainer {
@@ -170,18 +175,16 @@
   pointer-events: none;
 }
 
-.pdfDiv {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-bottom: 1rem;
-}
-
 .pdfCanvas {
   max-width: 100%;
   max-height: calc(80vh - 100px);
   overflow: auto;
   border: 1px solid #ccc;
+}
+
+.pdfCanvas canvas {
+  display: block;
+  max-width: none;
 }
 
 /* PAGE CONTROLS STYLES */
@@ -259,11 +262,60 @@
   background-color: var(--hover-bg-color);
 }
 
-/* Original CSS remains the same, add these media queries at the bottom */
+/* IMAGE STYLES */
+
+.imageContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-height: calc(100vh - 200px);
+}
+
+.imageContainer > div {
+  max-height: calc(80vh - 40px);
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  border: 1px solid #ccc;
+}
+
+.imageContainer canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* WORD DOC STYLES */
+
+.wordDocPreview {
+  height: 45rem;
+  background-color: var(--main-bg-color);
+  padding: 2rem;
+}
+
+.wordDocRenderer {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-height: calc(100vh - 200px);
+  -webkit-overflow-scrolling: touch;
+}
+
+.wordDocRenderer > div {
+  flex: 1;
+  overflow: auto;
+  border: 1px solid #ccc;
+  padding: 20px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  -webkit-overflow-scrolling: touch;
+}
+
 @media screen and (max-width: 833px) {
   .individualFileScreenDiv {
     width: 100%;
-    height: -webkit-fill-available;
+    height: 100vh;
     padding: 0.5rem;
   }
 
@@ -290,7 +342,6 @@
     font-size: 0.9rem;
   }
 
-  /* Tags input adjustments */
   .tagsInputDiv {
     width: 100%;
     flex-wrap: wrap;
@@ -303,7 +354,6 @@
     margin-right: 0;
   }
 
-  /* PDF viewer adjustments */
   .pdfDiv {
     width: 100%;
     height: calc(100vh - 200px);
@@ -315,7 +365,6 @@
     max-height: calc(100vh - 250px);
   }
 
-  /* Zoom controls adjustments */
   .zoomButtonsDiv {
     margin: 0.5rem;
   }
@@ -325,7 +374,6 @@
     margin: 0 0.5rem;
   }
 
-  /* Page controls adjustments */
   .pageControlsDiv {
     position: fixed;
     bottom: 1rem;
@@ -343,7 +391,6 @@
     font-size: 0.9rem;
   }
 
-  /* Word doc preview adjustment */
   .wordDocPreview {
     height: calc(100vh - 200px);
     padding: 1rem;
@@ -351,8 +398,7 @@
     overflow-y: auto;
   }
 
-  /* File buttons adjustment */
-  .individualFileScreenDiv .fileButtonsDiv {
+  .fileButtonsDiv {
     width: 100%;
     padding: 0.5rem;
     justify-content: space-between;
@@ -368,5 +414,37 @@
   .backButtonIcon {
     font-size: 0.9rem;
     margin-right: 0.5rem;
+  }
+
+  .individualFileName {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .pdfCanvas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    width: 100%;
+    max-height: calc(100vh - 250px);
+  }
+
+  .imageContainer,
+  .wordDocRenderer {
+    min-height: calc(100vh - 300px);
+  }
+
+  .imageContainer > div,
+  .wordDocRenderer > div {
+    border: none;
+  }
+
+  .wordDocPreview {
+    height: calc(100vh - 200px);
+    padding: 1rem;
+    width: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

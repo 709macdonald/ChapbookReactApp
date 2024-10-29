@@ -61,22 +61,9 @@ export default function ImageRenderer({
   };
 
   return (
-    <div
-      className="imageContainer"
-      style={{ display: "flex", flexDirection: "column", overflow: "auto" }}
-    >
-      <div
-        ref={containerRef}
-        style={{
-          maxHeight: "calc(80vh - 40px)",
-          overflow: "auto",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          border: "1px solid #ccc",
-        }}
-      >
-        <canvas ref={canvasRef} style={{ maxWidth: "100%", height: "auto" }} />
+    <div className="imageContainer">
+      <div ref={containerRef}>
+        <canvas ref={canvasRef} />
       </div>
     </div>
   );

@@ -19,17 +19,22 @@ export default function IndividualFileScreen({
   const [totalPages, setTotalPages] = useState(1);
   const [scale, setScale] = useState(1.5);
   const [pdfDocument, setPdfDocument] = useState(null);
+  const [newTag, setNewTag] = useState("");
+  const [showTags, setShowTags] = useState(false);
+  const [showFileDetails, setShowFileDetails] = useState(true);
+
+  const tagsRef = useRef(null);
 
   const matchedWords = useMemo(() => {
     if (!file) return [];
 
-    const allSearchTerms = [searchWord, ...assistedSearchWords].map((word) =>
-      word.toLowerCase()
-    );
+    const allSearchTerms = [searchWord, ...assistedSearchWords]
+      .filter(Boolean)
+      .map((word) => word.toLowerCase());
 
     return allSearchTerms.filter(
       (term) =>
-        file.text.toLowerCase().includes(term) ||
+        file.text?.toLowerCase().includes(term) ||
         file.name.toLowerCase().includes(term) ||
         (file.tags
           ? file.tags.some((tag) => tag.toLowerCase().includes(term))
@@ -37,19 +42,17 @@ export default function IndividualFileScreen({
     );
   }, [file, searchWord, assistedSearchWords]);
 
-  const [newTag, setNewTag] = useState("");
-  const [showTags, setShowTags] = useState(false);
-
-  const tagsRef = useRef(null);
-
   const handleAddTag = () => {
+    if (!newTag.trim()) return;
+
     onUpdateFileTags((prevFiles) =>
       prevFiles.map((f) => {
         if (f.id === file.id) {
-          return {
-            ...f,
-            tags: [...(f.tags || []), newTag],
-          };
+          const updatedTags = [...(f.tags || [])];
+          if (!updatedTags.includes(newTag.trim())) {
+            updatedTags.push(newTag.trim());
+          }
+          return { ...f, tags: updatedTags };
         }
         return f;
       })
@@ -62,10 +65,9 @@ export default function IndividualFileScreen({
     onUpdateFileTags((prevFiles) =>
       prevFiles.map((f) => {
         if (f.id === file.id) {
-          return {
-            ...f,
-            tags: (f.tags || []).filter((_, i) => i !== index),
-          };
+          const updatedTags = [...(f.tags || [])];
+          updatedTags.splice(index, 1);
+          return { ...f, tags: updatedTags };
         }
         return f;
       })
@@ -136,64 +138,76 @@ export default function IndividualFileScreen({
             Delete File
           </button>
         </div>
-        <h3 className="individualFileName">{file.name}</h3>
+        <h3
+          onClick={() => setShowFileDetails(!showFileDetails)}
+          className="individualFileName"
+          style={{ cursor: "pointer" }}
+        >
+          {file.name}
+        </h3>
         <hr />
-        <div className="fileDetailsDiv">
-          <p className="fileDetail">
-            Date Created: {new Date(file.date).toLocaleDateString()}
-          </p>
-          <p className="fileDetail">
-            Word Count: {file.text.split(/\s+/).length}
-          </p>
-          <p className="fileDetail">
-            Matched Words:{" "}
-            {matchedWords.length > 0 ? matchedWords.join(", ") : "None"}
-          </p>
-          <div className="tagsInputDiv" ref={tagsRef}>
-            <div className="tooltip-wrapper">
-              <span className="tooltip">
-                {showTags ? "Hide tags list" : "Show tags list"}
-              </span>
-              <button
-                className="toggleTagView"
-                onClick={() => setShowTags(!showTags)}
-              >
-                <i
-                  className={`fa-solid tagDisplayArrow ${
-                    showTags ? "fa-angle-up" : "fa-angle-down"
-                  }`}
-                ></i>
-              </button>
-            </div>
-            <input
-              type="text"
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              placeholder="Add a tag"
-              className="addATagBar"
-              onKeyDown={handleKeyDown}
-            />
-            <button className="addTagButton" onClick={handleAddTag}>
-              Add Tag
-            </button>
-
-            {showTags && (
-              <div className="tagsList">
-                {(file.tags || []).map((tag, index) => (
-                  <div key={index}>
-                    <button
-                      className="tagDeleteButton"
-                      onClick={() => handleRemoveTag(index)}
-                    >
-                      x
-                    </button>
-                    {tag}{" "}
-                  </div>
-                ))}
+        {showFileDetails && (
+          <div className="fileDetailsDiv">
+            <p className="fileDetail">
+              Date Created: {new Date(file.date).toLocaleDateString()}
+            </p>
+            <p className="fileDetail">
+              Word Count: {file.text?.split(/\s+/).length || 0}
+            </p>
+            <p className="fileDetail">
+              Matched Words:{" "}
+              {matchedWords.length > 0 ? matchedWords.join(", ") : "None"}
+            </p>
+            <div className="tagsInputDiv" ref={tagsRef}>
+              <div className="tooltip-wrapper">
+                <span className="tooltip">
+                  {showTags ? "Hide tags list" : "Show tags list"}
+                </span>
+                <button
+                  className="toggleTagView"
+                  onClick={() => setShowTags(!showTags)}
+                >
+                  <i
+                    className={`fa-solid tagDisplayArrow ${
+                      showTags ? "fa-angle-up" : "fa-angle-down"
+                    }`}
+                  ></i>
+                </button>
               </div>
-            )}
+              <input
+                type="text"
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                placeholder="Add a tag"
+                className="addATagBar"
+                onKeyDown={handleKeyDown}
+              />
+              <button
+                className="addTagButton"
+                onClick={handleAddTag}
+                disabled={!newTag.trim()}
+              >
+                Add Tag
+              </button>
+
+              {showTags && (
+                <div className="tagsList">
+                  {(file.tags || []).map((tag, index) => (
+                    <div key={index} className="tag">
+                      <button
+                        className="tagDeleteButton"
+                        onClick={() => handleRemoveTag(index)}
+                      >
+                        x
+                      </button>
+                      <span>{tag}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div className="zoomButtonsDiv">
         <button className="zoomButton" onClick={() => handleZoom(false)}>

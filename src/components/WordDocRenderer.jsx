@@ -23,23 +23,8 @@ const WordDocRenderer = ({ file, scale, searchWord, assistedSearchWords }) => {
   }, [file, searchWord, assistedSearchWords]);
 
   return (
-    <div
-      className="wordDocRenderer"
-      style={{ display: "flex", flexDirection: "column", overflow: "auto" }}
-    >
-      <div
-        ref={containerRef}
-        style={{
-          flex: 1,
-          overflow: "auto",
-          border: "1px solid #ccc",
-          padding: "20px",
-          fontSize: `${16 * scale}px`,
-          lineHeight: "1.5",
-          whiteSpace: "pre-wrap",
-          wordWrap: "break-word",
-        }}
-      >
+    <div className="wordDocRenderer">
+      <div ref={containerRef} style={{ fontSize: `${16 * scale}px` }}>
         <div dangerouslySetInnerHTML={{ __html: highlightedText }} />
       </div>
     </div>
