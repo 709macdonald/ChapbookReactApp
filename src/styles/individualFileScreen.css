@@ -421,6 +421,10 @@
     cursor: pointer;
   }
 
+  .pdfDiv {
+    overflow: auto;
+  }
+
   .pdfCanvas {
     display: flex;
     align-items: center;
