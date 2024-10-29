@@ -330,11 +330,15 @@ const NewDocumentPage = ({
   return (
     <div className="textEditorScreenDiv">
       <div className="newFileTopDiv">
-        <button className="backButton" onClick={backToAllFileView}>
-          <i className="fa-solid fa-left-long backButtonIcon"></i>
-          Back
-        </button>
-
+        <div className="backButtonDiv">
+          <button
+            className="newDocBackButton individualFileBackButton"
+            onClick={backToAllFileView}
+          >
+            <i className="fa-solid fa-left-long backButtonIcon"></i>
+            Back
+          </button>
+        </div>
         <div className="documentNameDiv">
           <input
             type="text"

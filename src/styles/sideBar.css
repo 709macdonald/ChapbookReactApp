@@ -2,7 +2,7 @@
 
 .sidebarDiv {
   position: relative; /* Back to relative for desktop */
-  z-index: 1;
+  z-index: 200;
   background-color: var(--main-bg-color);
   height: 100vh;
   padding: 0 1rem 0 1rem;
@@ -19,7 +19,7 @@
   position: absolute;
   left: 1rem;
   top: 1rem;
-  z-index: 10;
+  z-index: 210;
   font-size: 2rem;
   color: var(--font-color);
   cursor: pointer;
