@@ -314,6 +314,8 @@
   -webkit-overflow-scrolling: touch;
 }
 
+/* IPHONE */
+
 @media screen and (max-width: 833px) {
   .individualFileScreenDiv {
     width: 100%;
@@ -375,6 +377,7 @@
   }
 
   .pdfCanvas {
+    max-width: 100%;
     width: 100%;
     max-height: calc(100vh - 250px);
   }

@@ -255,16 +255,19 @@
   color: var(--secondary-font-color);
 }
 
-/* Tablet */
+/* TABLET */
+
 @media screen and (max-width: 1231px) {
   .sideBarButton {
     display: block;
   }
 }
 
+/* IPHONE */
+
 @media screen and (max-width: 833px) {
   .sidebarDiv {
-    position: fixed; /* Changes to fixed only on mobile */
+    position: fixed;
     left: 0;
     top: 0;
     width: 280px;

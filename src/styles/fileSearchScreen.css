@@ -104,6 +104,8 @@
   align-items: center;
 }
 
+/* IPHONE */
+
 @media screen and (max-width: 833px) {
   .fileSearchScreenDiv {
     grid-template-columns: 1fr;

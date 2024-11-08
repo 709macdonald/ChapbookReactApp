@@ -10,6 +10,7 @@ import {
   ContentBlock,
   genKey,
 } from "draft-js";
+import { List, Map } from "immutable";
 import "draft-js/dist/Draft.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -35,11 +36,12 @@ const createEmptyContentState = (numberOfLines = 40) => {
           key: genKey(),
           text: "",
           type: "unstyled",
-          characterList: [],
+          characterList: List(),
+          depth: 0,
+          data: Map(),
         })
     );
 
-  // Create content state with empty blocks
   return ContentState.createFromBlockArray(blocks);
 };
 
@@ -63,9 +65,13 @@ const NewDocumentPage = ({
   const [editorState, setEditorState] = useState(() => {
     const savedContent = localStorage.getItem(STORAGE_KEY);
     if (savedContent) {
-      return EditorState.createWithContent(
-        convertFromRaw(JSON.parse(savedContent))
-      );
+      try {
+        return EditorState.createWithContent(
+          convertFromRaw(JSON.parse(savedContent))
+        );
+      } catch (e) {
+        return EditorState.createWithContent(createEmptyContentState(40));
+      }
     }
     return EditorState.createWithContent(createEmptyContentState(40));
   });
@@ -74,12 +80,16 @@ const NewDocumentPage = ({
   const [showColorPicker, setShowColorPicker] = useState(false);
   const editorRef = useRef(null);
 
-  /* LOCAL STORAGE */
-
   useEffect(() => {
-    const content = editorState.getCurrentContent();
-    const rawContent = convertToRaw(content);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(rawContent));
+    if (editorState) {
+      try {
+        const content = editorState.getCurrentContent();
+        const rawContent = convertToRaw(content);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(rawContent));
+      } catch (e) {
+        console.error("Error saving to localStorage:", e);
+      }
+    }
   }, [editorState]);
 
   useEffect(() => {
@@ -93,10 +103,14 @@ const NewDocumentPage = ({
   /* STYLING AND FUNCTIONALITY */
 
   const getCurrentAlignment = (editorState) => {
-    const selection = editorState.getSelection();
-    const currentContent = editorState.getCurrentContent();
-    const currentBlock = currentContent.getBlockForKey(selection.getStartKey());
-    return currentBlock.getData().get("alignment") || ALIGNMENTS.LEFT;
+    if (editorState) {
+      const selection = editorState.getSelection();
+      const currentContent = editorState.getCurrentContent();
+      const currentBlock = currentContent.getBlockForKey(
+        selection.getStartKey()
+      );
+      return currentBlock.getData().get("alignment") || ALIGNMENTS.LEFT;
+    }
   };
 
   const toggleAlignment = (alignment, e) => {
@@ -355,7 +369,7 @@ const NewDocumentPage = ({
             <button
               onMouseDown={(e) => toggleInlineStyle("BOLD", e)}
               className={`boldButton editStyleButton ${
-                editorState.getCurrentInlineStyle().has("BOLD")
+                editorState?.getCurrentInlineStyle().has("BOLD")
                   ? "bg-gray-300"
                   : ""
               }`}
@@ -369,7 +383,7 @@ const NewDocumentPage = ({
             <button
               onMouseDown={(e) => toggleInlineStyle("ITALIC", e)}
               className={`italicButton editStyleButton ${
-                editorState.getCurrentInlineStyle().has("ITALIC")
+                editorState?.getCurrentInlineStyle().has("ITALIC")
                   ? "bg-gray-300"
                   : ""
               }`}
@@ -383,7 +397,7 @@ const NewDocumentPage = ({
             <button
               onMouseDown={(e) => toggleInlineStyle("UNDERLINE", e)}
               className={`underLineButton editStyleButton ${
-                editorState.getCurrentInlineStyle().has("UNDERLINE")
+                editorState?.getCurrentInlineStyle().has("UNDERLINE")
                   ? "bg-gray-300"
                   : ""
               }`}
