@@ -140,8 +140,10 @@ const TextEditorButtons = ({
     const rawContent = convertToRaw(currentContent);
     const currentDate = new Date().toISOString();
 
-    // If we have a selectedUserCreatedFile, update that file
-    if (selectedUserCreatedFile) {
+    if (
+      selectedUserCreatedFile &&
+      files.some((file) => file.id === selectedUserCreatedFile.id)
+    ) {
       const updatedFile = {
         ...selectedUserCreatedFile,
         name: `${documentTitle}.txt`,
@@ -155,8 +157,9 @@ const TextEditorButtons = ({
           file.id === selectedUserCreatedFile.id ? updatedFile : file
         );
       });
+
+      console.log("Updated existing file:", updatedFile.name);
     } else {
-      // If no existing file, create a new one
       const newChapbookFile = {
         id: uuidv4(),
         name: `${documentTitle}.txt`,
@@ -170,6 +173,7 @@ const TextEditorButtons = ({
       };
 
       setFiles((prevFiles) => [...prevFiles, newChapbookFile]);
+      console.log("Created new file:", newChapbookFile.name);
     }
 
     backToAllFileView();
