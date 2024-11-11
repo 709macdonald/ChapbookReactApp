@@ -14,7 +14,8 @@ import { List, Map } from "immutable";
 import "draft-js/dist/Draft.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-
+import { v4 as uuidv4 } from "uuid";
+1;
 const COLORS = [
   { label: "Black", style: "BLACK", hex: "#000000" },
   { label: "Red", style: "RED", hex: "#FF0000" },
@@ -76,11 +77,11 @@ const NewDocumentPage = ({
     return EditorState.createWithContent(createEmptyContentState(40));
   });
 
-  const saveAsDraftDocument = () => {
-    const currentContent = editorStat.getCurrentContent();
+  const saveToChapbook = () => {
+    const currentContent = editorState.getCurrentContent();
     const rawContent = convertToRaw(currentContent);
 
-    const fileDate = {
+    const fileData = {
       id: uuidv4(),
       name: `${documentTitle}.txt`,
       type: "application/draft-js",
@@ -92,7 +93,7 @@ const NewDocumentPage = ({
       locations: [],
       tags: [],
     };
-    onSaveDocument(fileData);
+    console.log(fileData);
   };
 
   const [currentColor, setCurrentColor] = useState("BLACK");
@@ -504,7 +505,7 @@ const NewDocumentPage = ({
           <div className="saveAndDeleteButtonsDiv">
             <div className="tooltip-wrapper">
               <span className="tooltip">Save to Chapbook</span>
-              <button onClick={saveAsDraftDocument} className="editStyleButton">
+              <button onClick={saveToChapbook} className="editStyleButton">
                 <i className="fa-solid fa-save"></i>
               </button>
             </div>

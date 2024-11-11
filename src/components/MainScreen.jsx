@@ -78,6 +78,8 @@ export default function MainScreen({
         setShowAllFiles={setShowAllFiles}
         setBgLogoOn={setBgLogoOn}
         setHideSearchSection={setHideSearchSection}
+        files={files}
+        setFiles={setFiles}
       />
     </div>
   );
