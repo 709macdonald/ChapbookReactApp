@@ -8,6 +8,7 @@ export default function FileSearchScreen({
   openIndividualFile,
   searchWord,
   assistedSearchWords,
+  setSelectedUserCreatedFile,
 }) {
   const [hoveredFileId, setHoveredFileId] = useState(null);
 

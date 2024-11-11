@@ -24,8 +24,17 @@ export default function MainScreen({
   setHideSearchSection,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
+  const [selectedUserCreatedFile, setSelectedUserCreatedFile] = useState(null);
 
   const openIndividualFile = (file) => {
+    if (file.type === "application/draft-js") {
+      setNewDocumentPage(true);
+      setShowIndividualFile(false);
+      setBgLogoOn(false);
+      setShowAllFiles(false);
+      setHideSearchSection(true);
+      setSelectedDraftFile(file);
+    }
     setIndividualFile(file);
     setShowAllFiles(false);
     setBgLogoOn(false);
@@ -61,6 +70,7 @@ export default function MainScreen({
         openIndividualFile={openIndividualFile}
         searchWord={searchWord}
         assistedSearchWords={assistedSearchWords}
+        setSelectedUserCreatedFile={setSelectedUserCreatedFile}
       />
       <IndividualFileScreen
         file={individualFile}
@@ -80,6 +90,7 @@ export default function MainScreen({
         setHideSearchSection={setHideSearchSection}
         files={files}
         setFiles={setFiles}
+        selectedUserCreatedFile={selectedUserCreatedFile}
       />
     </div>
   );

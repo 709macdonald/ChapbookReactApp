@@ -58,12 +58,28 @@ const NewDocumentPage = ({
   setShowAllFiles,
   setBgLogoOn,
   setHideSearchSection,
+  setFiles,
+  files,
+  selectedUserCreatedFile = null,
 }) => {
   const [documentTitle, setDocumentTitle] = useState(() => {
+    if (selectedUserCreatedFile) {
+      return selectedUserCreatedFile.name.replace(/\.txt$/, "");
+    }
     return localStorage.getItem(TITLE_STORAGE_KEY) || "New Document";
   });
 
   const [editorState, setEditorState] = useState(() => {
+    if (selectedUserCreatedFile) {
+      try {
+        const content = JSON.parse(selectedUserCreatedFile.fileContent);
+        return EditorState.createWithContent(convertFromRaw(content));
+      } catch (e) {
+        console.error("Error loading draft content:", e);
+        return EditorState.createWithContent(createEmptyContentState(40));
+      }
+    }
+
     const savedContent = localStorage.getItem(STORAGE_KEY);
     if (savedContent) {
       try {
@@ -81,7 +97,7 @@ const NewDocumentPage = ({
     const currentContent = editorState.getCurrentContent();
     const rawContent = convertToRaw(currentContent);
 
-    const fileData = {
+    const newChapbookFile = {
       id: uuidv4(),
       name: `${documentTitle}.txt`,
       type: "application/draft-js",
@@ -93,7 +109,15 @@ const NewDocumentPage = ({
       locations: [],
       tags: [],
     };
-    console.log(fileData);
+    console.log(newChapbookFile);
+    setFiles((prevFiles) => [...prevFiles, newChapbookFile]);
+
+    alert(`${documentTitle} saved to Chapbook successfully!`);
+
+    backToAllFileView();
+
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(TITLE_STORAGE_KEY);
   };
 
   const [currentColor, setCurrentColor] = useState("BLACK");
