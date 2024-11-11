@@ -5,6 +5,7 @@ import { convertToRaw } from "draft-js";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { v4 as uuidv4 } from "uuid";
+import AIWritingAssistant from "./AIWritingAssistant";
 
 const COLORS = [
   { label: "Black", style: "BLACK", hex: "#000000" },
@@ -196,6 +197,10 @@ const TextEditorButtons = ({
 
   return (
     <div className="styleButtonsDiv">
+      <AIWritingAssistant
+        editorState={editorState}
+        setEditorState={setEditorState}
+      />
       <div className="tooltip-wrapper">
         <span className="tooltip">Bold</span>
         <button
