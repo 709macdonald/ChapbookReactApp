@@ -76,6 +76,25 @@ const NewDocumentPage = ({
     return EditorState.createWithContent(createEmptyContentState(40));
   });
 
+  const saveAsDraftDocument = () => {
+    const currentContent = editorStat.getCurrentContent();
+    const rawContent = convertToRaw(currentContent);
+
+    const fileDate = {
+      id: uuidv4(),
+      name: `${documentTitle}.txt`,
+      type: "application/draft-js",
+      date: new Date().toISOString(),
+      fileContent: JSON.stringify(rawContent),
+      text: currentContent.getPlainText(),
+      matchedWords: [],
+      locations: [],
+      locations: [],
+      tags: [],
+    };
+    onSaveDocument(fileData);
+  };
+
   const [currentColor, setCurrentColor] = useState("BLACK");
   const [showColorPicker, setShowColorPicker] = useState(false);
   const editorRef = useRef(null);
@@ -126,7 +145,6 @@ const NewDocumentPage = ({
 
     let newContentState = currentContent;
 
-    // If selection is collapsed, only apply to current block
     if (selection.isCollapsed()) {
       const currentBlock = currentContent.getBlockForKey(startKey);
       const blockData = currentBlock.getData().merge({ alignment });
@@ -141,7 +159,6 @@ const NewDocumentPage = ({
         blockData
       );
     } else {
-      // Apply alignment to all blocks in selection
       blockMap
         .skipUntil((_, k) => k === startKey)
         .takeUntil((_, k) => k === endKey)
@@ -485,6 +502,12 @@ const NewDocumentPage = ({
           </div>
 
           <div className="saveAndDeleteButtonsDiv">
+            <div className="tooltip-wrapper">
+              <span className="tooltip">Save to Chapbook</span>
+              <button onClick={saveAsDraftDocument} className="editStyleButton">
+                <i className="fa-solid fa-save"></i>
+              </button>
+            </div>
             <div className="tooltip-wrapper">
               <span className="tooltip">Save as PDF</span>
               <button onClick={saveAsPDF} className="editStyleButton">
