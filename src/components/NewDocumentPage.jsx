@@ -12,9 +12,7 @@ import {
 } from "draft-js";
 import { List, Map } from "immutable";
 import "draft-js/dist/Draft.css";
-
-const STORAGE_KEY = "myEditorContent";
-const TITLE_STORAGE_KEY = "documentTitle";
+import TextEditorButtons from "./textEditorButtons";
 
 const createEmptyContentState = (numberOfLines = 40) => {
   const blocks = Array(numberOfLines)
@@ -50,33 +48,24 @@ const NewDocumentPage = ({
   setBgLogoOn,
   setHideSearchSection,
   setFiles,
-  selectedUserCreatedFile = null,
+  files,
+  selectedUserCreatedFile,
 }) => {
   const [documentTitle, setDocumentTitle] = useState(() => {
     if (selectedUserCreatedFile) {
       return selectedUserCreatedFile.name.replace(/\.txt$/, "");
     }
-    return localStorage.getItem(TITLE_STORAGE_KEY) || "New Document";
+    return "New Document";
   });
 
   const [editorState, setEditorState] = useState(() => {
+    console.log(selectedUserCreatedFile);
     if (selectedUserCreatedFile) {
       try {
         const content = JSON.parse(selectedUserCreatedFile.fileContent);
         return EditorState.createWithContent(convertFromRaw(content));
       } catch (e) {
-        console.error("Error loading draft content:", e);
-        return EditorState.createWithContent(createEmptyContentState(40));
-      }
-    }
-
-    const savedContent = localStorage.getItem(STORAGE_KEY);
-    if (savedContent) {
-      try {
-        return EditorState.createWithContent(
-          convertFromRaw(JSON.parse(savedContent))
-        );
-      } catch (e) {
+        console.error("Error loading file content:", e);
         return EditorState.createWithContent(createEmptyContentState(40));
       }
     }
@@ -84,22 +73,6 @@ const NewDocumentPage = ({
   });
 
   const editorRef = useRef(null);
-
-  useEffect(() => {
-    if (editorState) {
-      try {
-        const content = editorState.getCurrentContent();
-        const rawContent = convertToRaw(content);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(rawContent));
-      } catch (e) {
-        console.error("Error saving to localStorage:", e);
-      }
-    }
-  }, [editorState]);
-
-  useEffect(() => {
-    localStorage.setItem(TITLE_STORAGE_KEY, documentTitle);
-  }, [documentTitle]);
 
   const handleTitleChange = (e) => {
     setDocumentTitle(e.target.value);
@@ -157,7 +130,13 @@ const NewDocumentPage = ({
     }
   };
 
+  const resetEditor = () => {
+    setEditorState(EditorState.createWithContent(createEmptyContentState(40)));
+    setDocumentTitle("New Document");
+  };
+
   const backToAllFileView = () => {
+    resetEditor();
     setBgLogoOn(true);
     setShowAllFiles(true);
     setNewDocumentPage(false);
@@ -195,6 +174,7 @@ const NewDocumentPage = ({
           documentTitle={documentTitle}
           backToAllFileView={backToAllFileView}
           setFiles={setFiles}
+          files={files}
         />
       </div>
 

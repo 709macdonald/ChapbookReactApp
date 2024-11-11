@@ -4,7 +4,6 @@ import BGLogo from "./BGLogo";
 import FileSearchScreen from "./FileSearchScreen";
 import IndividualFileScreen from "./IndividualFileScreen";
 import NewDocumentPage from "./NewDocumentPage";
-import TextEditorButtons from "./TextEditorButtons";
 
 export default function MainScreen({
   files,
@@ -28,18 +27,22 @@ export default function MainScreen({
   const [selectedUserCreatedFile, setSelectedUserCreatedFile] = useState(null);
 
   const openIndividualFile = (file) => {
+    setShowAllFiles(false);
+    setBgLogoOn(false);
+
     if (file.type === "application/draft-js") {
       setNewDocumentPage(true);
       setShowIndividualFile(false);
-      setBgLogoOn(false);
-      setShowAllFiles(false);
       setHideSearchSection(true);
-      setSelectedDraftFile(file);
+      setSelectedUserCreatedFile(file);
+      setIndividualFile(null);
+    } else {
+      setNewDocumentPage(false);
+      setShowIndividualFile(true);
+      setHideSearchSection(false);
+      setIndividualFile(file);
+      setSelectedUserCreatedFile(null);
     }
-    setIndividualFile(file);
-    setShowAllFiles(false);
-    setBgLogoOn(false);
-    setShowIndividualFile(true);
   };
 
   const backToAllFileView = () => {
