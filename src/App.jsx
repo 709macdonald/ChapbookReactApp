@@ -20,6 +20,10 @@ function App() {
     var global = window;
   }
 
+  useEffect(() => {
+    console.log("Files state updated:", files);
+  }, [files]);
+
   /* LIGHT AND DARK MODE  */
 
   const toggleTheme = () => {
@@ -52,6 +56,10 @@ function App() {
       try {
         const parsedFiles = JSON.parse(storedFiles);
         const updatedFiles = parsedFiles.map((file) => {
+          if (file.type === "application/draft-js") {
+            return file;
+          }
+
           const byteString = atob(file.fileContent.split(",")[1]);
           const mimeString = file.fileContent
             .split(",")[0]
@@ -79,7 +87,13 @@ function App() {
 
   useEffect(() => {
     if (files.length > 0) {
-      const filesToStore = files.map(({ blobUrl, ...rest }) => rest);
+      const filesToStore = files.map((file) => {
+        if (file.type === "application/draft-js") {
+          return file;
+        }
+        const { blobUrl, ...rest } = file;
+        return rest;
+      });
       localStorage.setItem("files", JSON.stringify(filesToStore));
     }
   }, [files]);

@@ -1,5 +1,5 @@
 // TextEditorButtons.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RichUtils, Modifier, EditorState } from "draft-js";
 import { convertToRaw } from "draft-js";
 import html2canvas from "html2canvas";
@@ -150,11 +150,27 @@ const TextEditorButtons = ({
       tags: [],
     };
 
-    setFiles((prevFiles) => [...prevFiles, newChapbookFile]);
-    alert(`${documentTitle} saved to Chapbook successfully!`);
+    // Use the callback form of setFiles
+    setFiles((prevFiles) => {
+      console.log("Previous files:", prevFiles);
+      console.log("Adding new file:", newChapbookFile);
+      return [...prevFiles, newChapbookFile];
+    });
+
+    // Store in local storage as backup
+    try {
+      const existingFiles = JSON.parse(
+        localStorage.getItem("chapbookFiles") || "[]"
+      );
+      localStorage.setItem(
+        "chapbookFiles",
+        JSON.stringify([...existingFiles, newChapbookFile])
+      );
+    } catch (e) {
+      console.error("Error saving to localStorage:", e);
+    }
+
     backToAllFileView();
-    console.log(newChapbookFile);
-    console.log(files);
   };
 
   const saveAsPDF = async () => {

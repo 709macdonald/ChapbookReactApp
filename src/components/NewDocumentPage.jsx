@@ -59,13 +59,15 @@ const NewDocumentPage = ({
   });
 
   const [editorState, setEditorState] = useState(() => {
-    console.log(selectedUserCreatedFile);
+    console.log("Selected file:", selectedUserCreatedFile); // Add this
     if (selectedUserCreatedFile) {
       try {
         const content = JSON.parse(selectedUserCreatedFile.fileContent);
+        console.log("Parsed content:", content); // Add this
         return EditorState.createWithContent(convertFromRaw(content));
       } catch (e) {
         console.error("Error loading file content:", e);
+        console.log("Raw fileContent:", selectedUserCreatedFile.fileContent); // Add this
         return EditorState.createWithContent(createEmptyContentState(40));
       }
     }
