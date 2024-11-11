@@ -4,6 +4,7 @@ import BGLogo from "./BGLogo";
 import FileSearchScreen from "./FileSearchScreen";
 import IndividualFileScreen from "./IndividualFileScreen";
 import NewDocumentPage from "./NewDocumentPage";
+import TextEditorButtons from "./TextEditorButtons";
 
 export default function MainScreen({
   files,
