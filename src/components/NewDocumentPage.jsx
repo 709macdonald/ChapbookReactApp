@@ -51,28 +51,49 @@ const NewDocumentPage = ({
   files,
   selectedUserCreatedFile,
 }) => {
-  const [documentTitle, setDocumentTitle] = useState(() => {
-    if (selectedUserCreatedFile) {
-      return selectedUserCreatedFile.name.replace(/\.txt$/, "");
-    }
-    return "New Document";
-  });
+  const [documentTitle, setDocumentTitle] = useState("New Document");
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createWithContent(createEmptyContentState(40))
+  );
 
-  const [editorState, setEditorState] = useState(() => {
-    console.log("Selected file:", selectedUserCreatedFile); // Add this
+  useEffect(() => {
+    console.log(
+      "Effect triggered - selectedUserCreatedFile:",
+      selectedUserCreatedFile
+    );
+
     if (selectedUserCreatedFile) {
-      try {
-        const content = JSON.parse(selectedUserCreatedFile.fileContent);
-        console.log("Parsed content:", content); // Add this
-        return EditorState.createWithContent(convertFromRaw(content));
-      } catch (e) {
-        console.error("Error loading file content:", e);
-        console.log("Raw fileContent:", selectedUserCreatedFile.fileContent); // Add this
-        return EditorState.createWithContent(createEmptyContentState(40));
+      setDocumentTitle(selectedUserCreatedFile.name.replace(/\.txt$/, ""));
+
+      if (selectedUserCreatedFile.fileContent) {
+        try {
+          const parsedContent = JSON.parse(selectedUserCreatedFile.fileContent);
+          console.log("Parsed content:", parsedContent);
+
+          if (
+            parsedContent &&
+            parsedContent.blocks &&
+            Array.isArray(parsedContent.blocks)
+          ) {
+            const newState = EditorState.createWithContent(
+              convertFromRaw(parsedContent)
+            );
+            setEditorState(newState);
+          } else {
+            console.warn("Invalid content structure:", parsedContent);
+          }
+        } catch (e) {
+          console.error("Error parsing file content:", e);
+          if (selectedUserCreatedFile.text) {
+            const contentState = ContentState.createFromText(
+              selectedUserCreatedFile.text
+            );
+            setEditorState(EditorState.createWithContent(contentState));
+          }
+        }
       }
     }
-    return EditorState.createWithContent(createEmptyContentState(40));
-  });
+  }, [selectedUserCreatedFile]);
 
   const editorRef = useRef(null);
 
@@ -177,6 +198,7 @@ const NewDocumentPage = ({
           backToAllFileView={backToAllFileView}
           setFiles={setFiles}
           files={files}
+          selectedUserCreatedFile={selectedUserCreatedFile}
         />
       </div>
 

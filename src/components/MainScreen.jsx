@@ -31,12 +31,18 @@ export default function MainScreen({
     setBgLogoOn(false);
 
     if (file.type === "application/draft-js") {
+      console.log("Opening draft-js file:", file);
+      const fileToPass = {
+        ...file,
+        fileContent: file.fileContent,
+      };
       setNewDocumentPage(true);
       setShowIndividualFile(false);
       setHideSearchSection(true);
-      setSelectedUserCreatedFile(file);
+      setSelectedUserCreatedFile(fileToPass);
       setIndividualFile(null);
     } else {
+      console.log("Opening non-draft-js file:", file);
       setNewDocumentPage(false);
       setShowIndividualFile(true);
       setHideSearchSection(false);

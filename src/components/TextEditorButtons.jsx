@@ -28,6 +28,7 @@ const TextEditorButtons = ({
   documentTitle,
   backToAllFileView,
   setFiles,
+  selectedUserCreatedFile,
   files,
 }) => {
   const [currentColor, setCurrentColor] = useState("BLACK");
@@ -137,37 +138,38 @@ const TextEditorButtons = ({
   const saveToChapbook = () => {
     const currentContent = editorState.getCurrentContent();
     const rawContent = convertToRaw(currentContent);
+    const currentDate = new Date().toISOString();
 
-    const newChapbookFile = {
-      id: uuidv4(),
-      name: `${documentTitle}.txt`,
-      type: "application/draft-js",
-      date: new Date().toISOString(),
-      fileContent: JSON.stringify(rawContent),
-      text: currentContent.getPlainText(),
-      matchedWords: [],
-      locations: [],
-      tags: [],
-    };
+    // If we have a selectedUserCreatedFile, update that file
+    if (selectedUserCreatedFile) {
+      const updatedFile = {
+        ...selectedUserCreatedFile,
+        name: `${documentTitle}.txt`,
+        date: currentDate,
+        fileContent: JSON.stringify(rawContent),
+        text: currentContent.getPlainText(),
+      };
 
-    // Use the callback form of setFiles
-    setFiles((prevFiles) => {
-      console.log("Previous files:", prevFiles);
-      console.log("Adding new file:", newChapbookFile);
-      return [...prevFiles, newChapbookFile];
-    });
+      setFiles((prevFiles) => {
+        return prevFiles.map((file) =>
+          file.id === selectedUserCreatedFile.id ? updatedFile : file
+        );
+      });
+    } else {
+      // If no existing file, create a new one
+      const newChapbookFile = {
+        id: uuidv4(),
+        name: `${documentTitle}.txt`,
+        type: "application/draft-js",
+        date: currentDate,
+        fileContent: JSON.stringify(rawContent),
+        text: currentContent.getPlainText(),
+        matchedWords: [],
+        locations: [],
+        tags: [],
+      };
 
-    // Store in local storage as backup
-    try {
-      const existingFiles = JSON.parse(
-        localStorage.getItem("chapbookFiles") || "[]"
-      );
-      localStorage.setItem(
-        "chapbookFiles",
-        JSON.stringify([...existingFiles, newChapbookFile])
-      );
-    } catch (e) {
-      console.error("Error saving to localStorage:", e);
+      setFiles((prevFiles) => [...prevFiles, newChapbookFile]);
     }
 
     backToAllFileView();
