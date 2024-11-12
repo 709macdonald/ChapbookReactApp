@@ -6,7 +6,7 @@ export default function PDFRenderer({
   currentPage,
   scale,
   searchWord,
-  assistedSearchWords, 
+  assistedSearchWords,
 }) {
   const [renderTask, setRenderTask] = useState(null);
   const canvasRef = useRef(null);

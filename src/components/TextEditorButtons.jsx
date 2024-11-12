@@ -1,4 +1,3 @@
-// TextEditorButtons.jsx
 import React, { useState, useEffect } from "react";
 import { RichUtils, Modifier, EditorState } from "draft-js";
 import { convertToRaw } from "draft-js";
