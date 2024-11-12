@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EditorState, Modifier } from "draft-js";
+import { EditorState, Modifier, SelectionState } from "draft-js";
 import OpenAI from "openai";
 
 console.log("API Key available:", !!import.meta.env.VITE_OPENAI_API_KEY);
@@ -19,13 +19,46 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
     const currentContent = editorState.getCurrentContent();
     const selection = editorState.getSelection();
 
-    const newContent = Modifier.insertText(currentContent, selection, text);
+    const currentBlock = currentContent.getBlockForKey(selection.getStartKey());
 
-    const newEditorState = EditorState.push(
+    const blockLength = currentBlock.getLength();
+    let targetSelection;
+
+    if (blockLength > 0) {
+      targetSelection = SelectionState.createEmpty(currentBlock.getKey()).merge(
+        {
+          anchorOffset: blockLength,
+          focusOffset: blockLength,
+        }
+      );
+    } else {
+      targetSelection = SelectionState.createEmpty(currentBlock.getKey()).merge(
+        {
+          anchorOffset: 0,
+          focusOffset: 0,
+        }
+      );
+    }
+
+    let newEditorState = EditorState.forceSelection(
       editorState,
+      targetSelection
+    );
+
+    const newContent = Modifier.insertText(
+      newEditorState.getCurrentContent(),
+      targetSelection,
+      text
+    );
+
+    newEditorState = EditorState.push(
+      newEditorState,
       newContent,
       "insert-characters"
     );
+
+    const newSelection = newContent.getSelectionAfter();
+    newEditorState = EditorState.forceSelection(newEditorState, newSelection);
 
     setEditorState(newEditorState);
   };
@@ -73,41 +106,29 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
     <div>
       <div className="tooltip-wrapper">
         <span className="tooltip">AI Writing Assistant</span>
-        <button className="editStyleButton" onClick={() => setIsOpen(true)}>
+        <button className="editStyleButton" onClick={() => setIsOpen(!isOpen)}>
           <i className="fas fa-robot"></i>
         </button>
       </div>
 
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-lg w-full mx-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">AI Writing Assistant</h2>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
+        <div className="aiToolsDiv">
+          <textarea
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            placeholder="Enter your prompt (e.g., 'Write a short story about...')"
+            className="aiPromptWritingBox"
+          />
 
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Enter your prompt (e.g., 'Write a short story about...')"
-              className="w-full h-32 p-2 border rounded mb-4"
-            />
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
-            <button
-              onClick={handleGenerateContent}
-              disabled={isLoading}
-              className="w-full bg-blue-500 text-white rounded py-2 px-4 hover:bg-blue-600 disabled:bg-blue-300"
-            >
-              {isLoading ? "Generating..." : "Generate Content"}
-            </button>
-          </div>
+          <button
+            onClick={handleGenerateContent}
+            disabled={isLoading}
+            className="generateContentButton"
+          >
+            {isLoading ? "Generating..." : "Generate Content"}
+          </button>
         </div>
       )}
     </div>
