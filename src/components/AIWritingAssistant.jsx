@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { EditorState, Modifier } from "draft-js";
 import OpenAI from "openai";
 
-// Log to check if we can access the env variable
 console.log("API Key available:", !!import.meta.env.VITE_OPENAI_API_KEY);
 
 const openai = new OpenAI({

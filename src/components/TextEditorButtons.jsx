@@ -139,6 +139,15 @@ const TextEditorButtons = ({
   const saveToChapbook = () => {
     const currentContent = editorState.getCurrentContent();
     const rawContent = convertToRaw(currentContent);
+    const plainText = currentContent.getPlainText();
+
+    const hasContent = plainText.trim().length > 0;
+
+    if (!hasContent) {
+      alert("Cannot save empty document");
+      return;
+    }
+
     const currentDate = new Date().toISOString();
 
     if (
@@ -150,7 +159,7 @@ const TextEditorButtons = ({
         name: `${documentTitle}.txt`,
         date: currentDate,
         fileContent: JSON.stringify(rawContent),
-        text: currentContent.getPlainText(),
+        text: plainText,
       };
 
       setFiles((prevFiles) => {
@@ -167,7 +176,7 @@ const TextEditorButtons = ({
         type: "application/draft-js",
         date: currentDate,
         fileContent: JSON.stringify(rawContent),
-        text: currentContent.getPlainText(),
+        text: plainText,
         matchedWords: [],
         locations: [],
         tags: [],
