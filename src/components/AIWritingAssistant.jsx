@@ -1,5 +1,14 @@
 import React, { useState } from "react";
 import { EditorState, Modifier } from "draft-js";
+import OpenAI from "openai";
+
+// Log to check if we can access the env variable
+console.log("API Key available:", !!import.meta.env.VITE_OPENAI_API_KEY);
+
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true,
+});
 
 const AIWritingAssistant = ({ editorState, setEditorState }) => {
   const [prompt, setPrompt] = useState("");
@@ -28,27 +37,33 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
       return;
     }
 
+    if (!import.meta.env.VITE_OPENAI_API_KEY) {
+      setError("API key is not configured");
+      return;
+    }
+
     setIsLoading(true);
     setError("");
 
     try {
-      const response = await fetch("/api/generate-content", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ prompt }),
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        max_tokens: 1000,
+        temperature: 0.7,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate content");
-      }
-
-      const data = await response.json();
-      insertTextIntoEditor(data.content);
+      const generatedContent = completion.choices[0].message.content;
+      insertTextIntoEditor(generatedContent);
       setPrompt("");
       setIsOpen(false);
     } catch (err) {
+      console.error("Error:", err);
       setError("Failed to generate content. Please try again.");
     } finally {
       setIsLoading(false);

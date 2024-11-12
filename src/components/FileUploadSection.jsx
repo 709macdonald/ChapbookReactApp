@@ -9,6 +9,7 @@ export default function FileUploadSection({
   setBgLogoOn,
   setNewDocumentPage,
   setHideSearchSection,
+  setSelectedUserCreatedFile,
 }) {
   const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
   const [folderName, setFolderName] = useState(savedFolderName);
@@ -75,6 +76,7 @@ export default function FileUploadSection({
     setBgLogoOn(false);
     setShowAllFiles(false);
     setHideSearchSection(true);
+    setSelectedUserCreatedFile(null);
   };
 
   return (

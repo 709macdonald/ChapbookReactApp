@@ -12,6 +12,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [newDocumentPage, setNewDocumentPage] = useState(false);
   const [hideSearchSection, setHideSearchSection] = useState(false);
+  const [selectedUserCreatedFile, setSelectedUserCreatedFile] = useState(null);
 
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
@@ -133,6 +134,7 @@ function App() {
         setNewDocumentPage={setNewDocumentPage}
         hideSearchSection={hideSearchSection}
         setHideSearchSection={setHideSearchSection}
+        setSelectedUserCreatedFile={setSelectedUserCreatedFile}
       />
       <MainScreen
         files={files}
@@ -151,6 +153,8 @@ function App() {
         newDocumentPage={newDocumentPage}
         setNewDocumentPage={setNewDocumentPage}
         setHideSearchSection={setHideSearchSection}
+        selectedUserCreatedFile={selectedUserCreatedFile}
+        setSelectedUserCreatedFile={setSelectedUserCreatedFile}
       />
     </div>
   );

@@ -22,9 +22,10 @@ export default function MainScreen({
   newDocumentPage,
   setNewDocumentPage,
   setHideSearchSection,
+  selectedUserCreatedFile,
+  setSelectedUserCreatedFile,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
-  const [selectedUserCreatedFile, setSelectedUserCreatedFile] = useState(null);
 
   const openIndividualFile = (file) => {
     setShowAllFiles(false);

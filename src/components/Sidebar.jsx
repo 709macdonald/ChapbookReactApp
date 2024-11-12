@@ -19,6 +19,7 @@ export default function Sidebar({
   setNewDocumentPage,
   setHideSearchSection,
   hideSearchSection,
+  setSelectedUserCreatedFile,
 }) {
   const goToMainScreen = () => {
     setIsLoadingFiles(false);
@@ -61,6 +62,7 @@ export default function Sidebar({
         setBgLogoOn={setBgLogoOn}
         setNewDocumentPage={setNewDocumentPage}
         setHideSearchSection={setHideSearchSection}
+        setSelectedUserCreatedFile={setSelectedUserCreatedFile}
       />
       <SearchBarSection
         files={files}
