@@ -59,6 +59,12 @@
   cursor: text;
 }
 
+.newDocTagsInputDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .styleButtonsDiv {
   display: flex;
   align-items: center;

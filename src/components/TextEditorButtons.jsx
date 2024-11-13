@@ -31,6 +31,7 @@ const TextEditorButtons = ({
   setFiles,
   selectedUserCreatedFile,
   files,
+  documentTags,
 }) => {
   const [currentColor, setCurrentColor] = useState("BLACK");
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -160,6 +161,7 @@ const TextEditorButtons = ({
         date: currentDate,
         fileContent: JSON.stringify(rawContent),
         text: plainText,
+        tags: documentTags,
       };
 
       setFiles((prevFiles) => {
@@ -179,7 +181,7 @@ const TextEditorButtons = ({
         text: plainText,
         matchedWords: [],
         locations: [],
-        tags: [],
+        tags: documentTags,
       };
 
       setFiles((prevFiles) => [...prevFiles, newChapbookFile]);

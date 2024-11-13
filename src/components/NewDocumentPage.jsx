@@ -56,20 +56,19 @@ const NewDocumentPage = ({
     EditorState.createWithContent(createEmptyContentState(40))
   );
 
-  useEffect(() => {
-    console.log(
-      "Effect triggered - selectedUserCreatedFile:",
-      selectedUserCreatedFile
-    );
+  const [newTag, setNewTag] = useState("");
+  const [documentTags, setDocumentTags] = useState([]);
+  const [showTags, setShowTags] = useState(false);
+  const tagsRef = useRef(null);
 
+  useEffect(() => {
     if (selectedUserCreatedFile) {
       setDocumentTitle(selectedUserCreatedFile.name.replace(/\.txt$/, ""));
+      setDocumentTags(selectedUserCreatedFile.tags || []);
 
       if (selectedUserCreatedFile.fileContent) {
         try {
           const parsedContent = JSON.parse(selectedUserCreatedFile.fileContent);
-          console.log("Parsed content:", parsedContent);
-
           if (
             parsedContent &&
             parsedContent.blocks &&
@@ -79,8 +78,6 @@ const NewDocumentPage = ({
               convertFromRaw(parsedContent)
             );
             setEditorState(newState);
-          } else {
-            console.warn("Invalid content structure:", parsedContent);
           }
         } catch (e) {
           console.error("Error parsing file content:", e);
@@ -166,6 +163,41 @@ const NewDocumentPage = ({
     setHideSearchSection(false);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (tagsRef.current && !tagsRef.current.contains(event.target)) {
+        setShowTags(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleAddTag = () => {
+    if (!newTag.trim()) return;
+
+    if (!documentTags.includes(newTag.trim())) {
+      setDocumentTags([...documentTags, newTag.trim()]);
+    }
+    setNewTag("");
+    setShowTags(true);
+  };
+
+  const handleRemoveTag = (index) => {
+    const updatedTags = [...documentTags];
+    updatedTags.splice(index, 1);
+    setDocumentTags(updatedTags);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleAddTag();
+    }
+  };
+
   if (!newDocumentPage) return null;
 
   return (
@@ -190,6 +222,54 @@ const NewDocumentPage = ({
           />
         </div>
         <hr />
+        <div className="newDocTagsInputDiv" ref={tagsRef}>
+          <div className="tooltip-wrapper">
+            <span className="tooltip">
+              {showTags ? "Hide tags list" : "Show tags list"}
+            </span>
+            <button
+              className="toggleTagView"
+              onClick={() => setShowTags(!showTags)}
+            >
+              <i
+                className={`fa-solid tagDisplayArrow ${
+                  showTags ? "fa-angle-up" : "fa-angle-down"
+                }`}
+              ></i>
+            </button>
+          </div>
+          <input
+            type="text"
+            value={newTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            placeholder="Add a tag"
+            className="addATagBar"
+            onKeyDown={handleKeyDown}
+          />
+          <button
+            className="addTagButton"
+            onClick={handleAddTag}
+            disabled={!newTag.trim()}
+          >
+            Add Tag
+          </button>
+
+          {showTags && (
+            <div className="tagsList">
+              {documentTags.map((tag, index) => (
+                <div key={index} className="tag">
+                  <button
+                    className="tagDeleteButton"
+                    onClick={() => handleRemoveTag(index)}
+                  >
+                    x
+                  </button>
+                  <span>{tag}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <TextEditorButtons
           editorState={editorState}
           setEditorState={setEditorState}
@@ -199,6 +279,7 @@ const NewDocumentPage = ({
           setFiles={setFiles}
           files={files}
           selectedUserCreatedFile={selectedUserCreatedFile}
+          documentTags={documentTags}
         />
       </div>
 
