@@ -16,6 +16,7 @@
   top: 0;
   z-index: 1;
   margin-top: 1rem;
+  max-width: 23rem;
 }
 
 .textEditorDiv {
@@ -63,6 +64,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.newDocTagsList {
+  position: absolute;
+  top: 100%;
+  width: 60%;
+  background-color: var(--secondary-bg-color);
+  z-index: 999;
+  overflow-y: auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
 }
 
 .styleButtonsDiv {
@@ -87,6 +100,35 @@
   font-size: 1rem;
 }
 
+.AIButton {
+  position: relative;
+}
+
+.aiToolsDiv {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--secondary-bg-color);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  left: 4rem;
+  margin-top: 1rem;
+}
+
+.generateContentButton {
+  width: 8rem;
+  margin-top: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+.generateContentButton:hover {
+  transform: scale(1.2);
+  background-color: var(--hover-bg-color);
+}
+
 .colorPickerIcon {
   color: var(--font-color);
 }
@@ -96,7 +138,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999 !important;
   pointer-events: all !important;
 }
 

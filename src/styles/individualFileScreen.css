@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: none;
 }
 
 .fileButtonsDiv {
@@ -90,7 +91,6 @@
   width: 15rem;
   height: 1.5rem;
   padding: 0 1rem 0 1rem;
-  margin-right: 1rem;
   border-radius: 0.5rem;
 }
 
@@ -99,11 +99,11 @@
   border: none;
   color: var(--font-color);
   font-size: var(--tertiary-font-size);
+  margin-left: 0.2rem;
 }
 
 .addTagButton:hover {
   transform: scale(1.2);
-  background-color: var(--hover-bg-color);
   border-radius: 0.5rem;
 }
 
@@ -124,6 +124,7 @@
   border-radius: 1rem;
   box-shadow: var(--shadow);
   margin-top: 1rem;
+  min-width: 23rem;
 }
 
 .tagDeleteButton {
@@ -213,9 +214,6 @@
 
 .zoomButton:hover {
   transform: scale(1.05);
-  background-color: var(--hover-bg-color);
-  border-radius: 1rem;
-  box-shadow: var(--shadow);
 }
 
 .pageControlsDiv {

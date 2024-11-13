@@ -246,16 +246,19 @@ const NewDocumentPage = ({
             className="addATagBar"
             onKeyDown={handleKeyDown}
           />
-          <button
-            className="addTagButton"
-            onClick={handleAddTag}
-            disabled={!newTag.trim()}
-          >
-            Add Tag
-          </button>
+          <div className="tooltip-wrapper">
+            <span className="tooltip">Add Tag</span>
+            <button
+              className="addTagButton"
+              onClick={handleAddTag}
+              disabled={!newTag.trim()}
+            >
+              <i className="fa-solid fa-plus"></i>
+            </button>
+          </div>
 
           {showTags && (
-            <div className="tagsList">
+            <div className="newDocTagsList">
               {documentTags.map((tag, index) => (
                 <div key={index} className="tag">
                   <button

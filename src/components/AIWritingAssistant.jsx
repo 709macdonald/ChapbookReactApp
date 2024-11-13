@@ -106,7 +106,10 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
     <div>
       <div className="tooltip-wrapper">
         <span className="tooltip">AI Writing Assistant</span>
-        <button className="editStyleButton" onClick={() => setIsOpen(!isOpen)}>
+        <button
+          className="editStyleButton AIButton"
+          onClick={() => setIsOpen(!isOpen)}
+        >
           <i className="fas fa-robot"></i>
         </button>
       </div>
