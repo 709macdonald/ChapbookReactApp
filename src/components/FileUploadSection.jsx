@@ -97,7 +97,7 @@ export default function FileUploadSection({
             id="fileInputFiles"
           />
           <label htmlFor="fileInputFiles" className="fileInputLabel">
-            <i className="fa-solid fa-file folderIcon"></i>
+            <i class="fa-solid fa-file-medical folderIcon"></i>
           </label>
         </div>
         <div className="fileInputDiv tooltip-wrapper">
@@ -111,13 +111,13 @@ export default function FileUploadSection({
             id="fileInputDirectory"
           />
           <label htmlFor="fileInputDirectory" className="fileInputLabel">
-            <i className="fa-solid fa-folder folderIcon"></i>
+            <i class="fa-solid fa-folder-plus folderIcon"></i>
           </label>
         </div>
         <div className="tooltip-wrapper">
           <span className="tooltip">New Document</span>
           <button className="newDocumentButton" onClick={showNewDocumentPage}>
-            <i className="fa-solid fa-file-circle-plus newDocumentButtonIcon"></i>
+            <i class="fa-solid fa-file-pen newDocumentButtonIcon"></i>
           </button>
         </div>
       </div>

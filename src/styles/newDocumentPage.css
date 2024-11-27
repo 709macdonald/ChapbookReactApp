@@ -172,6 +172,10 @@
   pointer-events: all !important;
 }
 
+.DraftEditor-editorContainer {
+  z-index: 0 !important;
+}
+
 .colorButton:hover {
   background-color: var(--hover-bg-color);
 }
