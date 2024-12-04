@@ -13,21 +13,28 @@ export default function FileSearchScreen({
   const [hoveredFileId, setHoveredFileId] = useState(null);
 
   const sortedFiles = useMemo(() => {
+    console.log("Sort Criteria:", sortCriteria);
     const sorted = [...files].sort((a, b) => {
       let comparison = 0;
-      if (sortCriteria === "name") {
+
+      if (sortCriteria === "nameA-Z") {
         comparison = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-      } else if (sortCriteria === "date") {
-        // Handle invalid date cases
+      } else if (sortCriteria === "nameZ-A") {
+        comparison = b.name.toLowerCase().localeCompare(a.name.toLowerCase());
+      } else if (sortCriteria === "dateOldNew") {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
-        comparison = dateA - dateB; // Sort by date
+        comparison = dateA - dateB;
+      } else if (sortCriteria === "dateNewOld") {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        comparison = dateB - dateA;
       } else if (sortCriteria === "wordCount") {
-        // Handle empty or missing text
         const wordCountA = a.text ? a.text.split(" ").length : 0;
         const wordCountB = b.text ? b.text.split(" ").length : 0;
-        comparison = wordCountA - wordCountB; // Sort by word count
+        comparison = wordCountA - wordCountB;
       }
+
       return comparison;
     });
     return sorted;

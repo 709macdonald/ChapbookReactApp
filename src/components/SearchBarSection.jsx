@@ -117,8 +117,10 @@ export default function SearchBarSection({
           onChange={(e) => setSortCriteria(e.target.value)}
           value={sortCriteria}
         >
-          <option value="name">Name (A-Z)</option>
-          <option value="date">Date</option>
+          <option value="nameA-Z">Name (A-Z)</option>
+          <option value="nameZ-A">Name (Z-A)</option>
+          <option value="dateOldNew">Date (Old - New)</option>
+          <option value="dateNewOld">Date (New - Old)</option>
           <option value="wordCount">Word Count</option>
         </select>
       </div>
