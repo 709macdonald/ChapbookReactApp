@@ -81,7 +81,6 @@ export default function MainScreen({
         openIndividualFile={openIndividualFile}
         searchWord={searchWord}
         assistedSearchWords={assistedSearchWords}
-        setSelectedUserCreatedFile={setSelectedUserCreatedFile}
       />
       <IndividualFileScreen
         file={individualFile}

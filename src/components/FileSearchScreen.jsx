@@ -8,15 +8,27 @@ export default function FileSearchScreen({
   openIndividualFile,
   searchWord,
   assistedSearchWords,
-  setSelectedUserCreatedFile,
 }) {
   const [hoveredFileId, setHoveredFileId] = useState(null);
+
+  const [sortOrder, setSortOrder] = useState("asc"); // Default sort order: ascending
+
+  const sortedFiles = useMemo(() => {
+    const sorted = [...files].sort((a, b) => {
+      if (a.name.toLowerCase() < b.name.toLowerCase())
+        return sortOrder === "asc" ? -1 : 1;
+      if (a.name.toLowerCase() > b.name.toLowerCase())
+        return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+    return sorted;
+  }, [files, sortOrder]);
 
   const filteredFilesWithText = useMemo(() => {
     const allSearchTerms = [searchWord, ...assistedSearchWords].map((word) =>
       word.toLowerCase()
     );
-    return files
+    return sortedFiles
       .filter((file) => file.text.trim() !== "")
       .map((file) => {
         const matchedWords = allSearchTerms.filter(
