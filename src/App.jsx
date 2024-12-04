@@ -17,6 +17,8 @@ function App() {
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
 
+  const [sortCriteria, setSortCriteria] = useState("name");
+
   if (typeof global === "undefined") {
     var global = window;
   }
@@ -135,6 +137,8 @@ function App() {
         hideSearchSection={hideSearchSection}
         setHideSearchSection={setHideSearchSection}
         setSelectedUserCreatedFile={setSelectedUserCreatedFile}
+        sortCriteria={sortCriteria}
+        setSortCriteria={setSortCriteria}
       />
       <MainScreen
         files={files}
@@ -155,6 +159,7 @@ function App() {
         setHideSearchSection={setHideSearchSection}
         selectedUserCreatedFile={selectedUserCreatedFile}
         setSelectedUserCreatedFile={setSelectedUserCreatedFile}
+        sortCriteria={sortCriteria}
       />
     </div>
   );

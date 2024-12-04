@@ -24,6 +24,7 @@ export default function MainScreen({
   setHideSearchSection,
   selectedUserCreatedFile,
   setSelectedUserCreatedFile,
+  sortCriteria,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
 
@@ -81,6 +82,7 @@ export default function MainScreen({
         openIndividualFile={openIndividualFile}
         searchWord={searchWord}
         assistedSearchWords={assistedSearchWords}
+        sortCriteria={sortCriteria}
       />
       <IndividualFileScreen
         file={individualFile}

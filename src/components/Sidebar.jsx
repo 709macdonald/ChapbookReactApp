@@ -20,6 +20,8 @@ export default function Sidebar({
   setHideSearchSection,
   hideSearchSection,
   setSelectedUserCreatedFile,
+  sortCriteria,
+  setSortCriteria,
 }) {
   const goToMainScreen = () => {
     setIsLoadingFiles(false);
@@ -72,6 +74,8 @@ export default function Sidebar({
         assistedSearchWords={assistedSearchWords}
         setAssistedSearchWords={setAssistedSearchWords}
         hideSearchSection={hideSearchSection}
+        setSortCriteria={setSortCriteria}
+        sortCriteria={sortCriteria}
       />
       <div className="creatorNameDiv">
         <p>Created By Peter MacDonald</p>

@@ -8,21 +8,30 @@ export default function FileSearchScreen({
   openIndividualFile,
   searchWord,
   assistedSearchWords,
+  sortCriteria,
 }) {
   const [hoveredFileId, setHoveredFileId] = useState(null);
 
-  const [sortOrder, setSortOrder] = useState("asc"); // Default sort order: ascending
-
   const sortedFiles = useMemo(() => {
     const sorted = [...files].sort((a, b) => {
-      if (a.name.toLowerCase() < b.name.toLowerCase())
-        return sortOrder === "asc" ? -1 : 1;
-      if (a.name.toLowerCase() > b.name.toLowerCase())
-        return sortOrder === "asc" ? 1 : -1;
-      return 0;
+      let comparison = 0;
+      if (sortCriteria === "name") {
+        comparison = a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+      } else if (sortCriteria === "date") {
+        // Handle invalid date cases
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        comparison = dateA - dateB; // Sort by date
+      } else if (sortCriteria === "wordCount") {
+        // Handle empty or missing text
+        const wordCountA = a.text ? a.text.split(" ").length : 0;
+        const wordCountB = b.text ? b.text.split(" ").length : 0;
+        comparison = wordCountA - wordCountB; // Sort by word count
+      }
+      return comparison;
     });
     return sorted;
-  }, [files, sortOrder]);
+  }, [files, sortCriteria]);
 
   const filteredFilesWithText = useMemo(() => {
     const allSearchTerms = [searchWord, ...assistedSearchWords].map((word) =>
@@ -43,7 +52,7 @@ export default function FileSearchScreen({
         return matchedWords.length > 0 ? { ...file, matchedWords } : null;
       })
       .filter(Boolean);
-  }, [files, searchWord, assistedSearchWords]);
+  }, [files, searchWord, assistedSearchWords, sortedFiles]);
 
   useEffect(() => {
     setResultsCount(filteredFilesWithText.length);

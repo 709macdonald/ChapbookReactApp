@@ -6,11 +6,14 @@ export default function SearchBarSection({
   setSearchWord,
   assistedSearchWords,
   setAssistedSearchWords,
-  resultsCount,
   hideSearchSection,
+  resultsCount,
+  setSortCriteria,
+  sortCriteria,
 }) {
   const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
   const [showAssistedSearchWords, setShowAssistedSearchWords] = useState(false);
+
   const [predictiveTextWords, setPredictiveTextWords] = useState([]);
   const searchRef = useRef(null);
 
@@ -107,6 +110,19 @@ export default function SearchBarSection({
         placeholder="Search for Keywords"
       />
       <p className="resultsFound">{resultsCount} results found</p>
+
+      {/* Sorting Criteria Dropdown */}
+      <div className="sortingControls">
+        <select
+          onChange={(e) => setSortCriteria(e.target.value)}
+          value={sortCriteria}
+        >
+          <option value="name">Name (A-Z)</option>
+          <option value="date">Date</option>
+          <option value="wordCount">Word Count</option>
+        </select>
+      </div>
+
       <hr />
       {predictiveTextWords.length > 0 && (
         <div className="predictiveTextWordsDiv">
