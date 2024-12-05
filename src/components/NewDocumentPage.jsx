@@ -12,7 +12,7 @@ import {
 } from "draft-js";
 import { List, Map } from "immutable";
 import "draft-js/dist/Draft.css";
-import TextEditorButtons from "./textEditorButtons";
+import TextEditorButtons from "./TextEditorButtons";
 
 const createEmptyContentState = (numberOfLines = 40) => {
   const blocks = Array(numberOfLines)
