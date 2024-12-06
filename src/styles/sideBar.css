@@ -151,7 +151,6 @@
 .sortingSelect {
   width: 8rem;
   font-size: 0.5em;
-  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
   background-color: rgb(246, 246, 246);
   cursor: pointer;
   border-radius: 0.5rem;
