@@ -112,8 +112,11 @@ export default function SearchBarSection({
       <p className="resultsFound">{resultsCount} results found</p>
 
       {/* Sorting Criteria Dropdown */}
-      <div className="sortingControls">
+
+      <div className="sortingControls tooltip-wrapper">
+        <span className="tooltip">Organize files by</span>
         <select
+          className="sortingSelect"
           onChange={(e) => setSortCriteria(e.target.value)}
           value={sortCriteria}
         >
