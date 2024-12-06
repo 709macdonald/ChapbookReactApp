@@ -1,6 +1,7 @@
 import * as pdfjsLib from "pdfjs-dist";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
+// Use the base path with the new worker file we just copied
+pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.js";
 
 export const PDFTextExtraction = async (fileUrl) => {
   return new Promise((resolve, reject) => {
@@ -42,7 +43,7 @@ export const PDFTextExtraction = async (fileUrl) => {
                   page: pageNumber,
                 });
 
-                currentX += width + item.width / item.str.length; // Add a small space between words
+                currentX += width + item.width / item.str.length;
               });
 
               allText += "\n";

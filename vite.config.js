@@ -13,4 +13,7 @@ export default defineConfig({
       global: resolve(__dirname, "src/global-shim.js"),
     },
   },
+  optimizeDeps: {
+    include: ["pdfjs-dist"],
+  },
 });
