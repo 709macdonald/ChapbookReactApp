@@ -1,7 +1,5 @@
 import * as pdfjsLib from "pdfjs-dist";
-
-// Use the base path with the new worker file we just copied
-pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.js";
+pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
 export const PDFTextExtraction = async (fileUrl) => {
   return new Promise((resolve, reject) => {
