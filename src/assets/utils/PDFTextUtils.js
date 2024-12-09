@@ -1,5 +1,5 @@
 import * as pdfjsLib from "pdfjs-dist";
-pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc = "/ChapbookReactApp/pdf.worker.mjs";
 
 export const PDFTextExtraction = async (fileUrl) => {
   return new Promise((resolve, reject) => {
