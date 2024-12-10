@@ -4,6 +4,7 @@ import { resolve } from "path";
 
 export default defineConfig({
   plugins: [react()],
+  base: "/ChapbookReactApp/",
   define: {
     global: "window",
   },
@@ -13,3 +14,4 @@ export default defineConfig({
     },
   },
 });
+3;
