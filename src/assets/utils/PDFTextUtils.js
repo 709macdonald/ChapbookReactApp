@@ -1,14 +1,7 @@
 import * as pdfjsLib from "pdfjs-dist";
 
-// Determine if we're in development or production
-const isDevelopment = import.meta.env.DEV;
-
-// Set the worker source based on environment
-pdfjsLib.GlobalWorkerOptions.workerSrc = isDevelopment
-  ? "/pdf.worker.mjs" // Local development
-  : "/ChapbookReactApp/pdf.worker.mjs"; // Production/GitHub Pages
-
-// Rest of your code...
+// Use CDN version with specific version number
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@4.6.82/build/pdf.worker.min.js`;
 
 export const PDFTextExtraction = async (fileUrl) => {
   return new Promise((resolve, reject) => {
