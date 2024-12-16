@@ -8,7 +8,8 @@ export default defineConfig(({ command }) => ({
     react(),
     {
       name: "copy-pdf-worker",
-      writeBundle() {
+      buildStart() {
+        // Copy at the start of build
         try {
           const workerPath = resolve(
             __dirname,
@@ -18,6 +19,16 @@ export default defineConfig(({ command }) => ({
           copyFileSync(workerPath, publicPath);
         } catch (error) {
           console.error("Error copying worker file:", error);
+        }
+      },
+      writeBundle() {
+        // Copy again to dist folder
+        try {
+          const workerPath = resolve(__dirname, "public/pdf.worker.mjs");
+          const distPath = resolve(__dirname, "dist/pdf.worker.mjs");
+          copyFileSync(workerPath, distPath);
+        } catch (error) {
+          console.error("Error copying worker file to dist:", error);
         }
       },
     },
@@ -30,5 +41,9 @@ export default defineConfig(({ command }) => ({
     alias: {
       global: resolve(__dirname, "src/global-shim.js"),
     },
+  },
+  build: {
+    outDir: "dist",
+    copyPublicDir: true, // Ensure public directory is copied
   },
 }));
