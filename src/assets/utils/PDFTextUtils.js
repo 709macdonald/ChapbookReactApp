@@ -1,5 +1,7 @@
 import * as pdfjsLib from "pdfjs-dist";
-
+// Log what version and files are available
+console.log("PDF.js version:", pdfjsLib.version);
+console.log("Worker:", pdfjsLib);
 // Use CDN version with specific version number
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@4.6.82/build/pdf.worker.min.js`;
 
