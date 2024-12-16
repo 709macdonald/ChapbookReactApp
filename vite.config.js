@@ -2,9 +2,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: "/ChapbookReactApp/",
+  base: command === "build" ? "/ChapbookReactApp/" : "/",
   define: {
     global: "window",
   },
@@ -13,5 +13,4 @@ export default defineConfig({
       global: resolve(__dirname, "src/global-shim.js"),
     },
   },
-});
-3;
+}));

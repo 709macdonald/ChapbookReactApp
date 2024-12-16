@@ -1,10 +1,18 @@
 import * as pdfjsLib from "pdfjs-dist";
-pdfjsLib.GlobalWorkerOptions.workerSrc = "/ChapbookReactApp/pdf.worker.mjs";
+
+// Determine if we're in development or production
+const isDevelopment = import.meta.env.DEV;
+
+// Set the worker source based on environment
+pdfjsLib.GlobalWorkerOptions.workerSrc = isDevelopment
+  ? "/pdf.worker.mjs" // Local development
+  : "/ChapbookReactApp/pdf.worker.mjs"; // Production/GitHub Pages
+
+// Rest of your code...
 
 export const PDFTextExtraction = async (fileUrl) => {
   return new Promise((resolve, reject) => {
     const loadingTask = pdfjsLib.getDocument(fileUrl);
-
     loadingTask.promise
       .then(async (doc) => {
         let allText = "";
