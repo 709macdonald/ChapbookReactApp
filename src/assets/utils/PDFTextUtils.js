@@ -1,9 +1,10 @@
 import * as pdfjsLib from "pdfjs-dist";
-// Log what version and files are available
-console.log("PDF.js version:", pdfjsLib.version);
-console.log("Worker:", pdfjsLib);
-// Use CDN version with specific version number
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@4.6.82/build/pdf.worker.min.js`;
+
+// Use a more specific CDN path
+const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.6.82/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
+
+console.log("Worker source set to:", workerSrc);
 
 export const PDFTextExtraction = async (fileUrl) => {
   return new Promise((resolve, reject) => {
