@@ -4,17 +4,17 @@ import { resolve } from "path";
 
 export default defineConfig(({ command }) => ({
   plugins: [react()],
-  base: command === "build" ? "/ChapbookReactApp/" : "/", // Set the base for GitHub Pages
+  base: command === "build" ? "/ChapbookReactApp/" : "/",
   define: {
-    global: "window", // Compatibility for libraries using `global`
+    global: "window",
   },
   resolve: {
     alias: {
-      global: resolve(__dirname, "src/global-shim.js"), // Alias for your global shim
+      global: resolve(__dirname, "src/global-shim.js"),
     },
   },
   build: {
-    outDir: "dist", // Output directory for builds
-    copyPublicDir: true, // Ensures public directory content is included in builds
+    outDir: "dist",
+    copyPublicDir: true,
   },
 }));

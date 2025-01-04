@@ -20,27 +20,23 @@ Add tags to documents for faster access in future searches, making document mana
 📄 Document Creation & Saving
 Create new PDF documents within the app using the Add Document page.
 Save newly created or modified documents directly from CHAPBOOK.
+utilize our AI feature to get your docs started right away.
 
 Getting Started
-Upload Documents: Select individual files or entire folders to upload.
-Search: Enter keywords to search across all your documents.
-Assisted Search: Discover related words with assisted search.
-Review Documents: Instantly locate and highlight your keyword within documents.
 
-Organize with Tags: Add tags to your documents for better organization and faster future searches.
+1. Upload Documents: Select individual files or entire folders to upload.
 
-Future Enhancements (Planned)
-More Supported File Types: Expanding to additional document types.
-Advanced Search Filters: Add filters, date ranges, and tag-based sorting.
-User Annotations: Annotate and save notes within documents.
+2. Search: Enter keywords to search across all your documents.
+
+3. Assisted Search: Discover related words with assisted search.
+
+4. Review Documents: Instantly locate and highlight your keyword within documents.
+
+5. Organize with Tags: Add tags to your documents for better organization and faster future searches.
+
 Tech Stack
-
-Frontend: React.js for an intuitive, responsive UI.
-Backend: Node.js and Express for smooth data handling.
-File Handling: PDF.js and other tools for robust document processing.
-
+Frontend: React.js for a responsive UI.
+File Handling: PDF.js, Mammoth, Tesseract.js for document processing.
+AI: OpenAI for document creation assistance.
 Contributing
-We welcome contributions! Submit issues, pull requests, or feature suggestions.
-
-License
-This project is licensed under the MIT License.
+A big thank you to the community at Get Coding and my coach Jacob Critch for their support, and to Jack Harrhy for his help getting over the finish line.
