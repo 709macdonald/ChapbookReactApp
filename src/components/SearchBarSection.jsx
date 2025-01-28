@@ -145,7 +145,7 @@ export default function SearchBarSection({
       <div className="assistedSearchDiv">
         <div className="tooltip-wrapper">
           <span className="tooltip">
-            Search for words similar to your search word.
+            Search for words similar to your Keyword.
           </span>
           <div className="assistedSearchTitleAndButtonDiv">
             <p className="assistedSearchTitle">Assisted Search</p>
@@ -163,7 +163,8 @@ export default function SearchBarSection({
         </div>
         <div className="tooltip-wrapper">
           <span className="tooltip">
-            Show/Hide the assisted words added to your search.
+            {showAssistedSearchWords ? "Hide" : "Show"} the Assisted Search word
+            bank.
           </span>
           <button
             className="showAssistedSearchButton"
