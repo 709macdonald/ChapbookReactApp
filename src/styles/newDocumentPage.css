@@ -20,6 +20,7 @@
 .textEditorDiv {
   background-color: white;
   flex: 1;
+  color: black;
   padding: 4rem;
   width: 50rem;
   overflow-y: auto;
