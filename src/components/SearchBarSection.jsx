@@ -11,7 +11,7 @@ export default function SearchBarSection({
   setSortCriteria,
   sortCriteria,
 }) {
-  const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(true);
+  const [isAssistedSearchEnabled, setIsAssistedSearchEnabled] = useState(false);
   const [showAssistedSearchWords, setShowAssistedSearchWords] = useState(false);
 
   const [predictiveTextWords, setPredictiveTextWords] = useState([]);
