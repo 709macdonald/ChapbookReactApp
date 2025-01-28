@@ -23,8 +23,12 @@ const WordDocRenderer = ({ file, scale, searchWord, assistedSearchWords }) => {
   }, [file, searchWord, assistedSearchWords]);
 
   return (
-    <div className="wordDocRenderer">
-      <div ref={containerRef} style={{ fontSize: `${16 * scale}px` }}>
+    <div className="WordDocRendererDiv">
+      <div
+        ref={containerRef}
+        className="wordDocRenderer"
+        style={{ fontSize: `${16 * scale}px` }}
+      >
         <div dangerouslySetInnerHTML={{ __html: highlightedText }} />
       </div>
     </div>

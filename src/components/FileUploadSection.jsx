@@ -5,6 +5,7 @@ export default function FileUploadSection({
   setFiles,
   setIsLoadingFiles,
   setShowAllFiles,
+  setSearchWord,
   setShowIndividualFile,
   setBgLogoOn,
   setNewDocumentPage,
@@ -29,6 +30,7 @@ export default function FileUploadSection({
     if (selectedUserFiles.length > 0) {
       setIsLoadingFiles(true);
       setBgLogoOn(false);
+      setSearchWord("");
       setShowAllFiles(false);
       setShowIndividualFile(false);
 
@@ -62,6 +64,7 @@ export default function FileUploadSection({
       setShowIndividualFile(false);
       setBgLogoOn(true);
       setShowAllFiles(true);
+      setSearchWord("");
       setNewDocumentPage(false);
       setHideSearchSection(false);
       localStorage.removeItem("files");

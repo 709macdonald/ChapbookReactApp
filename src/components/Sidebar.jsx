@@ -65,6 +65,7 @@ export default function Sidebar({
         setNewDocumentPage={setNewDocumentPage}
         setHideSearchSection={setHideSearchSection}
         setSelectedUserCreatedFile={setSelectedUserCreatedFile}
+        setSearchWord={setSearchWord}
       />
       <SearchBarSection
         files={files}

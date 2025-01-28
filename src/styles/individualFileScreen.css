@@ -292,20 +292,17 @@
   padding: 2rem;
 }
 
-.wordDocRenderer {
-  display: flex;
-  flex-direction: column;
+.WordDocRendererDiv {
   overflow: auto;
-  min-height: calc(100vh - 200px);
-  -webkit-overflow-scrolling: touch;
 }
 
-.wordDocRenderer > div {
+.wordDocRenderer {
   flex: 1;
   overflow: auto;
   border: 1px solid #ccc;
   padding: 20px;
   line-height: 1.5;
+  max-height: 100%;
   white-space: pre-wrap;
   word-wrap: break-word;
   -webkit-overflow-scrolling: touch;
