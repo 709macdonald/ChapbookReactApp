@@ -4,12 +4,8 @@ import PDFRenderer from "./PDFRenderer";
 import ImageRenderer from "./ImageRenderer";
 import WordDocRenderer from "./WordDocRenderer";
 
-<<<<<<< HEAD
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   import.meta.env.BASE_URL + "pdf.worker.mjs";
-=======
-pdfjsLib.GlobalWorkerOptions.workerSrc = import.meta.env.BASE_URL + "pdf.worker.mjs";
->>>>>>> c7eda1155696b122f868ff997ed13a000bdf2dc1
 
 export default function IndividualFileScreen({
   file,

@@ -143,25 +143,35 @@ export default function SearchBarSection({
         </div>
       )}
       <div className="assistedSearchDiv">
-        <div className="assistedSearchTitleAndButtonDiv">
-          <p className="assistedSearchTitle">Assisted Search</p>
+        <div className="tooltip-wrapper">
+          <span className="tooltip">
+            Search for words similar to your search word.
+          </span>
+          <div className="assistedSearchTitleAndButtonDiv">
+            <p className="assistedSearchTitle">Assisted Search</p>
+            <button
+              className="assistedSearchButton"
+              onClick={toggleAssistedSearch}
+            >
+              {isAssistedSearchEnabled ? (
+                <i className="fa-solid fa-square-check"></i>
+              ) : (
+                <i className="fa-solid fa-square-xmark"></i>
+              )}
+            </button>
+          </div>
+        </div>
+        <div className="tooltip-wrapper">
+          <span className="tooltip">
+            Show/Hide the assisted words added to your search.
+          </span>
           <button
-            className="assistedSearchButton"
-            onClick={toggleAssistedSearch}
+            className="showAssistedSearchButton"
+            onClick={toggleShowAssistedSearchWords}
           >
-            {isAssistedSearchEnabled ? (
-              <i className="fa-solid fa-square-check"></i>
-            ) : (
-              <i className="fa-solid fa-square-xmark"></i>
-            )}
+            {showAssistedSearchWords ? "Hide" : "Show"} Words
           </button>
         </div>
-        <button
-          className="showAssistedSearchButton"
-          onClick={toggleShowAssistedSearchWords}
-        >
-          {showAssistedSearchWords ? "Hide" : "Show"} Words
-        </button>
         {showAssistedSearchWords && isAssistedSearchEnabled && searchWord && (
           <div className="assistedSearchWordsDiv fade-in">
             <p className="assistedSearchTableTitle">Assisted Search Words:</p>
