@@ -6,7 +6,7 @@ function App() {
   const [files, setFiles] = useState([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
   const [resultsCount, setResultsCount] = useState(0);
-  const [showAllFiles, setShowAllFiles] = useState(true);
+  const [showAllFiles, setShowAllFiles] = useState(false);
   const [showIndividualFile, setShowIndividualFile] = useState(false);
   const [bgLogoOn, setBgLogoOn] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);

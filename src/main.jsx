@@ -7,6 +7,7 @@ import "./styles/individualFileScreen.css";
 import "./styles/newDocumentPage.css";
 import "./styles/fileSearchScreen.css";
 import "./styles/toolTip.css";
+import "./styles/loginScreen.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

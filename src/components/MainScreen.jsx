@@ -4,6 +4,7 @@ import BGLogo from "./BGLogo";
 import FileSearchScreen from "./FileSearchScreen";
 import IndividualFileScreen from "./IndividualFileScreen";
 import NewDocumentPage from "./NewDocumentPage";
+import LoginScreen from "./LoginScreen";
 
 export default function MainScreen({
   files,
@@ -71,6 +72,7 @@ export default function MainScreen({
 
   return (
     <div className="mainScreenDiv">
+      <LoginScreen />
       <BGLogo bgLogoOn={bgLogoOn} />
       <LoadingGear isLoadingFiles={isLoadingFiles} />
       <FileSearchScreen

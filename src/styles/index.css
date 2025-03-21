@@ -115,6 +115,7 @@ body {
 }
 
 .book {
+  font-size: 3rem;
   color: var(--logo-2nd-color);
 }
 

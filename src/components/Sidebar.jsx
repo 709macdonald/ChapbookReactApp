@@ -32,7 +32,7 @@ export default function Sidebar({
     setHideSearchSection(false);
   };
 
-  const [toggleSideBar, setToggleSideBar] = useState(true);
+  const [toggleSideBar, setToggleSideBar] = useState(false);
 
   const handleToggleSideBar = () => {
     setToggleSideBar(!toggleSideBar);
