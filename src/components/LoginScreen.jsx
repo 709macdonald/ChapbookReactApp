@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function LoginScreen() {
+  const [showLoginScreen, toggleShowLoginScreen] = useState(false);
+
+  if (!showLoginScreen) {
+    return <div></div>;
+  }
+
   return (
     <div className="loginPageDiv">
       <h1>
