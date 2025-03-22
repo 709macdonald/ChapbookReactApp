@@ -8,6 +8,7 @@ import "./styles/newDocumentPage.css";
 import "./styles/fileSearchScreen.css";
 import "./styles/toolTip.css";
 import "./styles/loginScreen.css";
+import "./styles/signUpScreen.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

@@ -1,43 +1,98 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function SignUpScreen() {
+  const [showSignUpScreen, SetShowSignUpScreen] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  if (!showSignUpScreen) {
+    return <div></div>;
+  }
+
+  const handleSignUp = async () => {
+    setError("");
+    setSuccessMessage("");
+    const user = { firstName, lastName, email, password };
+
+    try {
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccessMessage("Account created successfully!");
+        // Optionally redirect the user to the login page or auto-login here
+      } else {
+        setError(data.error || "Account creation failed");
+      }
+    } catch (err) {
+      setError("Network error, please try again");
+    }
+  };
+
   return (
-    <div className="loginPageDiv">
+    <div className="signUpPageDiv">
       <h1>
         <span className="chap">Chap</span>
         <span className="book">book</span>
-        <p className="instructionsP">
-          Please fill out all fields to create account
-        </p>
       </h1>
+      <p className="signUpInstructionsText">
+        Complete all fields to create an account
+      </p>
       <div className="firstNameCreateDiv">
         <p>First Name:</p>
         <input
           className="firstNameCreateInput"
           placeholder="Enter First Name"
-        ></input>
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
       </div>
       <div className="lastNameCreateDiv">
         <p>Last Name:</p>
         <input
           className="lastNameCreateInput"
           placeholder="Enter Last Name"
-        ></input>
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
       </div>
-      <div className="emailLoginDiv">
+      <div className="emailCreateDiv">
         <p>Email:</p>
-        <input className="emailLoginInput" placeholder="Enter Email"></input>
+        <input
+          className="emailCreateInput"
+          placeholder="Enter Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
-      <div className="passwordLoginDiv">
+      <div className="passwordCreateDiv">
         <p>Password:</p>
         <input
-          className="passwordLoginInput"
+          className="passwordCreateInput"
           placeholder="Enter Password"
-        ></input>
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </div>
-      <button className="createAccountButton">Create Account</button>
-      <p className="notAMemberText">
-        Already a member? <button className="signUpButton">LOGIN</button>
+      <button className="createAccountButton" onClick={handleSignUp}>
+        Create Account
+      </button>
+      {error && <p className="errorText">{error}</p>}
+      {successMessage && <p className="successText">{successMessage}</p>}
+      <p className="alreadyAMemberText">
+        Already a member? <button className="goToLoginButton">LOGIN</button>
       </p>
     </div>
   );
