@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 
-export default function LoginScreen() {
-  const [showLoginScreen, toggleShowLoginScreen] = useState(true);
+export default function LoginScreen({
+  setToggleSideBar,
+  setShowAllFiles,
+  SetShowSignUpScreen,
+  showLoginScreen,
+  setShowLoginScreen,
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -12,25 +17,24 @@ export default function LoginScreen() {
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded = jwt_decode(token); // Decode the token to extract expiry
-        const currentTime = Date.now() / 1000; // Get the current time in seconds
+        const decoded = jwt_decode(token);
+        const currentTime = Date.now() / 1000;
 
-        // Check if the token has expired
         if (decoded.exp < currentTime) {
-          localStorage.removeItem("token"); // Token is expired, remove it
-          setIsLoggedIn(false); // Set logged-in state to false
+          localStorage.removeItem("token");
+          setIsLoggedIn(false);
         } else {
-          setIsLoggedIn(true); // Token is valid, set logged-in state to true
+          setIsLoggedIn(true);
         }
       } catch (error) {
         console.error("Token decoding error:", error);
-        localStorage.removeItem("token"); // In case decoding fails, remove token
-        setIsLoggedIn(false); // Set logged-in state to false
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
       }
     } else {
-      setIsLoggedIn(false); // No token in localStorage, set logged-in state to false
+      setIsLoggedIn(false);
     }
-  }, []); // Runs on component mount, only once
+  }, []);
 
   const handleLogin = async () => {
     setError("");
@@ -46,8 +50,8 @@ export default function LoginScreen() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token); // Save the token in localStorage
-        setIsLoggedIn(true); // Update the logged-in state
+        localStorage.setItem("token", data.token);
+        setIsLoggedIn(true);
         alert("Login successful!");
       } else {
         setError(data.error || "Login failed");
@@ -55,6 +59,11 @@ export default function LoginScreen() {
     } catch (err) {
       setError("Network error, please try again");
     }
+  };
+
+  const showSignUpPage = () => {
+    SetShowSignUpScreen(true);
+    setShowLoginScreen(false);
   };
 
   if (!showLoginScreen) {
@@ -97,7 +106,10 @@ export default function LoginScreen() {
         </>
       )}
       <p className="notAMemberText">
-        Not a member? <button className="signUpButton">SIGN UP</button>
+        Not a member?{" "}
+        <button onClick={showSignUpPage} className="signUpButton">
+          SIGN UP
+        </button>
       </p>
     </div>
   );

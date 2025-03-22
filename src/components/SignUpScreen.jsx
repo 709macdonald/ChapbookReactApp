@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 
-export default function SignUpScreen() {
-  const [showSignUpScreen, SetShowSignUpScreen] = useState(false);
+export default function SignUpScreen({
+  setToggleSideBar,
+  showSignUpScreen,
+  SetShowSignUpScreen,
+  setShowLoginScreen,
+  setShowAllFiles,
+}) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");

@@ -27,8 +27,11 @@ export default function MainScreen({
   selectedUserCreatedFile,
   setSelectedUserCreatedFile,
   sortCriteria,
+  setToggleSideBar,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
+  const [showSignUpScreen, SetShowSignUpScreen] = useState(false);
+  const [showLoginScreen, setShowLoginScreen] = useState(true);
 
   const openIndividualFile = (file) => {
     setShowAllFiles(false);
@@ -73,8 +76,20 @@ export default function MainScreen({
 
   return (
     <div className="mainScreenDiv">
-      <LoginScreen />
-      <SignUpScreen />
+      <LoginScreen
+        setToggleSideBar={setToggleSideBar}
+        setShowAllFiles={setShowAllFiles}
+        SetShowSignUpScreen={SetShowSignUpScreen}
+        showLoginScreen={showLoginScreen}
+        setShowLoginScreen={setShowLoginScreen}
+      />
+      <SignUpScreen
+        setToggleSideBar={setToggleSideBar}
+        showSignUpScreen={showSignUpScreen}
+        SetShowSignUpScreen={SetShowSignUpScreen}
+        setShowLoginScreen={setShowLoginScreen}
+        setShowAllFiles={setShowAllFiles}
+      />
       <BGLogo bgLogoOn={bgLogoOn} />
       <LoadingGear isLoadingFiles={isLoadingFiles} />
       <FileSearchScreen

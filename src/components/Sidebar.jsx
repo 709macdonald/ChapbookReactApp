@@ -22,6 +22,8 @@ export default function Sidebar({
   setSelectedUserCreatedFile,
   sortCriteria,
   setSortCriteria,
+  toggleSideBar,
+  setToggleSideBar,
 }) {
   const goToMainScreen = () => {
     setIsLoadingFiles(false);
@@ -31,8 +33,6 @@ export default function Sidebar({
     setNewDocumentPage(false);
     setHideSearchSection(false);
   };
-
-  const [toggleSideBar, setToggleSideBar] = useState(false);
 
   const handleToggleSideBar = () => {
     setToggleSideBar(!toggleSideBar);

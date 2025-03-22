@@ -5,6 +5,7 @@ import MainScreen from "./components/MainScreen";
 function App() {
   const [files, setFiles] = useState([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
+  const [toggleSideBar, setToggleSideBar] = useState(false);
   const [resultsCount, setResultsCount] = useState(0);
   const [showAllFiles, setShowAllFiles] = useState(false);
   const [showIndividualFile, setShowIndividualFile] = useState(false);
@@ -120,6 +121,8 @@ function App() {
   return (
     <div className="containerDiv">
       <Sidebar
+        toggleSideBar={toggleSideBar}
+        setToggleSideBar={setToggleSideBar}
         files={files}
         setFiles={setFiles}
         setIsLoadingFiles={setIsLoadingFiles}
@@ -160,6 +163,7 @@ function App() {
         selectedUserCreatedFile={selectedUserCreatedFile}
         setSelectedUserCreatedFile={setSelectedUserCreatedFile}
         sortCriteria={sortCriteria}
+        setToggleSideBar={setToggleSideBar}
       />
     </div>
   );
