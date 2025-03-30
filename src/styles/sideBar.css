@@ -257,16 +257,181 @@
   align-items: center;
 }
 
+.creatorNameDiv p {
+  margin-right: 15px;
+}
+
 .toggleThemeButton {
   background-color: transparent;
   border: none;
 }
 
-.moonIcon,
-.sunIcon {
-  margin-left: 1.2rem;
+/* User Settings Button */
+.userSettingsButton {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
   font-size: 1.2rem;
-  color: var(--secondary-font-color);
+  padding: 5px;
+  transition: all 0.3s ease;
+}
+
+.userSettingsButton:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+/* User Settings Section */
+.userSettingsSection {
+  width: 100%;
+  padding: 1rem;
+  overflow-y: auto;
+  max-height: calc(100% - 90px);
+  margin: 0.5rem 0 5rem 0;
+}
+
+.userSettingsHeader {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.userSettingsHeader h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: normal;
+  text-align: center;
+}
+
+.backToMainButton {
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background-color: #767676;
+  color: white;
+  width: 100%;
+}
+
+.backToMainButton:hover {
+  background-color: #5a5a5a;
+}
+
+/* Settings Sections */
+.settingsSection,
+.themeToggleSection {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.settingsSection h3,
+.themeToggleSection h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.profileInputDiv {
+  margin-bottom: 1rem;
+}
+
+.profileInputDiv p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.profileInput {
+  width: 90%; /* Reduce width from 100% */
+  max-width: 300px; /* Set a max width */
+  padding: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 4px;
+  background-color: inherit;
+  color: inherit;
+}
+
+/* Theme Toggle */
+.themeToggleDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggleThemeButton {
+  background: none;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.toggleThemeButton:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.sunIcon {
+  color: #f39c12;
+}
+
+.moonIcon {
+  color: #3498db;
+}
+
+/* Buttons */
+.settingsButtonsDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 1.5rem;
+}
+
+.updateProfileButton,
+.deleteAccountButton {
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.updateProfileButton {
+  background-color: #3498db;
+  color: white;
+}
+
+.updateProfileButton:hover {
+  background-color: #2980b9;
+}
+
+.deleteAccountButton {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.deleteAccountButton:hover {
+  background-color: #c0392b;
+}
+
+/* Messages */
+.errorText {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin: 10px 0;
+}
+
+.successText {
+  color: #2ecc71;
+  font-size: 0.9rem;
+  margin: 10px 0;
 }
 
 /* TABLET */

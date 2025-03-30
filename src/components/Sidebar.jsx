@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import FileUploadSection from "./FileUploadSection";
 import SearchBarSection from "./SearchBarSection";
+import UserSettings from "./UserSettings";
 
 export default function Sidebar({
   files,
@@ -25,6 +26,8 @@ export default function Sidebar({
   toggleSideBar,
   setToggleSideBar,
 }) {
+  const [showUserSettings, setShowUserSettings] = useState(false);
+
   const goToMainScreen = () => {
     setIsLoadingFiles(false);
     setShowIndividualFile(false);
@@ -32,10 +35,19 @@ export default function Sidebar({
     setShowAllFiles(true);
     setNewDocumentPage(false);
     setHideSearchSection(false);
+    setShowUserSettings(false);
   };
 
   const handleToggleSideBar = () => {
     setToggleSideBar(!toggleSideBar);
+  };
+
+  const handleShowUserSettings = () => {
+    setShowUserSettings(true);
+  };
+
+  const handleCloseUserSettings = () => {
+    setShowUserSettings(false);
   };
 
   if (!toggleSideBar) {
@@ -56,36 +68,49 @@ export default function Sidebar({
           Chap<span className="book">book</span>
         </h2>
       </div>
-      <FileUploadSection
-        setFiles={setFiles}
-        setIsLoadingFiles={setIsLoadingFiles}
-        setShowAllFiles={setShowAllFiles}
-        setShowIndividualFile={setShowIndividualFile}
-        setBgLogoOn={setBgLogoOn}
-        setNewDocumentPage={setNewDocumentPage}
-        setHideSearchSection={setHideSearchSection}
-        setSelectedUserCreatedFile={setSelectedUserCreatedFile}
-        setSearchWord={setSearchWord}
-      />
-      <SearchBarSection
-        files={files}
-        resultsCount={resultsCount}
-        searchWord={searchWord}
-        setSearchWord={setSearchWord}
-        assistedSearchWords={assistedSearchWords}
-        setAssistedSearchWords={setAssistedSearchWords}
-        hideSearchSection={hideSearchSection}
-        setSortCriteria={setSortCriteria}
-        sortCriteria={sortCriteria}
-      />
+
+      {/* Conditionally show either settings or the regular sections */}
+      {showUserSettings ? (
+        <UserSettings
+          setShowUserSettings={setShowUserSettings}
+          setToggleSideBar={setToggleSideBar}
+          setShowAllFiles={setShowAllFiles}
+          toggleTheme={toggleTheme}
+          isDarkMode={isDarkMode}
+          handleClose={handleCloseUserSettings}
+        />
+      ) : (
+        <>
+          <FileUploadSection
+            setFiles={setFiles}
+            setIsLoadingFiles={setIsLoadingFiles}
+            setShowAllFiles={setShowAllFiles}
+            setShowIndividualFile={setShowIndividualFile}
+            setBgLogoOn={setBgLogoOn}
+            setNewDocumentPage={setNewDocumentPage}
+            setHideSearchSection={setHideSearchSection}
+            setSelectedUserCreatedFile={setSelectedUserCreatedFile}
+            setSearchWord={setSearchWord}
+          />
+          <SearchBarSection
+            files={files}
+            resultsCount={resultsCount}
+            searchWord={searchWord}
+            setSearchWord={setSearchWord}
+            assistedSearchWords={assistedSearchWords}
+            setAssistedSearchWords={setAssistedSearchWords}
+            hideSearchSection={hideSearchSection}
+            setSortCriteria={setSortCriteria}
+            sortCriteria={sortCriteria}
+          />
+        </>
+      )}
+
       <div className="creatorNameDiv">
         <p>Created By Peter MacDonald</p>
-        <button className="toggleThemeButton" onClick={toggleTheme}>
-          {isDarkMode ? (
-            <i className="fa-solid fa-sun sunIcon"></i>
-          ) : (
-            <i className="fa-solid fa-moon moonIcon"></i>
-          )}
+        {/* User settings button */}
+        <button className="userSettingsButton" onClick={handleShowUserSettings}>
+          <i className="fa-solid fa-user-gear"></i>
         </button>
       </div>
     </div>
