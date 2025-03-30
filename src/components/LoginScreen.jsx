@@ -25,6 +25,9 @@ export default function LoginScreen({
           setIsLoggedIn(false);
         } else {
           setIsLoggedIn(true);
+          setToggleSideBar(true);
+          setShowAllFiles(true);
+          setShowLoginScreen(false);
         }
       } catch (error) {
         console.error("Token decoding error:", error);
@@ -52,6 +55,9 @@ export default function LoginScreen({
       if (response.ok) {
         localStorage.setItem("token", data.token);
         setIsLoggedIn(true);
+        setToggleSideBar(true);
+        setShowAllFiles(true);
+        setShowLoginScreen(false);
         alert("Login successful!");
       } else {
         setError(data.error || "Login failed");
