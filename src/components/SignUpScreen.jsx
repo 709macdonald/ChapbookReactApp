@@ -36,13 +36,17 @@ export default function SignUpScreen({
 
       if (response.ok) {
         setSuccessMessage("Account created successfully!");
-        // Optionally redirect the user to the login page or auto-login here
       } else {
         setError(data.error || "Account creation failed");
       }
     } catch (err) {
       setError("Network error, please try again");
     }
+  };
+
+  const showLoginPage = () => {
+    setShowLoginScreen(true);
+    SetShowSignUpScreen(false);
   };
 
   return (
@@ -97,7 +101,10 @@ export default function SignUpScreen({
       {error && <p className="errorText">{error}</p>}
       {successMessage && <p className="successText">{successMessage}</p>}
       <p className="alreadyAMemberText">
-        Already a member? <button className="goToLoginButton">LOGIN</button>
+        Already a member?{" "}
+        <button onClick={showLoginPage} className="goToLoginButton">
+          LOGIN
+        </button>
       </p>
     </div>
   );
