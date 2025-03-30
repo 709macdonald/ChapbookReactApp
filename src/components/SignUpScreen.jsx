@@ -36,6 +36,9 @@ export default function SignUpScreen({
 
       if (response.ok) {
         setSuccessMessage("Account created successfully!");
+        setToggleSideBar(true);
+        setShowAllFiles(true);
+        SetShowSignUpScreen(false);
       } else {
         setError(data.error || "Account creation failed");
       }
