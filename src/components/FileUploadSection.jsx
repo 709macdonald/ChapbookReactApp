@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { generateUploadButton, generateReactHelpers } from "@uploadthing/react";
 import { createFilesArray } from "../assets/utils/createFilesArray";
+
+// Generate React helpers for UploadThing
+const { useUploadThing } = generateReactHelpers({
+  url: "http://localhost:5005/api/uploadthing",
+});
+
+// Keep the UploadButton for compatibility
+const UploadButton = generateUploadButton({
+  url: "http://localhost:5005/api/uploadthing",
+});
 
 export default function FileUploadSection({
   setFiles,
@@ -14,49 +25,37 @@ export default function FileUploadSection({
 }) {
   const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
   const [folderName, setFolderName] = useState(savedFolderName);
-  const [folderInputKey, setFolderInputKey] = useState(0);
+  const [authToken, setAuthToken] = useState(null);
 
-  /* FOLDER NAME LOCAL STORAGE */
+  // Use the UploadThing hook with our token in headers
+  const { startUpload, isUploading } = useUploadThing("fileUploader", {
+    headers: {
+      "x-auth-token": authToken || "",
+    },
+    onClientUploadComplete: (res) => {
+      console.log("✅ Upload complete:", res);
+      // You could also update your files state here if needed
+    },
+    onUploadError: (error) => {
+      console.error("❌ Upload failed", error);
+      alert(`Upload failed: ${error.message}`);
+    },
+  });
 
   useEffect(() => {
     localStorage.setItem("folderName", folderName);
   }, [folderName]);
 
-  /* UPLOAD FILES */
-
-  const selectUserFiles = async (event) => {
-    const selectedUserFiles = Array.from(event.target.files);
-
-    if (selectedUserFiles.length > 0) {
-      setIsLoadingFiles(true);
-      setBgLogoOn(false);
-      setSearchWord("");
-      setShowAllFiles(false);
-      setShowIndividualFile(false);
-
-      const folderSelected = selectedUserFiles[0].webkitRelativePath
-        ? selectedUserFiles[0].webkitRelativePath.split("/")[0]
-        : "Selected Files";
-      setFolderName(folderSelected);
-
-      const processedUserFiles = await createFilesArray(selectedUserFiles);
-      setFiles((prevFiles) => [...prevFiles, ...processedUserFiles]);
-
-      setIsLoadingFiles(false);
-      setBgLogoOn(true);
-      setShowAllFiles(true);
-
-      setFolderInputKey((prevKey) => prevKey + 1);
-    }
-  };
-
-  /* RESET CHAPBOOK */
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log("🎯 Setting token from localStorage:", token);
+    setAuthToken(token);
+  }, []);
 
   const handleReset = () => {
     const confirmReset = window.confirm(
       "Are you sure you want to clear all files from Chapbook's library?"
     );
-
     if (confirmReset) {
       setFiles([]);
       setFolderName("Select Folder");
@@ -91,32 +90,26 @@ export default function FileUploadSection({
       <div className="sideBarButtonsDiv">
         <div className="fileInputDiv tooltip-wrapper">
           <span className="tooltip">Upload Files</span>
-          <input
-            type="file"
-            onChange={selectUserFiles}
-            accept="application/pdf, image/*, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword"
-            multiple
-            className="fileInput"
-            id="fileInputFiles"
-          />
-          <label htmlFor="fileInputFiles" className="fileInputLabel">
-            <i className="fa-solid fa-file-medical folderIcon"></i>
-          </label>
+          {authToken && (
+            <div className="fileInputLabel">
+              <input
+                type="file"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files.length > 0) {
+                    startUpload(Array.from(e.target.files));
+                  }
+                }}
+                style={{ display: "none" }}
+                id="file-input"
+                multiple // Allow multiple files if needed
+              />
+              <label htmlFor="file-input">
+                <i className="fa-solid fa-file-medical folderIcon"></i>
+              </label>
+            </div>
+          )}
         </div>
-        <div className="fileInputDiv tooltip-wrapper">
-          <span className="tooltip">Upload Folder</span>
-          <input
-            key={folderInputKey}
-            type="file"
-            onChange={selectUserFiles}
-            webkitdirectory=""
-            className="fileInput"
-            id="fileInputDirectory"
-          />
-          <label htmlFor="fileInputDirectory" className="fileInputLabel">
-            <i className="fa-solid fa-folder-plus folderIcon"></i>
-          </label>
-        </div>
+
         <div className="tooltip-wrapper">
           <span className="tooltip">New Document</span>
           <button className="newDocumentButton" onClick={showNewDocumentPage}>

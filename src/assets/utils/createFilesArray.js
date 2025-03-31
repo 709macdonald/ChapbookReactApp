@@ -3,54 +3,68 @@ import { PDFTextExtraction } from "./PDFTextUtils";
 import { imageTextExtraction } from "./ImageTextUtils";
 import { wordTextExtraction } from "./wordDocTextUtils";
 
-export const createFilesArray = async (selectedUserFiles) => {
-  const processedUserFiles = await Promise.all(
-    selectedUserFiles.map(async (file) => {
+export const createFilesArray = async (
+  uploadedFiles,
+  fromUploadThing = false
+) => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("Authentication required for file uploads");
+
+  const processedFiles = await Promise.all(
+    uploadedFiles.map(async (file) => {
       try {
-        const fileContent = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
+        const fileUrl = fromUploadThing ? file.url : file.fileUrl;
+        const fileName = file.name;
+        const fileKey = file.key;
 
-        const blobUrl = URL.createObjectURL(file);
+        let fileType = "";
+        const ext = fileName.split(".").pop()?.toLowerCase();
 
-        let fileData = {
+        if (ext === "pdf") {
+          fileType = "application/pdf";
+        } else if (["jpg", "jpeg", "png"].includes(ext)) {
+          fileType = `image/${ext}`;
+        } else if (["docx", "doc"].includes(ext)) {
+          fileType =
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        }
+
+        const fileData = {
           id: uuidv4(),
-          name: file.name,
-          type: file.type,
-          date: new Date(file.lastModified).toISOString(),
-          fileContent,
-          blobUrl,
+          name: fileName,
+          type: fileType,
+          date: new Date().toISOString(),
+          fileUrl: fileUrl,
+          serverKey: fileKey,
           text: "",
           matchedWords: [],
           locations: [],
           tags: [],
         };
 
-        if (file.type === "application/pdf") {
-          const { text, locations } = await PDFTextExtraction(fileData.blobUrl);
+        // Text extraction based on type
+        if (fileType === "application/pdf") {
+          const { text, locations } = await PDFTextExtraction(fileUrl);
           fileData.text = text;
           fileData.locations = locations;
-        } else if (file.type.startsWith("image/")) {
-          const { text, locations } = await imageTextExtraction(file);
+        } else if (fileType.startsWith("image/")) {
+          const { text, locations } = await imageTextExtraction(fileUrl);
           fileData.text = text;
           fileData.locations = locations;
         } else if (
-          file.type ===
+          fileType ===
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ) {
-          fileData.text = await wordTextExtraction(file);
+          fileData.text = await wordTextExtraction(fileUrl);
         }
 
         return fileData;
-      } catch (error) {
-        console.error(`Failed to extract text from file: ${file.name}`, error);
+      } catch (err) {
+        console.error(`❌ Error processing ${file.name}:`, err);
         return null;
       }
     })
   );
 
-  return processedUserFiles.filter((file) => file !== null);
+  return processedFiles.filter((f) => f !== null);
 };
