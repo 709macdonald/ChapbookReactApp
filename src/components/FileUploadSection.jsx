@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { generateUploadButton, generateReactHelpers } from "@uploadthing/react";
-import { createFilesArray } from "../assets/utils/createFilesArray";
+import { generateReactHelpers } from "@uploadthing/react";
 
-// Generate React helpers for UploadThing
 const { useUploadThing } = generateReactHelpers({
   url: "http://localhost:5005/api/uploadthing",
-});
-
-// Keep the UploadButton for compatibility
-const UploadButton = generateUploadButton({
-  url: "http://localhost:5005/api/uploadthing",
+  isDev: true,
 });
 
 export default function FileUploadSection({
@@ -26,31 +20,55 @@ export default function FileUploadSection({
   const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
   const [folderName, setFolderName] = useState(savedFolderName);
   const [authToken, setAuthToken] = useState(null);
-
-  // Use the UploadThing hook with our token in headers
-  const { startUpload, isUploading } = useUploadThing("fileUploader", {
-    headers: {
-      "x-auth-token": authToken || "",
-    },
-    onClientUploadComplete: (res) => {
-      console.log("✅ Upload complete:", res);
-      // You could also update your files state here if needed
-    },
-    onUploadError: (error) => {
-      console.error("❌ Upload failed", error);
-      alert(`Upload failed: ${error.message}`);
-    },
-  });
-
-  useEffect(() => {
-    localStorage.setItem("folderName", folderName);
-  }, [folderName]);
+  const [uploadError, setUploadError] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     console.log("🎯 Setting token from localStorage:", token);
     setAuthToken(token);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("folderName", folderName);
+  }, [folderName]);
+
+  const { startUpload, isUploading, permittedFileInfo } = useUploadThing(
+    "fileUploader",
+    {
+      headers: {
+        "x-auth-token": authToken || "",
+      },
+      onClientUploadComplete: (res) => {
+        console.log("✅ Upload complete:", res);
+        if (res && res.length > 0) {
+          setFiles((prevFiles) => [...prevFiles, ...res]);
+
+          setUploadError(null);
+
+          alert(`Successfully uploaded ${res.length} file(s)`);
+        }
+      },
+      onUploadError: (error) => {
+        console.error("❌ Upload failed", error);
+        setUploadError(error.message || "Upload failed");
+        alert(`Upload failed: ${error.message}`);
+      },
+    }
+  );
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      console.log("Starting upload with files:", e.target.files);
+      setUploadError(null);
+
+      try {
+        startUpload(Array.from(e.target.files));
+      } catch (error) {
+        console.error("Error starting upload:", error);
+        setUploadError("Failed to start upload process");
+      }
+    }
+  };
 
   const handleReset = () => {
     const confirmReset = window.confirm(
@@ -66,6 +84,7 @@ export default function FileUploadSection({
       setSearchWord("");
       setNewDocumentPage(false);
       setHideSearchSection(false);
+      setUploadError(null);
       localStorage.removeItem("files");
       localStorage.removeItem("folderName");
     }
@@ -87,25 +106,37 @@ export default function FileUploadSection({
         Reset
       </button>
       <hr />
+
       <div className="sideBarButtonsDiv">
         <div className="fileInputDiv tooltip-wrapper">
           <span className="tooltip">Upload Files</span>
-          {authToken && (
+          {authToken ? (
             <div className="fileInputLabel">
               <input
                 type="file"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files.length > 0) {
-                    startUpload(Array.from(e.target.files));
-                  }
-                }}
+                onChange={handleFileChange}
                 style={{ display: "none" }}
                 id="file-input"
-                multiple // Allow multiple files if needed
+                multiple
+                disabled={isUploading}
               />
               <label htmlFor="file-input">
-                <i className="fa-solid fa-file-medical folderIcon"></i>
+                <i
+                  className={`fa-solid ${
+                    isUploading ? "fa-spinner fa-spin" : "fa-file-medical"
+                  } folderIcon`}
+                ></i>
               </label>
+              {isUploading && (
+                <span className="upload-status">Uploading...</span>
+              )}
+            </div>
+          ) : (
+            <div
+              className="fileInputLabel disabled"
+              title="Please log in to upload files"
+            >
+              <i className="fa-solid fa-file-medical folderIcon disabled"></i>
             </div>
           )}
         </div>
@@ -117,7 +148,11 @@ export default function FileUploadSection({
           </button>
         </div>
       </div>
+
       <p className="folderName">{folderName}</p>
+
+      {uploadError && <div className="error-message">{uploadError}</div>}
+
       <hr />
     </div>
   );

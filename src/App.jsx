@@ -120,7 +120,6 @@ function App() {
 
   return (
     <div className="containerDiv">
-      {/* Removed UploadThingProvider */}
       <Sidebar
         toggleSideBar={toggleSideBar}
         setToggleSideBar={setToggleSideBar}
