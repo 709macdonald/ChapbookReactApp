@@ -17,7 +17,7 @@ export default function ImageRenderer({
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const img = new Image();
-    img.src = file.blobUrl;
+    img.src = file.fileUrl;
 
     img.onload = () => {
       setOriginalDimensions({ width: img.width, height: img.height });

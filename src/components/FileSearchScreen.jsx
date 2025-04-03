@@ -102,25 +102,25 @@ export default function FileSearchScreen({
           >
             <div className="fileDisplayTopDiv">
               {isPdf(file) ? (
-                !renderErrors[file.blobUrl] ? (
+                !renderErrors[file.fileUrl] ? (
                   <iframe
                     className="previewIFrame"
-                    src={file.blobUrl}
+                    src={file.fileUrl}
                     title={file.name}
                     style={{ width: "9rem", height: "12rem" }}
-                    onError={() => handleRenderError(file.blobUrl)}
+                    onError={() => handleRenderError(file.fileUrl)}
                   ></iframe>
                 ) : (
                   <i className="fa-regular fa-file-pdf documentIcons"></i>
                 )
               ) : isImage(file) ? (
-                !renderErrors[file.blobUrl] ? (
+                !renderErrors[file.fileUrl] ? (
                   <img
                     className="previewImage"
-                    src={file.blobUrl}
+                    src={file.fileUrl}
                     alt={file.name}
                     style={{ width: "9rem", height: "12rem" }}
-                    onError={() => handleRenderError(file.blobUrl)}
+                    onError={() => handleRenderError(file.fileUrl)}
                   />
                 ) : (
                   <i className="fa-regular fa-file-image documentIcons"></i>

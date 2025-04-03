@@ -97,7 +97,7 @@ export default function IndividualFileScreen({
   useEffect(() => {
     if (showIndividualFile && file && file.type === "application/pdf") {
       pdfjsLib
-        .getDocument(file.blobUrl)
+        .getDocument(file.fileUrl)
         .promise.then((pdf) => {
           setPdfDocument(pdf);
           setTotalPages(pdf.numPages);
