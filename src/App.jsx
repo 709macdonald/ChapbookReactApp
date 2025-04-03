@@ -104,17 +104,41 @@ function App() {
 
   /* DELETE FILES */
 
-  const handleDeleteFile = (id) => {
+  const handleDeleteFile = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this file?"
     );
 
     if (confirmDelete) {
-      const updatedFiles = files.filter((file) => file.id !== id);
-      setFiles(updatedFiles);
-      setShowIndividualFile(false);
-      setBgLogoOn(true);
-      setShowAllFiles(true);
+      const fileToDelete = files.find((file) => file.id === id);
+
+      if (!fileToDelete) {
+        alert("File not found.");
+        return;
+      }
+
+      try {
+        // Make backend call to delete the file
+        const res = await fetch(
+          `http://localhost:5005/api/delete-local/${fileToDelete.serverKey}`,
+          { method: "DELETE" }
+        );
+
+        if (!res.ok) {
+          throw new Error("Server responded with an error.");
+        }
+
+        // Remove file from frontend state after successful deletion
+        setFiles(files.filter((file) => file.id !== id));
+        setShowIndividualFile(false);
+        setBgLogoOn(true);
+        setShowAllFiles(true);
+
+        alert("File deleted successfully.");
+      } catch (error) {
+        console.error("❌ Error deleting file:", error);
+        alert("Failed to delete the file. Please try again.");
+      }
     }
   };
 
