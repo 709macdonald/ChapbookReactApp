@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { generateReactHelpers } from "@uploadthing/react";
+import { createFilesArray } from "../assets/utils/createFilesArray";
 
 const { useUploadThing } = generateReactHelpers({
   url: "http://localhost:5005/api/uploadthing",
@@ -90,6 +91,44 @@ export default function FileUploadSection({
     }
   };
 
+  const handleFileChangeLocal = async (e) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append("files", file);
+    }
+
+    try {
+      const res = await fetch("http://localhost:5005/api/upload-local", {
+        method: "POST",
+        body: formData,
+      });
+
+      const uploadedFiles = await res.json();
+      console.log("📦 Multer uploaded:", uploadedFiles);
+
+      const formattedUploadedFiles = uploadedFiles.map((file) => ({
+        url: file.fileUrl, // ✅ fixed to exactly match backend
+        name: file.name, // ✅ fixed to exactly match backend
+        key: file.key, // ✅ fixed to exactly match backend
+      }));
+
+      const processedFiles = await createFilesArray(formattedUploadedFiles);
+
+      console.log("✅ Processed files:", processedFiles);
+      setFiles((prev) => [...prev, ...processedFiles]);
+
+      alert(
+        `Successfully uploaded and processed ${processedFiles.length} file(s)`
+      );
+    } catch (err) {
+      console.error("❌ Upload or processing error:", err);
+      setUploadError("Something went wrong processing the file.");
+    }
+  };
+
   const showNewDocumentPage = () => {
     setNewDocumentPage(true);
     setIsLoadingFiles(false);
@@ -114,7 +153,7 @@ export default function FileUploadSection({
             <div className="fileInputLabel">
               <input
                 type="file"
-                onChange={handleFileChange}
+                onChange={handleFileChangeLocal}
                 style={{ display: "none" }}
                 id="file-input"
                 multiple

@@ -3,23 +3,24 @@ import { PDFTextExtraction } from "./PDFTextUtils";
 import { imageTextExtraction } from "./ImageTextUtils";
 import { wordTextExtraction } from "./wordDocTextUtils";
 
-export const createFilesArray = async (
-  uploadedFiles,
-  fromUploadThing = false
-) => {
+export const createFilesArray = async (uploadedFiles) => {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("Authentication required for file uploads");
 
   const processedFiles = await Promise.all(
     uploadedFiles.map(async (file) => {
       try {
-        const fileUrl = fromUploadThing ? file.url : file.fileUrl;
-        const fileName = file.name;
-        const fileKey = file.key;
+        const fileUrl = file.url || file.fileUrl;
+        const fileName = file.name || file.originalname;
+        const fileKey = file.key || file.filename;
 
-        let fileType = "";
+        if (!fileUrl || !fileName) {
+          throw new Error("File URL or name missing");
+        }
+
         const ext = fileName.split(".").pop()?.toLowerCase();
 
+        let fileType = "application/octet-stream";
         if (ext === "pdf") {
           fileType = "application/pdf";
         } else if (["jpg", "jpeg", "png"].includes(ext)) {
@@ -34,7 +35,7 @@ export const createFilesArray = async (
           name: fileName,
           type: fileType,
           date: new Date().toISOString(),
-          fileUrl: fileUrl,
+          fileUrl,
           serverKey: fileKey,
           text: "",
           matchedWords: [],
@@ -42,7 +43,6 @@ export const createFilesArray = async (
           tags: [],
         };
 
-        // Text extraction based on type
         if (fileType === "application/pdf") {
           const { text, locations } = await PDFTextExtraction(fileUrl);
           fileData.text = text;
@@ -60,11 +60,14 @@ export const createFilesArray = async (
 
         return fileData;
       } catch (err) {
-        console.error(`❌ Error processing ${file.name}:`, err);
+        console.error(
+          `❌ Error processing file (${file.url || file.fileUrl}):`,
+          err
+        );
         return null;
       }
     })
   );
 
-  return processedFiles.filter((f) => f !== null);
+  return processedFiles.filter(Boolean);
 };
