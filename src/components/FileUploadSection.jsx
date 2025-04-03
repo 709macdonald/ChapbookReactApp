@@ -26,7 +26,6 @@ export default function FileUploadSection({
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("🎯 Setting token from localStorage:", token);
     setAuthToken(token);
   }, []);
 

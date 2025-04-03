@@ -13,7 +13,6 @@ export default function FileSearchScreen({
   const [hoveredFileId, setHoveredFileId] = useState(null);
 
   const sortedFiles = useMemo(() => {
-    console.log("Sort Criteria:", sortCriteria);
     const sorted = [...files].sort((a, b) => {
       let comparison = 0;
 

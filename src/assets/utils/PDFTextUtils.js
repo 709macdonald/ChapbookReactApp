@@ -4,8 +4,6 @@ import * as pdfjsLib from "pdfjs-dist";
 const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.6.82/pdf.worker.min.js`;
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 
-console.log("Worker source set to:", workerSrc);
-
 export const PDFTextExtraction = async (fileUrl) => {
   return new Promise((resolve, reject) => {
     const loadingTask = pdfjsLib.getDocument(fileUrl);

@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { EditorState, Modifier, SelectionState } from "draft-js";
 import OpenAI from "openai";
 
-console.log("API Key available:", !!import.meta.env.VITE_OPENAI_API_KEY);
-
 const openai = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
