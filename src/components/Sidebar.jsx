@@ -82,6 +82,7 @@ export default function Sidebar({
       ) : (
         <>
           <FileUploadSection
+            files={files}
             setFiles={setFiles}
             setIsLoadingFiles={setIsLoadingFiles}
             setShowAllFiles={setShowAllFiles}

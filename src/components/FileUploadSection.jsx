@@ -8,6 +8,7 @@ const { useUploadThing } = generateReactHelpers({
 });
 
 export default function FileUploadSection({
+  files,
   setFiles,
   setIsLoadingFiles,
   setShowAllFiles,
@@ -92,13 +93,23 @@ export default function FileUploadSection({
   };
 
   const handleFileChangeLocal = async (e) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+    const selectedFiles = Array.from(e.target.files);
+    if (!selectedFiles.length) return;
 
     const formData = new FormData();
-    for (const file of files) {
-      formData.append("files", file);
+
+    // Check for duplicates
+    const existingFileNames = new Set(files.map((f) => f.name));
+    const newFiles = selectedFiles.filter(
+      (file) => !existingFileNames.has(file.name)
+    );
+
+    if (newFiles.length === 0) {
+      alert("All selected files are already uploaded.");
+      return;
     }
+
+    newFiles.forEach((file) => formData.append("files", file));
 
     try {
       const res = await fetch("http://localhost:5005/api/upload-local", {
@@ -110,23 +121,24 @@ export default function FileUploadSection({
       console.log("📦 Multer uploaded:", uploadedFiles);
 
       const formattedUploadedFiles = uploadedFiles.map((file) => ({
-        url: file.fileUrl, // ✅ fixed to exactly match backend
-        name: file.name, // ✅ fixed to exactly match backend
-        key: file.key, // ✅ fixed to exactly match backend
+        url: file.fileUrl,
+        name: file.name,
+        key: file.key,
       }));
 
       const processedFiles = await createFilesArray(formattedUploadedFiles);
 
-      console.log("✅ Processed files:", processedFiles);
-      setFiles((prev) => [...prev, ...processedFiles]);
+      setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
 
       alert(
-        `Successfully uploaded and processed ${processedFiles.length} file(s)`
+        `Successfully uploaded and processed ${processedFiles.length} file(s).`
       );
     } catch (err) {
       console.error("❌ Upload or processing error:", err);
-      setUploadError("Something went wrong processing the file.");
+      setUploadError("Something went wrong processing the files.");
     }
+
+    e.target.value = ""; // Clear input to allow re-upload of same file if needed
   };
 
   const showNewDocumentPage = () => {
