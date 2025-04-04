@@ -50,6 +50,7 @@ const NewDocumentPage = ({
   setFiles,
   files,
   selectedUserCreatedFile,
+  setIsLoadingFiles,
 }) => {
   const [documentTitle, setDocumentTitle] = useState("New Document");
   const [editorState, setEditorState] = useState(() =>
@@ -283,6 +284,7 @@ const NewDocumentPage = ({
           files={files}
           selectedUserCreatedFile={selectedUserCreatedFile}
           documentTags={documentTags}
+          setIsLoadingFiles={setIsLoadingFiles}
         />
       </div>
 

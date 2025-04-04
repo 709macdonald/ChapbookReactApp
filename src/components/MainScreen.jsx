@@ -29,6 +29,7 @@ export default function MainScreen({
   sortCriteria,
   setToggleSideBar,
   fetchFiles,
+  setIsLoadingFiles,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
   const [showSignUpScreen, SetShowSignUpScreen] = useState(false);
@@ -116,6 +117,7 @@ export default function MainScreen({
         onUpdateFileTags={onUpdateFileTags}
       />
       <NewDocumentPage
+        setIsLoadingFiles={setIsLoadingFiles}
         newDocumentPage={newDocumentPage}
         setNewDocumentPage={setNewDocumentPage}
         setShowAllFiles={setShowAllFiles}

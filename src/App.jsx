@@ -170,6 +170,7 @@ function App() {
         files={files}
         setFiles={setFiles}
         isLoadingFiles={isLoadingFiles}
+        setIsLoadingFiles={setIsLoadingFiles}
         setResultsCount={setResultsCount}
         showAllFiles={showAllFiles}
         setShowAllFiles={setShowAllFiles}
