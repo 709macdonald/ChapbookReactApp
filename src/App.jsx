@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
 import Sidebar from "./components/Sidebar";
 import MainScreen from "./components/MainScreen";
 
@@ -14,22 +15,61 @@ function App() {
   const [newDocumentPage, setNewDocumentPage] = useState(false);
   const [hideSearchSection, setHideSearchSection] = useState(false);
   const [selectedUserCreatedFile, setSelectedUserCreatedFile] = useState(null);
-
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
-
   const [sortCriteria, setSortCriteria] = useState("name");
 
   if (typeof global === "undefined") {
     var global = window;
   }
 
+  // 🔄 Load user files from DB
+  const fetchFiles = async () => {
+    let userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const decoded = jwt_decode(token);
+          userId = decoded.userId;
+          if (userId) localStorage.setItem("userId", userId);
+        } catch (err) {
+          console.warn("Failed to decode token:", err);
+        }
+      }
+    }
+
+    if (!userId) {
+      console.warn("No userId found. User may not be logged in.");
+      return;
+    }
+
+    try {
+      setIsLoadingFiles(true);
+      const res = await fetch(
+        `http://localhost:5005/api/files?userId=${userId}`
+      );
+      if (!res.ok) throw new Error("Failed to fetch user files");
+      const data = await res.json();
+      setFiles(data);
+    } catch (err) {
+      console.error("❌ Error fetching files:", err);
+    } finally {
+      setIsLoadingFiles(false);
+    }
+  };
+
+  // 🔁 Load files when app first loads
+  useEffect(() => {
+    fetchFiles();
+  }, []);
+
   useEffect(() => {
     console.log("Files state updated:", files);
   }, [files]);
 
-  /* LIGHT AND DARK MODE  */
-
+  // 🌓 Light/Dark Mode
   const toggleTheme = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
@@ -52,91 +92,47 @@ function App() {
     }
   }, []);
 
-  /* STORAGE */
-
-  useEffect(() => {
-    const fetchFiles = async () => {
-      let userId = localStorage.getItem("userId");
-
-      // 🧠 If it's missing, decode it from the token
-      if (!userId) {
-        const token = localStorage.getItem("token");
-        if (token) {
-          try {
-            const decoded = jwt_decode(token);
-            userId = decoded.userId;
-            if (userId) {
-              localStorage.setItem("userId", userId); // ✅ Put it back
-            }
-          } catch (err) {
-            console.warn("Failed to decode token:", err);
-          }
-        }
-      }
-
-      if (!userId) {
-        console.warn("No userId found. User may not be logged in.");
-        return;
-      }
-
-      try {
-        setIsLoadingFiles(true);
-
-        const res = await fetch(
-          `http://localhost:5005/api/files?userId=${userId}`
-        );
-
-        if (!res.ok) throw new Error("Failed to fetch user files");
-
-        const data = await res.json();
-        setFiles(data);
-      } catch (error) {
-        console.error("❌ Error fetching user files:", error);
-      } finally {
-        setIsLoadingFiles(false);
-      }
-    };
-
-    fetchFiles();
-  }, []);
-
-  /* DELETE FILES */
-
+  // 🗑 Delete file from DB + server + UI
   const handleDeleteFile = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this file?"
     );
 
-    if (confirmDelete) {
-      const fileToDelete = files.find((file) => file.id === id);
+    if (!confirmDelete) return;
 
-      if (!fileToDelete) {
-        alert("File not found.");
-        return;
-      }
+    const fileToDelete = files.find((file) => file.id === id);
 
-      try {
-        // Make backend call to delete the file
-        const res = await fetch(
-          `http://localhost:5005/api/delete-local/${fileToDelete.serverKey}`,
-          { method: "DELETE" }
-        );
+    if (!fileToDelete) {
+      alert("File not found.");
+      return;
+    }
 
-        if (!res.ok) {
-          throw new Error("Server responded with an error.");
+    try {
+      // ✅ Delete from DB
+      const res = await fetch(`http://localhost:5005/api/files/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Server error on DB delete");
+
+      // ✅ Optional: delete from local /uploads folder
+      await fetch(
+        `http://localhost:5005/api/delete-local/${fileToDelete.serverKey}`,
+        {
+          method: "DELETE",
         }
+      );
 
-        // Remove file from frontend state after successful deletion
-        setFiles(files.filter((file) => file.id !== id));
-        setShowIndividualFile(false);
-        setBgLogoOn(true);
-        setShowAllFiles(true);
+      // ✅ Update frontend
+      setFiles(files.filter((file) => file.id !== id));
+      setShowIndividualFile(false);
+      setBgLogoOn(true);
+      setShowAllFiles(true);
 
-        alert("File deleted successfully.");
-      } catch (error) {
-        console.error("❌ Error deleting file:", error);
-        alert("Failed to delete the file. Please try again.");
-      }
+      alert("File deleted successfully.");
+    } catch (error) {
+      console.error("❌ Error deleting file:", error);
+      alert("Failed to delete the file. Please try again.");
     }
   };
 
@@ -166,6 +162,7 @@ function App() {
         setSortCriteria={setSortCriteria}
       />
       <MainScreen
+        fetchFiles={fetchFiles}
         files={files}
         setFiles={setFiles}
         isLoadingFiles={isLoadingFiles}

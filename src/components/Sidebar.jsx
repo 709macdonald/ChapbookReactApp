@@ -78,6 +78,7 @@ export default function Sidebar({
           toggleTheme={toggleTheme}
           isDarkMode={isDarkMode}
           handleClose={handleCloseUserSettings}
+          setFiles={setFiles} // ✅ pass the function that updates your files array
         />
       ) : (
         <>

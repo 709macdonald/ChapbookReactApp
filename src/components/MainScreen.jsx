@@ -28,6 +28,7 @@ export default function MainScreen({
   setSelectedUserCreatedFile,
   sortCriteria,
   setToggleSideBar,
+  fetchFiles,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
   const [showSignUpScreen, SetShowSignUpScreen] = useState(false);
@@ -82,6 +83,7 @@ export default function MainScreen({
         SetShowSignUpScreen={SetShowSignUpScreen}
         showLoginScreen={showLoginScreen}
         setShowLoginScreen={setShowLoginScreen}
+        fetchFiles={fetchFiles}
       />
       <SignUpScreen
         setToggleSideBar={setToggleSideBar}

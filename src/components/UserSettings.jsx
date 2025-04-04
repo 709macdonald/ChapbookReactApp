@@ -8,6 +8,7 @@ export default function UserSettings({
   toggleTheme,
   isDarkMode,
   handleClose,
+  setFiles, // ✅ add this
 }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -186,6 +187,58 @@ export default function UserSettings({
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToggleSideBar(false);
+    setShowAllFiles(false);
+    setShowUserSettings(false);
+    // Optionally: reload the page or redirect to login
+    window.location.reload(); // or use your own login screen toggle
+  };
+
+  const handleResetAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete all your files? This cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    const token = localStorage.getItem("token");
+    if (!token || !userId) {
+      setError("You must be logged in to reset your account");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/files/reset/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccessMessage("All files deleted successfully");
+
+        // ✅ Clear the file list in app state
+        if (typeof setFiles === "function") {
+          setFiles([]);
+        }
+
+        // ✅ Optionally close the settings panel after a short delay
+        setTimeout(() => {
+          setShowUserSettings(false);
+        }, 1000);
+      } else {
+        setError(data.error || "Failed to reset account");
+      }
+    } catch (err) {
+      setError("Network error, please try again");
+    }
+  };
+
   return (
     <div className="userSettingsSection">
       <div className="userSettingsHeader">
@@ -276,8 +329,14 @@ export default function UserSettings({
         <button className="updateProfileButton" onClick={handleUpdateProfile}>
           Update Profile
         </button>
+        <button className="resetAccountButton" onClick={handleResetAccount}>
+          Reset Account (Delete All Files)
+        </button>
         <button className="deleteAccountButton" onClick={handleDeleteAccount}>
           Delete Account
+        </button>
+        <button className="logoutButton" onClick={handleLogout}>
+          Log Out
         </button>
         <button className="backToMainButton" onClick={handleCloseSettings}>
           Back to Main Menu

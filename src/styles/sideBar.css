@@ -320,6 +320,36 @@
   background-color: #5a5a5a;
 }
 
+.logoutButton {
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background-color: #555;
+  color: white;
+}
+
+.logoutButton:hover {
+  background-color: #333;
+}
+
+.resetAccountButton {
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background-color: #f39c12;
+  color: white;
+}
+
+.resetAccountButton:hover {
+  background-color: #e67e22;
+}
+
 /* Settings Sections */
 .settingsSection,
 .themeToggleSection {

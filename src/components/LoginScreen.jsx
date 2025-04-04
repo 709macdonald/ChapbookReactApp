@@ -7,6 +7,7 @@ export default function LoginScreen({
   SetShowSignUpScreen,
   showLoginScreen,
   setShowLoginScreen,
+  fetchFiles,
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -86,6 +87,7 @@ export default function LoginScreen({
         setToggleSideBar(true);
         setShowAllFiles(true);
         setShowLoginScreen(false);
+        fetchFiles(); // 👈 load user’s files after login
         alert("Login successful!");
       } else {
         setError(data.error || "Login failed");
