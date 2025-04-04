@@ -42,12 +42,12 @@ export default function Sidebar({
     setToggleSideBar(!toggleSideBar);
   };
 
-  const handleShowUserSettings = () => {
-    setShowUserSettings(true);
-  };
-
   const handleCloseUserSettings = () => {
     setShowUserSettings(false);
+  };
+
+  const handleShowUserSettings = () => {
+    setShowUserSettings((prev) => !prev);
   };
 
   if (!toggleSideBar) {
