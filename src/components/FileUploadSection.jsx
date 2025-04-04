@@ -96,6 +96,12 @@ export default function FileUploadSection({
     if (!selectedFiles.length) return;
 
     const formData = new FormData();
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Authentication required. Please log in again.");
+      return;
+    }
 
     // Check for duplicates
     const existingFileNames = new Set(files.map((f) => f.name));
@@ -113,8 +119,15 @@ export default function FileUploadSection({
     try {
       const res = await fetch("http://localhost:5005/api/upload-local", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
+
+      if (!res.ok) {
+        throw new Error(`Upload failed with status: ${res.status}`);
+      }
 
       const uploadedFiles = await res.json();
       console.log("📦 Multer uploaded:", uploadedFiles);
@@ -137,7 +150,7 @@ export default function FileUploadSection({
       setUploadError("Something went wrong processing the files.");
     }
 
-    e.target.value = ""; // Clear input to allow re-upload of same file if needed
+    e.target.value = "";
   };
 
   const showNewDocumentPage = () => {

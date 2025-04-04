@@ -23,33 +23,23 @@ function App() {
     var global = window;
   }
 
-  // 🔄 Load user files from DB
   const fetchFiles = async () => {
-    let userId = localStorage.getItem("userId");
-
-    if (!userId) {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const decoded = jwt_decode(token);
-          userId = decoded.userId;
-          if (userId) localStorage.setItem("userId", userId);
-        } catch (err) {
-          console.warn("Failed to decode token:", err);
-        }
-      }
-    }
-
-    if (!userId) {
-      console.warn("No userId found. User may not be logged in.");
-      return;
-    }
-
     try {
       setIsLoadingFiles(true);
-      const res = await fetch(
-        `http://localhost:5005/api/files?userId=${userId}`
-      );
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.warn("No token found. User may not be logged in.");
+        return;
+      }
+
+      // Send the token in the Authorization header
+      const res = await fetch(`http://localhost:5005/api/files`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       if (!res.ok) throw new Error("Failed to fetch user files");
       const data = await res.json();
       setFiles(data);
@@ -92,7 +82,6 @@ function App() {
     }
   }, []);
 
-  // 🗑 Delete file from DB + server + UI
   const handleDeleteFile = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this file?"
@@ -108,18 +97,31 @@ function App() {
     }
 
     try {
-      // ✅ Delete from DB
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        alert("Authentication required. Please log in again.");
+        return;
+      }
+
+      // ✅ Delete from DB with token
       const res = await fetch(`http://localhost:5005/api/files/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (!res.ok) throw new Error("Server error on DB delete");
 
-      // ✅ Optional: delete from local /uploads folder
+      // ✅ Optional: delete from local /uploads folder with token
       await fetch(
         `http://localhost:5005/api/delete-local/${fileToDelete.serverKey}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
