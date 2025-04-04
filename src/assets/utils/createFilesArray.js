@@ -4,6 +4,41 @@ import { imageTextExtraction } from "./ImageTextUtils";
 import { wordTextExtraction } from "./wordDocTextUtils";
 
 /**
+ * Ensures a value is an array - useful for normalizing locations data
+ * @param {any} value - The value to check/convert
+ * @returns {Array} - Either the original array or a new empty array
+ */
+const ensureArray = (value) => {
+  // If it's already an array, return it
+  if (Array.isArray(value)) return value;
+
+  // If it's a string that looks like JSON, try to parse it
+  if (
+    typeof value === "string" &&
+    (value.startsWith("[") || value.startsWith("{"))
+  ) {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // If it's an object with numeric keys (like a JSON object representation of an array)
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    // Check if it has numeric keys like {0: item1, 1: item2}
+    const keys = Object.keys(value);
+    if (keys.length > 0 && keys.every((k) => !isNaN(parseInt(k)))) {
+      return Object.values(value);
+    }
+  }
+
+  // Default to empty array
+  return [];
+};
+
+/**
  * Processes uploaded files and sends them to the backend for storage.
  * @param {Array<{ url?: string, fileUrl?: string, name?: string, originalname?: string, key?: string, filename?: string }>} uploadedFiles
  * @returns {Promise<Array<Object>>}
@@ -47,28 +82,45 @@ export const createFilesArray = async (uploadedFiles) => {
           serverKey: fileKey,
           text: "",
           matchedWords: [],
-          locations: [],
+          locations: [], // Initialize as empty array
           tags: [],
-          UserId: userId, // ✅ include the logged-in user's ID
+          UserId: userId,
         };
 
         // Extract text & locations
         if (fileType === "application/pdf") {
-          const { text, locations } = await PDFTextExtraction(fileUrl);
-          fileData.text = text;
-          fileData.locations = locations;
+          try {
+            const result = await PDFTextExtraction(fileUrl);
+            fileData.text = result.text || "";
+            fileData.locations = ensureArray(result.locations);
+          } catch (err) {
+            console.error(`Error extracting PDF text:`, err);
+            fileData.text = "";
+            fileData.locations = [];
+          }
         } else if (fileType.startsWith("image/")) {
-          const { text, locations } = await imageTextExtraction(fileUrl);
-          fileData.text = text;
-          fileData.locations = locations;
+          try {
+            const result = await imageTextExtraction(fileUrl);
+            fileData.text = result.text || "";
+            fileData.locations = ensureArray(result.locations);
+          } catch (err) {
+            console.error(`Error extracting image text:`, err);
+            fileData.text = "";
+            fileData.locations = [];
+          }
         } else if (
           fileType ===
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ) {
-          fileData.text = await wordTextExtraction(fileUrl);
+          try {
+            fileData.text = (await wordTextExtraction(fileUrl)) || "";
+          } catch (err) {
+            console.error(`Error extracting Word document text:`, err);
+            fileData.text = "";
+          }
         }
 
-        // ✅ Send to backend
+        // Send to backend
         await fetch("http://localhost:5005/api/files", {
           method: "POST",
           headers: {
@@ -90,4 +142,22 @@ export const createFilesArray = async (uploadedFiles) => {
   );
 
   return processedFiles.filter(Boolean);
+};
+
+/**
+ * Helper function to normalize file data from the server
+ * Ensures that properties like locations are always in the expected format
+ * @param {Object} file - The file object from the server
+ * @returns {Object} - Normalized file object
+ */
+export const normalizeFileData = (file) => {
+  if (!file) return null;
+
+  return {
+    ...file,
+    // Ensure these are always arrays
+    locations: ensureArray(file.locations),
+    matchedWords: Array.isArray(file.matchedWords) ? file.matchedWords : [],
+    tags: Array.isArray(file.tags) ? file.tags : [],
+  };
 };

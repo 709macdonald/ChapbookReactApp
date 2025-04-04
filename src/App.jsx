@@ -23,9 +23,11 @@ function App() {
     var global = window;
   }
 
+  // 🔁 Load files when app first loads
   const fetchFiles = async () => {
     try {
       setIsLoadingFiles(true);
+      setShowAllFiles(false);
       const token = localStorage.getItem("token");
 
       if (!token) {
@@ -47,10 +49,10 @@ function App() {
       console.error("❌ Error fetching files:", err);
     } finally {
       setIsLoadingFiles(false);
+      setShowAllFiles(true);
     }
   };
 
-  // 🔁 Load files when app first loads
   useEffect(() => {
     fetchFiles();
   }, []);

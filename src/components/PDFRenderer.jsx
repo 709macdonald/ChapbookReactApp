@@ -12,7 +12,13 @@ export default function PDFRenderer({
   const canvasRef = useRef(null);
 
   const highlightMatchedWords = (page, viewport, context, currentScale) => {
-    if (!file.locations) return;
+    // Check if file.locations exists AND is an array
+    if (!file.locations || !Array.isArray(file.locations)) {
+      console.log(
+        "No searchable locations found in this file or locations is not an array"
+      );
+      return;
+    }
 
     const searchTerms = [searchWord, ...assistedSearchWords]
       .filter(Boolean)

@@ -3,6 +3,7 @@ import * as pdfjsLib from "pdfjs-dist";
 import PDFRenderer from "./PDFRenderer";
 import ImageRenderer from "./ImageRenderer";
 import WordDocRenderer from "./WordDocRenderer";
+import { normalizeFileData } from "../assets/utils/fileUtils";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   import.meta.env.BASE_URL + "pdf.worker.mjs";
@@ -16,6 +17,9 @@ export default function IndividualFileScreen({
   searchWord,
   assistedSearchWords,
 }) {
+  // Normalize file data to ensure consistent structure
+  const normalizedFile = useMemo(() => normalizeFileData(file), [file]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [scale, setScale] = useState(1.5);
@@ -27,7 +31,7 @@ export default function IndividualFileScreen({
   const tagsRef = useRef(null);
 
   const matchedWords = useMemo(() => {
-    if (!file) return [];
+    if (!normalizedFile) return [];
 
     const allSearchTerms = [searchWord, ...assistedSearchWords]
       .filter(Boolean)
@@ -35,20 +39,20 @@ export default function IndividualFileScreen({
 
     return allSearchTerms.filter(
       (term) =>
-        file.text?.toLowerCase().includes(term) ||
-        file.name.toLowerCase().includes(term) ||
-        (file.tags
-          ? file.tags.some((tag) => tag.toLowerCase().includes(term))
+        normalizedFile.text?.toLowerCase().includes(term) ||
+        normalizedFile.name.toLowerCase().includes(term) ||
+        (normalizedFile.tags
+          ? normalizedFile.tags.some((tag) => tag.toLowerCase().includes(term))
           : false)
     );
-  }, [file, searchWord, assistedSearchWords]);
+  }, [normalizedFile, searchWord, assistedSearchWords]);
 
   const handleAddTag = () => {
     if (!newTag.trim()) return;
 
     onUpdateFileTags((prevFiles) =>
       prevFiles.map((f) => {
-        if (f.id === file.id) {
+        if (f.id === normalizedFile.id) {
           const updatedTags = [...(f.tags || [])];
           if (!updatedTags.includes(newTag.trim())) {
             updatedTags.push(newTag.trim());
@@ -65,7 +69,7 @@ export default function IndividualFileScreen({
   const handleRemoveTag = (index) => {
     onUpdateFileTags((prevFiles) =>
       prevFiles.map((f) => {
-        if (f.id === file.id) {
+        if (f.id === normalizedFile.id) {
           const updatedTags = [...(f.tags || [])];
           updatedTags.splice(index, 1);
           return { ...f, tags: updatedTags };
@@ -95,9 +99,13 @@ export default function IndividualFileScreen({
   }, []);
 
   useEffect(() => {
-    if (showIndividualFile && file && file.type === "application/pdf") {
+    if (
+      showIndividualFile &&
+      normalizedFile &&
+      normalizedFile.type === "application/pdf"
+    ) {
       pdfjsLib
-        .getDocument(file.fileUrl)
+        .getDocument(normalizedFile.fileUrl)
         .promise.then((pdf) => {
           setPdfDocument(pdf);
           setTotalPages(pdf.numPages);
@@ -106,7 +114,7 @@ export default function IndividualFileScreen({
           console.error("Error loading PDF:", error);
         });
     }
-  }, [file, showIndividualFile]);
+  }, [normalizedFile, showIndividualFile]);
 
   const handlePageChange = (increment) => {
     setCurrentPage((prevPage) => {
@@ -122,7 +130,7 @@ export default function IndividualFileScreen({
     });
   };
 
-  if (!showIndividualFile || !file) return null;
+  if (!showIndividualFile || !normalizedFile) return null;
 
   return (
     <div className="individualFileScreenDiv">
@@ -133,7 +141,7 @@ export default function IndividualFileScreen({
             Back
           </button>
           <button
-            onClick={() => handleDeleteFile(file.id)}
+            onClick={() => handleDeleteFile(normalizedFile.id)}
             className="individualDeleteFileButton"
           >
             Delete File
@@ -144,16 +152,16 @@ export default function IndividualFileScreen({
           className="individualFileName"
           style={{ cursor: "pointer" }}
         >
-          {file.name}
+          {normalizedFile.name}
         </h3>
         <hr />
         {showFileDetails && (
           <div className="fileDetailsDiv">
             <p className="fileDetail">
-              Date Created: {new Date(file.date).toLocaleDateString()}
+              Date Created: {new Date(normalizedFile.date).toLocaleDateString()}
             </p>
             <p className="fileDetail">
-              Word Count: {file.text?.split(/\s+/).length || 0}
+              Word Count: {normalizedFile.text?.split(/\s+/).length || 0}
             </p>
             <p className="fileDetail">
               Matched Words:{" "}
@@ -196,7 +204,7 @@ export default function IndividualFileScreen({
 
               {showTags && (
                 <div className="tagsList">
-                  {(file.tags || []).map((tag, index) => (
+                  {(normalizedFile.tags || []).map((tag, index) => (
                     <div key={index} className="tag">
                       <button
                         className="tagDeleteButton"
@@ -221,26 +229,26 @@ export default function IndividualFileScreen({
           <i className="fa-solid fa-magnifying-glass-plus zoomButtonIcon"></i>
         </button>
       </div>
-      {file.type === "application/pdf" ? (
+      {normalizedFile.type === "application/pdf" ? (
         <PDFRenderer
-          file={file}
+          file={normalizedFile}
           pdfDocument={pdfDocument}
           currentPage={currentPage}
           scale={scale}
           searchWord={searchWord}
           assistedSearchWords={assistedSearchWords}
         />
-      ) : file.type.startsWith("image/") ? (
+      ) : normalizedFile.type.startsWith("image/") ? (
         <ImageRenderer
-          file={file}
+          file={normalizedFile}
           scale={scale}
           searchWord={searchWord}
           assistedSearchWords={assistedSearchWords}
         />
-      ) : file.type ===
+      ) : normalizedFile.type ===
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
         <WordDocRenderer
-          file={file}
+          file={normalizedFile}
           scale={scale}
           searchWord={searchWord}
           assistedSearchWords={assistedSearchWords}
@@ -248,7 +256,7 @@ export default function IndividualFileScreen({
       ) : (
         <p>Unsupported file type</p>
       )}
-      {file.type === "application/pdf" && (
+      {normalizedFile.type === "application/pdf" && (
         <div className="pageControlsDiv">
           <button
             className="previousPageButton"

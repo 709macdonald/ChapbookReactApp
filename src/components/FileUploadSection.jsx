@@ -23,6 +23,7 @@ export default function FileUploadSection({
   const [folderName, setFolderName] = useState(savedFolderName);
   const [authToken, setAuthToken] = useState(null);
   const [uploadError, setUploadError] = useState(null);
+  const [isProcessingFiles, setIsProcessingFiles] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -117,6 +118,9 @@ export default function FileUploadSection({
     newFiles.forEach((file) => formData.append("files", file));
 
     try {
+      setIsLoadingFiles(true);
+      setShowAllFiles(false);
+
       const res = await fetch("http://localhost:5005/api/upload-local", {
         method: "POST",
         headers: {
@@ -148,9 +152,13 @@ export default function FileUploadSection({
     } catch (err) {
       console.error("❌ Upload or processing error:", err);
       setUploadError("Something went wrong processing the files.");
+    } finally {
+      setTimeout(() => {
+        setIsLoadingFiles(false);
+        setShowAllFiles(true);
+      }, 500);
+      e.target.value = "";
     }
-
-    e.target.value = "";
   };
 
   const showNewDocumentPage = () => {
