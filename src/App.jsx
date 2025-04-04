@@ -52,55 +52,53 @@ function App() {
     }
   }, []);
 
-  /* LOCAL STORAGE */
+  /* STORAGE */
 
   useEffect(() => {
-    const storedFiles = localStorage.getItem("files");
-    if (storedFiles) {
-      try {
-        const parsedFiles = JSON.parse(storedFiles);
-        const updatedFiles = parsedFiles.map((file) => {
-          if (file.type === "application/draft-js") {
-            return file;
+    const fetchFiles = async () => {
+      let userId = localStorage.getItem("userId");
+
+      // 🧠 If it's missing, decode it from the token
+      if (!userId) {
+        const token = localStorage.getItem("token");
+        if (token) {
+          try {
+            const decoded = jwt_decode(token);
+            userId = decoded.userId;
+            if (userId) {
+              localStorage.setItem("userId", userId); // ✅ Put it back
+            }
+          } catch (err) {
+            console.warn("Failed to decode token:", err);
           }
-
-          const byteString = atob(file.fileContent.split(",")[1]);
-          const mimeString = file.fileContent
-            .split(",")[0]
-            .split(":")[1]
-            .split(";")[0];
-
-          const ab = new ArrayBuffer(byteString.length);
-          const ia = new Uint8Array(ab);
-          for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-          }
-
-          const blob = new Blob([ab], { type: mimeString });
-          const blobUrl = URL.createObjectURL(blob);
-
-          return { ...file, blobUrl };
-        });
-        setFiles(updatedFiles);
-      } catch (error) {
-        console.error("Failed to parse files from local storage", error);
-        localStorage.removeItem("files");
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (files.length > 0) {
-      const filesToStore = files.map((file) => {
-        if (file.type === "application/draft-js") {
-          return file;
         }
-        const { blobUrl, ...rest } = file;
-        return rest;
-      });
-      localStorage.setItem("files", JSON.stringify(filesToStore));
-    }
-  }, [files]);
+      }
+
+      if (!userId) {
+        console.warn("No userId found. User may not be logged in.");
+        return;
+      }
+
+      try {
+        setIsLoadingFiles(true);
+
+        const res = await fetch(
+          `http://localhost:5005/api/files?userId=${userId}`
+        );
+
+        if (!res.ok) throw new Error("Failed to fetch user files");
+
+        const data = await res.json();
+        setFiles(data);
+      } catch (error) {
+        console.error("❌ Error fetching user files:", error);
+      } finally {
+        setIsLoadingFiles(false);
+      }
+    };
+
+    fetchFiles();
+  }, []);
 
   /* DELETE FILES */
 

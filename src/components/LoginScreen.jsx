@@ -22,8 +22,14 @@ export default function LoginScreen({
 
         if (decoded.exp < currentTime) {
           localStorage.removeItem("token");
+          localStorage.removeItem("userId");
           setIsLoggedIn(false);
         } else {
+          // ✅ Check if userId is already stored
+          if (!localStorage.getItem("userId") && decoded.id) {
+            localStorage.setItem("userId", decoded.id);
+          }
+
           setIsLoggedIn(true);
           setToggleSideBar(true);
           setShowAllFiles(true);
@@ -32,6 +38,7 @@ export default function LoginScreen({
       } catch (error) {
         console.error("Token decoding error:", error);
         localStorage.removeItem("token");
+        localStorage.removeItem("userId");
         setIsLoggedIn(false);
       }
     } else {
@@ -41,6 +48,7 @@ export default function LoginScreen({
 
   const handleLogin = async () => {
     setError("");
+
     try {
       const response = await fetch("/api/login", {
         method: "POST",
@@ -53,7 +61,27 @@ export default function LoginScreen({
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token);
+        const token = data.token;
+
+        if (!token) {
+          throw new Error("No token returned");
+        }
+
+        // ✅ Store token
+        localStorage.setItem("token", token);
+
+        // ✅ Decode token
+        const decoded = jwt_decode(token);
+        console.log("Decoded token:", decoded); // Optional: see what's inside
+
+        // ✅ Store userId
+        if (decoded.userId) {
+          localStorage.setItem("userId", decoded.userId);
+        } else {
+          console.warn("userId not found in decoded token");
+        }
+
+        // ✅ Logged in actions
         setIsLoggedIn(true);
         setToggleSideBar(true);
         setShowAllFiles(true);
@@ -72,9 +100,7 @@ export default function LoginScreen({
     setShowLoginScreen(false);
   };
 
-  if (!showLoginScreen) {
-    return <div></div>;
-  }
+  if (!showLoginScreen) return <div></div>;
 
   return (
     <div className="loginPageDiv">
