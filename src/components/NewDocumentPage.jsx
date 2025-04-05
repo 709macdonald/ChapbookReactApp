@@ -51,6 +51,8 @@ const NewDocumentPage = ({
   files,
   selectedUserCreatedFile,
   setIsLoadingFiles,
+  handleAddTag,
+  handleRemoveTag,
 }) => {
   const [documentTitle, setDocumentTitle] = useState("New Document");
   const [editorState, setEditorState] = useState(() =>
@@ -177,25 +179,54 @@ const NewDocumentPage = ({
     };
   }, []);
 
-  const handleAddTag = () => {
+  const handleAddTagToDocument = async () => {
     if (!newTag.trim()) return;
 
-    if (!documentTags.includes(newTag.trim())) {
-      setDocumentTags([...documentTags, newTag.trim()]);
+    if (selectedUserCreatedFile?.id) {
+      // For existing files
+      const updatedTags = await handleAddTag(
+        selectedUserCreatedFile.id,
+        newTag,
+        documentTags
+      );
+
+      if (updatedTags) {
+        setDocumentTags(updatedTags);
+      }
+    } else {
+      // For new files (not yet saved)
+      if (!documentTags.includes(newTag.trim())) {
+        setDocumentTags([...documentTags, newTag.trim()]);
+      }
     }
+
     setNewTag("");
     setShowTags(true);
   };
 
-  const handleRemoveTag = (index) => {
-    const updatedTags = [...documentTags];
-    updatedTags.splice(index, 1);
-    setDocumentTags(updatedTags);
+  const handleRemoveTagFromDocument = async (index) => {
+    if (selectedUserCreatedFile?.id) {
+      // For existing files
+      const updatedTags = await handleRemoveTag(
+        selectedUserCreatedFile.id,
+        index,
+        documentTags
+      );
+
+      if (updatedTags) {
+        setDocumentTags(updatedTags);
+      }
+    } else {
+      // For new files (not yet saved)
+      const updatedTags = [...documentTags];
+      updatedTags.splice(index, 1);
+      setDocumentTags(updatedTags);
+    }
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleAddTag();
+      handleAddTagToDocument(); // Change handleAddTag() to handleAddTagToDocument()
     }
   };
 
@@ -247,16 +278,13 @@ const NewDocumentPage = ({
             className="addATagBar"
             onKeyDown={handleKeyDown}
           />
-          <div className="tooltip-wrapper">
-            <span className="tooltip">Add Tag</span>
-            <button
-              className="addTagButton"
-              onClick={handleAddTag}
-              disabled={!newTag.trim()}
-            >
-              <i className="fa-solid fa-plus"></i>
-            </button>
-          </div>
+          <button
+            className="addTagButton"
+            onClick={handleAddTagToDocument} // Change handleAddTag to handleAddTagToDocument
+            disabled={!newTag.trim()}
+          >
+            <i className="fa-solid fa-plus"></i>
+          </button>
 
           {showTags && (
             <div className="newDocTagsList">
@@ -264,7 +292,7 @@ const NewDocumentPage = ({
                 <div key={index} className="tag">
                   <button
                     className="tagDeleteButton"
-                    onClick={() => handleRemoveTag(index)}
+                    onClick={() => handleRemoveTagFromDocument(index)} // Change handleRemoveTag to handleRemoveTagFromDocument
                   >
                     x
                   </button>

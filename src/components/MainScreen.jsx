@@ -76,6 +76,108 @@ export default function MainScreen({
     });
   };
 
+  // Add these functions to your MainScreen component
+  const handleAddTag = async (fileId, newTag, currentTags) => {
+    const trimmedTag = newTag.trim();
+    if (!trimmedTag) return;
+
+    // Don't add duplicate tags
+    if (currentTags.includes(trimmedTag)) {
+      return currentTags;
+    }
+
+    const updatedTags = [...currentTags, trimmedTag];
+
+    // If a fileId exists, update the file's tags in the backend
+    if (fileId) {
+      try {
+        const token = localStorage.getItem("token");
+        await fetch(`http://localhost:5005/api/files/${fileId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ tags: updatedTags }),
+        });
+      } catch (err) {
+        console.error("Error updating file tags:", err);
+      }
+    }
+
+    // Update files in the state
+    setFiles((prevFiles) =>
+      prevFiles.map((f) => {
+        if (f.id === fileId) {
+          return { ...f, tags: updatedTags };
+        }
+        return f;
+      })
+    );
+
+    // If we're viewing an individual file, update it too
+    if (individualFile && individualFile.id === fileId) {
+      setIndividualFile({ ...individualFile, tags: updatedTags });
+    }
+
+    // If we have a selected user created file, update it too
+    if (selectedUserCreatedFile && selectedUserCreatedFile.id === fileId) {
+      setSelectedUserCreatedFile({
+        ...selectedUserCreatedFile,
+        tags: updatedTags,
+      });
+    }
+
+    return updatedTags;
+  };
+
+  const handleRemoveTag = async (fileId, index, currentTags) => {
+    const updatedTags = [...currentTags];
+    updatedTags.splice(index, 1);
+
+    // If a fileId exists, update the file's tags in the backend
+    if (fileId) {
+      try {
+        const token = localStorage.getItem("token");
+        await fetch(`http://localhost:5005/api/files/${fileId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ tags: updatedTags }),
+        });
+      } catch (err) {
+        console.error("Error updating file tags:", err);
+      }
+    }
+
+    // Update files in the state
+    setFiles((prevFiles) =>
+      prevFiles.map((f) => {
+        if (f.id === fileId) {
+          return { ...f, tags: updatedTags };
+        }
+        return f;
+      })
+    );
+
+    // If we're viewing an individual file, update it too
+    if (individualFile && individualFile.id === fileId) {
+      setIndividualFile({ ...individualFile, tags: updatedTags });
+    }
+
+    // If we have a selected user created file, update it too
+    if (selectedUserCreatedFile && selectedUserCreatedFile.id === fileId) {
+      setSelectedUserCreatedFile({
+        ...selectedUserCreatedFile,
+        tags: updatedTags,
+      });
+    }
+
+    return updatedTags;
+  };
+
   return (
     <div className="mainScreenDiv">
       <LoginScreen
@@ -114,7 +216,8 @@ export default function MainScreen({
         assistedSearchWords={assistedSearchWords}
         handleDeleteFile={handleDeleteFile}
         backToAllFileView={backToAllFileView}
-        onUpdateFileTags={onUpdateFileTags}
+        handleAddTag={handleAddTag}
+        handleRemoveTag={handleRemoveTag}
       />
       <NewDocumentPage
         setIsLoadingFiles={setIsLoadingFiles}
@@ -126,6 +229,8 @@ export default function MainScreen({
         files={files}
         setFiles={setFiles}
         selectedUserCreatedFile={selectedUserCreatedFile}
+        handleAddTag={handleAddTag}
+        handleRemoveTag={handleRemoveTag}
       />
     </div>
   );

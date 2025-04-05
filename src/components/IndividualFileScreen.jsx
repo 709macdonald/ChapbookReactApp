@@ -13,9 +13,10 @@ export default function IndividualFileScreen({
   showIndividualFile,
   handleDeleteFile,
   backToAllFileView,
-  onUpdateFileTags,
   searchWord,
   assistedSearchWords,
+  handleAddTag,
+  handleRemoveTag,
 }) {
   // Normalize file data to ensure consistent structure
   const normalizedFile = useMemo(() => normalizeFileData(file), [file]);
@@ -47,41 +48,28 @@ export default function IndividualFileScreen({
     );
   }, [normalizedFile, searchWord, assistedSearchWords]);
 
-  const handleAddTag = () => {
-    if (!newTag.trim()) return;
+  const handleAddTagToFile = async () => {
+    if (!newTag.trim() || !normalizedFile) return;
 
-    onUpdateFileTags((prevFiles) =>
-      prevFiles.map((f) => {
-        if (f.id === normalizedFile.id) {
-          const updatedTags = [...(f.tags || [])];
-          if (!updatedTags.includes(newTag.trim())) {
-            updatedTags.push(newTag.trim());
-          }
-          return { ...f, tags: updatedTags };
-        }
-        return f;
-      })
+    await handleAddTag(
+      normalizedFile.id,
+      newTag.trim(),
+      normalizedFile.tags || []
     );
+
     setNewTag("");
     setShowTags(true);
   };
 
-  const handleRemoveTag = (index) => {
-    onUpdateFileTags((prevFiles) =>
-      prevFiles.map((f) => {
-        if (f.id === normalizedFile.id) {
-          const updatedTags = [...(f.tags || [])];
-          updatedTags.splice(index, 1);
-          return { ...f, tags: updatedTags };
-        }
-        return f;
-      })
-    );
+  const handleRemoveTagFromFile = async (index) => {
+    if (!normalizedFile) return;
+
+    await handleRemoveTag(normalizedFile.id, index, normalizedFile.tags || []);
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleAddTag();
+      handleAddTagToFile(); // Change handleAddTag() to handleAddTagToFile()
     }
   };
 
@@ -195,7 +183,7 @@ export default function IndividualFileScreen({
                 <span className="tooltip">Add Tag</span>
                 <button
                   className="addTagButton"
-                  onClick={handleAddTag}
+                  onClick={handleAddTagToFile} // Change handleAddTag to handleAddTagToFile
                   disabled={!newTag.trim()}
                 >
                   <i className="fa-solid fa-plus"></i>{" "}
@@ -208,7 +196,7 @@ export default function IndividualFileScreen({
                     <div key={index} className="tag">
                       <button
                         className="tagDeleteButton"
-                        onClick={() => handleRemoveTag(index)}
+                        onClick={() => handleRemoveTagFromFile(index)} // Change handleRemoveTag to handleRemoveTagFromFile
                       >
                         x
                       </button>
