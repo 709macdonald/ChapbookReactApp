@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { EditorState, Modifier, SelectionState } from "draft-js";
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
 
 const AIWritingAssistant = ({ editorState, setEditorState }) => {
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [authToken, setAuthToken] = useState(null);
+
+  // Get the authentication token when component mounts
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setAuthToken(token);
+  }, []);
 
   const insertTextIntoEditor = (text) => {
     const currentContent = editorState.getCurrentContent();
@@ -67,8 +68,8 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
       return;
     }
 
-    if (!import.meta.env.VITE_OPENAI_API_KEY) {
-      setError("API key is not configured");
+    if (!authToken) {
+      setError("You must be logged in to use the AI Writing Assistant");
       return;
     }
 
@@ -76,27 +77,68 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
     setError("");
 
     try {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        max_tokens: 1000,
-        temperature: 0.7,
+      console.log(
+        "Sending request with token:",
+        authToken.substring(0, 10) + "..."
+      );
+
+      const response = await fetch("http://localhost:5005/api/ai/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": authToken,
+          // Also include as Authorization header for compatibility
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ prompt }),
       });
 
-      const generatedContent = completion.choices[0].message.content;
-      insertTextIntoEditor(generatedContent);
+      console.log("Response status:", response.status);
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || data.message || `Server error: ${response.status}`
+        );
+      }
+
+      insertTextIntoEditor(data.content);
       setPrompt("");
       setIsOpen(false);
     } catch (err) {
       console.error("Error:", err);
-      setError("Failed to generate content. Please try again.");
+      setError(`Failed to generate content: ${err.message}`);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const testApiConnection = async () => {
+    if (!authToken) {
+      setError("You must be logged in to test the connection");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5005/api/ai/test-openai", {
+        headers: {
+          "x-auth-token": authToken,
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      const data = await response.json();
+      console.log("Test API Result:", data);
+
+      if (response.ok) {
+        setError("✅ Connection successful!");
+      } else {
+        setError(`❌ Test failed: ${data.error || data.message}`);
+      }
+    } catch (err) {
+      console.error("Test API Error:", err);
+      setError(`❌ Connection test failed: ${err.message}`);
     }
   };
 
@@ -114,6 +156,14 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
 
       {isOpen && (
         <div className="aiToolsDiv">
+          <button
+            onClick={testApiConnection}
+            className="generateContentButton"
+            style={{ marginBottom: "10px", backgroundColor: "#4a5568" }}
+          >
+            Test Connection
+          </button>
+
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
