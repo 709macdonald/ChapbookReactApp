@@ -48,7 +48,7 @@ export default function FileUploadSection({
     }
   };
 
-  const handleFileChangeLocal = async (e) => {
+  const handleFileUpload = async (e) => {
     const selectedFiles = Array.from(e.target.files);
     if (!selectedFiles.length) return;
 
@@ -78,6 +78,7 @@ export default function FileUploadSection({
       setShowAllFiles(false);
       setUploadError(null);
 
+      // Upload files to S3 via our API
       const res = await fetch("http://localhost:5005/api/upload", {
         method: "POST",
         headers: {
@@ -87,29 +88,25 @@ export default function FileUploadSection({
       });
 
       if (!res.ok) {
-        throw new Error(`Upload failed with status: ${res.status}`);
+        const errorData = await res.json();
+        throw new Error(
+          errorData.error || `Upload failed with status: ${res.status}`
+        );
       }
 
       const uploadedFiles = await res.json();
-      console.log("📦 Multer uploaded:", uploadedFiles);
-
-      // Format returned files from the server
-      const formattedUploadedFiles = uploadedFiles.map((file) => ({
-        url: file.fileUrl,
-        name: file.name,
-        key: file.key,
-      }));
+      console.log("📦 S3 uploaded:", uploadedFiles);
 
       // Process the files (extract text, create database entries)
-      const processedFiles = await createFilesArray(formattedUploadedFiles);
+      const processedFiles = await createFilesArray(uploadedFiles);
 
       setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
 
       alert(
-        `Successfully uploaded and processed ${processedFiles.length} file(s).`
+        `Successfully uploaded and processed ${processedFiles.length} file(s) to S3.`
       );
     } catch (err) {
-      console.error("❌ Upload or processing error:", err);
+      console.error("❌ S3 Upload or processing error:", err);
       setUploadError(
         err.message || "Something went wrong processing the files."
       );
@@ -142,12 +139,12 @@ export default function FileUploadSection({
 
       <div className="sideBarButtonsDiv">
         <div className="fileInputDiv tooltip-wrapper">
-          <span className="tooltip">Upload Files</span>
+          <span className="tooltip">Upload Files to S3</span>
           {authToken ? (
             <div className="fileInputLabel">
               <input
                 type="file"
-                onChange={handleFileChangeLocal}
+                onChange={handleFileUpload}
                 style={{ display: "none" }}
                 id="file-input"
                 multiple

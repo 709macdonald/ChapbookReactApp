@@ -106,7 +106,7 @@ function App() {
         return;
       }
 
-      // Delete database record first
+      // ✅ Delete from DB with token
       const res = await fetch(`http://localhost:5005/api/files/${id}`, {
         method: "DELETE",
         headers: {
@@ -116,7 +116,18 @@ function App() {
 
       if (!res.ok) throw new Error("Server error on DB delete");
 
-      // Update frontend
+      // ✅ Optional: delete from local /uploads folder with token
+      await fetch(
+        `http://localhost:5005/api/delete-local/${fileToDelete.serverKey}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // ✅ Update frontend
       setFiles(files.filter((file) => file.id !== id));
       setShowIndividualFile(false);
       setBgLogoOn(true);
