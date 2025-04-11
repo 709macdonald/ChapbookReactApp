@@ -39,6 +39,35 @@ const ensureArray = (value) => {
 };
 
 /**
+ * Get a signed URL for S3 files (only needed for S3 storage)
+ * @param {string} fileKey - The S3 key of the file
+ * @param {string} token - Authentication token
+ * @returns {Promise<string>} - Signed URL
+ */
+const getSignedUrl = async (fileKey, token) => {
+  try {
+    const response = await fetch(
+      `http://localhost:5005/api/signed-url/${fileKey}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to get signed URL: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.url;
+  } catch (error) {
+    console.error("Error getting signed URL:", error);
+    throw error;
+  }
+};
+
+/**
  * Processes uploaded files and sends them to the backend for storage.
  * @param {Array<{ url?: string, fileUrl?: string, name?: string, originalname?: string, key?: string, filename?: string }>} uploadedFiles
  * @returns {Promise<Array<Object>>}
@@ -53,12 +82,18 @@ export const createFilesArray = async (uploadedFiles) => {
   const processedFiles = await Promise.all(
     uploadedFiles.map(async (file) => {
       try {
-        const fileUrl = file.url || file.fileUrl;
+        let fileUrl = file.url || file.fileUrl;
         const fileName = file.name || file.originalname;
         const fileKey = file.key || file.filename;
 
         if (!fileUrl || !fileName) {
           throw new Error("File URL or name missing");
+        }
+
+        // Check if this is an S3 URL that needs to be signed
+        if (fileUrl && fileUrl.includes("amazonaws.com")) {
+          // This is an S3 URL, we need to get a signed URL
+          fileUrl = await getSignedUrl(fileKey, token);
         }
 
         const ext = fileName.split(".").pop()?.toLowerCase();

@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { generateReactHelpers } from "@uploadthing/react";
 import { createFilesArray } from "../assets/utils/createFilesArray";
-
-const { useUploadThing } = generateReactHelpers({
-  url: "http://localhost:5005/api/uploadthing",
-  isDev: true,
-});
 
 export default function FileUploadSection({
   files,
@@ -23,7 +17,7 @@ export default function FileUploadSection({
   const [folderName, setFolderName] = useState(savedFolderName);
   const [authToken, setAuthToken] = useState(null);
   const [uploadError, setUploadError] = useState(null);
-  const [isProcessingFiles, setIsProcessingFiles] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,44 +27,6 @@ export default function FileUploadSection({
   useEffect(() => {
     localStorage.setItem("folderName", folderName);
   }, [folderName]);
-
-  const { startUpload, isUploading, permittedFileInfo } = useUploadThing(
-    "fileUploader",
-    {
-      headers: {
-        "x-auth-token": authToken || "",
-      },
-      onClientUploadComplete: (res) => {
-        console.log("✅ Upload complete:", res);
-        if (res && res.length > 0) {
-          setFiles((prevFiles) => [...prevFiles, ...res]);
-
-          setUploadError(null);
-
-          alert(`Successfully uploaded ${res.length} file(s)`);
-        }
-      },
-      onUploadError: (error) => {
-        console.error("❌ Upload failed", error);
-        setUploadError(error.message || "Upload failed");
-        alert(`Upload failed: ${error.message}`);
-      },
-    }
-  );
-
-  const handleFileChange = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
-      console.log("Starting upload with files:", e.target.files);
-      setUploadError(null);
-
-      try {
-        startUpload(Array.from(e.target.files));
-      } catch (error) {
-        console.error("Error starting upload:", error);
-        setUploadError("Failed to start upload process");
-      }
-    }
-  };
 
   const handleReset = () => {
     const confirmReset = window.confirm(
@@ -104,7 +60,6 @@ export default function FileUploadSection({
       return;
     }
 
-    // Check for duplicates
     const existingFileNames = new Set(files.map((f) => f.name));
     const newFiles = selectedFiles.filter(
       (file) => !existingFileNames.has(file.name)
@@ -118,10 +73,12 @@ export default function FileUploadSection({
     newFiles.forEach((file) => formData.append("files", file));
 
     try {
+      setIsUploading(true);
       setIsLoadingFiles(true);
       setShowAllFiles(false);
+      setUploadError(null);
 
-      const res = await fetch("http://localhost:5005/api/upload-local", {
+      const res = await fetch("http://localhost:5005/api/upload", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -136,12 +93,14 @@ export default function FileUploadSection({
       const uploadedFiles = await res.json();
       console.log("📦 Multer uploaded:", uploadedFiles);
 
+      // Format returned files from the server
       const formattedUploadedFiles = uploadedFiles.map((file) => ({
         url: file.fileUrl,
         name: file.name,
         key: file.key,
       }));
 
+      // Process the files (extract text, create database entries)
       const processedFiles = await createFilesArray(formattedUploadedFiles);
 
       setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
@@ -151,8 +110,11 @@ export default function FileUploadSection({
       );
     } catch (err) {
       console.error("❌ Upload or processing error:", err);
-      setUploadError("Something went wrong processing the files.");
+      setUploadError(
+        err.message || "Something went wrong processing the files."
+      );
     } finally {
+      setIsUploading(false);
       setTimeout(() => {
         setIsLoadingFiles(false);
         setShowAllFiles(true);
@@ -193,14 +155,12 @@ export default function FileUploadSection({
               />
               <label htmlFor="file-input">
                 <i
-                  className={`fa-solid ${
-                    isUploading ? "fa-spinner fa-spin" : "fa-file-medical"
-                  } folderIcon`}
+                  className={`fa-solid fa-file-medical folderIcon ${
+                    isUploading ? "disabled" : ""
+                  }`}
                 ></i>
+                {isUploading && <span className="upload-spinner"></span>}
               </label>
-              {isUploading && (
-                <span className="upload-status">Uploading...</span>
-              )}
             </div>
           ) : (
             <div
