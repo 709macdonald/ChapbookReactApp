@@ -8,7 +8,6 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [authToken, setAuthToken] = useState(null);
 
-  // Get the authentication token when component mounts
   useEffect(() => {
     const token = localStorage.getItem("token");
     setAuthToken(token);
@@ -87,7 +86,6 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
         headers: {
           "Content-Type": "application/json",
           "x-auth-token": authToken,
-          // Also include as Authorization header for compatibility
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({ prompt }),

@@ -1,4 +1,3 @@
-// TextEditorButtons.jsx
 import React, { useState, useEffect } from "react";
 import { RichUtils, Modifier, EditorState } from "draft-js";
 import { convertToRaw } from "draft-js";
@@ -150,7 +149,6 @@ const TextEditorButtons = ({
       return;
     }
 
-    // Get userId and token from localStorage
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
 
@@ -159,8 +157,7 @@ const TextEditorButtons = ({
       return;
     }
 
-    // Show loading indicator
-    setIsLoadingFiles(true); // You'll need to pass this down from App.jsx
+    setIsLoadingFiles(true);
 
     try {
       const currentDate = new Date().toISOString();
@@ -169,7 +166,6 @@ const TextEditorButtons = ({
         selectedUserCreatedFile &&
         files.some((file) => file.id === selectedUserCreatedFile.id)
       ) {
-        // Update existing file
         const updatedFile = {
           ...selectedUserCreatedFile,
           name: `${documentTitle}.txt`,
@@ -180,7 +176,6 @@ const TextEditorButtons = ({
           UserId: userId,
         };
 
-        // Send to API
         const res = await fetch(
           `http://localhost:5005/api/files/${selectedUserCreatedFile.id}`,
           {
@@ -197,7 +192,6 @@ const TextEditorButtons = ({
           throw new Error("Failed to update file");
         }
 
-        // Update local state
         setFiles((prevFiles) => {
           return prevFiles.map((file) =>
             file.id === selectedUserCreatedFile.id ? updatedFile : file
@@ -206,13 +200,12 @@ const TextEditorButtons = ({
 
         console.log("Updated existing file:", updatedFile.name);
       } else {
-        // Create new file
         const newFileId = uuidv4();
         const newChapbookFile = {
           id: newFileId,
           name: `${documentTitle}.txt`,
-          fileUrl: "internal", // 👈 identify as in-app created
-          serverKey: "user-created", // 👈 same
+          fileUrl: "internal",
+          serverKey: "user-created",
           type: "application/draft-js",
           date: currentDate,
           fileContent: JSON.stringify(rawContent),
@@ -223,7 +216,6 @@ const TextEditorButtons = ({
           UserId: userId,
         };
 
-        // Send to API
         const res = await fetch(`http://localhost:5005/api/files`, {
           method: "POST",
           headers: {
@@ -237,7 +229,6 @@ const TextEditorButtons = ({
           throw new Error("Failed to create file");
         }
 
-        // Update local state
         setFiles((prevFiles) => [...prevFiles, newChapbookFile]);
         console.log("Created new file:", newChapbookFile.name);
       }
@@ -247,7 +238,6 @@ const TextEditorButtons = ({
       console.error("Error saving document:", error);
       alert("Failed to save document. Please try again.");
     } finally {
-      // Hide loading indicator
       setIsLoadingFiles(false);
     }
   };
@@ -315,7 +305,6 @@ const TextEditorButtons = ({
         </button>
       </div>
 
-      {/* Alignment buttons */}
       <div className="tooltip-wrapper">
         <span className="tooltip">Align Left</span>
         <button
@@ -352,7 +341,6 @@ const TextEditorButtons = ({
         </button>
       </div>
 
-      {/* Color picker */}
       <div className="colorButtonDiv tooltip-wrapper">
         <span className="tooltip">Text Color</span>
         <button

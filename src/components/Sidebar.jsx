@@ -69,7 +69,6 @@ export default function Sidebar({
         </h2>
       </div>
 
-      {/* Conditionally show either settings or the regular sections */}
       {showUserSettings ? (
         <UserSettings
           setShowUserSettings={setShowUserSettings}
@@ -78,7 +77,7 @@ export default function Sidebar({
           toggleTheme={toggleTheme}
           isDarkMode={isDarkMode}
           handleClose={handleCloseUserSettings}
-          setFiles={setFiles} // ✅ pass the function that updates your files array
+          setFiles={setFiles}
         />
       ) : (
         <>
@@ -110,7 +109,6 @@ export default function Sidebar({
 
       <div className="creatorNameDiv">
         <p>Created By Peter MacDonald</p>
-        {/* User settings button */}
         <button className="userSettingsButton" onClick={handleShowUserSettings}>
           <i className="fa-solid fa-user-gear"></i>
         </button>

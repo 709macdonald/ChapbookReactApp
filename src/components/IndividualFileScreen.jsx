@@ -18,7 +18,6 @@ export default function IndividualFileScreen({
   handleAddTag,
   handleRemoveTag,
 }) {
-  // Normalize file data to ensure consistent structure
   const normalizedFile = useMemo(() => normalizeFileData(file), [file]);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -183,7 +182,7 @@ export default function IndividualFileScreen({
                 <span className="tooltip">Add Tag</span>
                 <button
                   className="addTagButton"
-                  onClick={handleAddTagToFile} // Change handleAddTag to handleAddTagToFile
+                  onClick={handleAddTagToFile}
                   disabled={!newTag.trim()}
                 >
                   <i className="fa-solid fa-plus"></i>{" "}
@@ -196,7 +195,7 @@ export default function IndividualFileScreen({
                     <div key={index} className="tag">
                       <button
                         className="tagDeleteButton"
-                        onClick={() => handleRemoveTagFromFile(index)} // Change handleRemoveTag to handleRemoveTagFromFile
+                        onClick={() => handleRemoveTagFromFile(index)}
                       >
                         x
                       </button>

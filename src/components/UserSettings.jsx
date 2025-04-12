@@ -8,7 +8,7 @@ export default function UserSettings({
   toggleTheme,
   isDarkMode,
   handleClose,
-  setFiles, // ✅ add this
+  setFiles,
 }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -21,17 +21,14 @@ export default function UserSettings({
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    // Fetch user data when component mounts
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
 
       if (token) {
         try {
-          // Decode token to get user ID
           const decoded = jwt_decode(token);
           setUserId(decoded.userId);
 
-          // Fetch user profile data
           const response = await fetch("/api/profile", {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -40,7 +37,6 @@ export default function UserSettings({
 
           if (response.ok) {
             const userData = await response.json();
-            // Set the initial state with user data
             setFirstName(userData.firstName || "");
             setLastName(userData.lastName || "");
             setEmail(userData.email || "");
@@ -80,7 +76,6 @@ export default function UserSettings({
       return;
     }
 
-    // Check if user is trying to update profile without making any changes
     const response = await fetch("/api/profile", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -94,10 +89,8 @@ export default function UserSettings({
 
     const currentUserData = await response.json();
 
-    // Create object to hold only changed fields
     const updatedFields = {};
 
-    // Only include fields that have changed
     if (firstName !== currentUserData.firstName) {
       updatedFields.firstName = firstName;
     }
@@ -110,13 +103,11 @@ export default function UserSettings({
       updatedFields.email = email;
     }
 
-    // Only include password if user is updating it
     if (newPassword) {
       updatedFields.oldPassword = password;
       updatedFields.newPassword = newPassword;
     }
 
-    // If nothing has changed and no password update, show message
     if (Object.keys(updatedFields).length === 0) {
       setSuccessMessage("No changes to update");
       return;
@@ -136,7 +127,6 @@ export default function UserSettings({
 
       if (updateResponse.ok) {
         setSuccessMessage("Profile updated successfully!");
-        // Clear password fields after successful update
         setPassword("");
         setNewPassword("");
         setConfirmPassword("");
@@ -170,13 +160,10 @@ export default function UserSettings({
       });
 
       if (response.ok) {
-        // Clear token and redirect to login page
         localStorage.removeItem("token");
         setToggleSideBar(false);
         setShowAllFiles(false);
         setShowUserSettings(false);
-        // You might want to redirect to login screen here
-        // setShowLoginScreen(true);
         alert("Your account has been deleted successfully");
       } else {
         const data = await response.json();
@@ -192,8 +179,7 @@ export default function UserSettings({
     setToggleSideBar(false);
     setShowAllFiles(false);
     setShowUserSettings(false);
-    // Optionally: reload the page or redirect to login
-    window.location.reload(); // or use your own login screen toggle
+    window.location.reload();
   };
 
   const handleResetAccount = async () => {
@@ -222,12 +208,10 @@ export default function UserSettings({
       if (response.ok) {
         setSuccessMessage("All files deleted successfully");
 
-        // ✅ Clear the file list in app state
         if (typeof setFiles === "function") {
           setFiles([]);
         }
 
-        // ✅ Optionally close the settings panel after a short delay
         setTimeout(() => {
           setShowUserSettings(false);
         }, 1000);

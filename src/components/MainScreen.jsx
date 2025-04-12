@@ -76,7 +76,6 @@ export default function MainScreen({
     });
   };
 
-  // Add these functions to your MainScreen component
   const handleAddTag = async (fileId, newTag, currentTags) => {
     const trimmedTag = newTag.trim();
     if (!trimmedTag) return;
@@ -135,7 +134,6 @@ export default function MainScreen({
     const updatedTags = [...currentTags];
     updatedTags.splice(index, 1);
 
-    // If a fileId exists, update the file's tags in the backend
     if (fileId) {
       try {
         const token = localStorage.getItem("token");
@@ -152,7 +150,6 @@ export default function MainScreen({
       }
     }
 
-    // Update files in the state
     setFiles((prevFiles) =>
       prevFiles.map((f) => {
         if (f.id === fileId) {
@@ -162,12 +159,10 @@ export default function MainScreen({
       })
     );
 
-    // If we're viewing an individual file, update it too
     if (individualFile && individualFile.id === fileId) {
       setIndividualFile({ ...individualFile, tags: updatedTags });
     }
 
-    // If we have a selected user created file, update it too
     if (selectedUserCreatedFile && selectedUserCreatedFile.id === fileId) {
       setSelectedUserCreatedFile({
         ...selectedUserCreatedFile,

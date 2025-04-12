@@ -226,7 +226,7 @@ const NewDocumentPage = ({
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleAddTagToDocument(); // Change handleAddTag() to handleAddTagToDocument()
+      handleAddTagToDocument();
     }
   };
 

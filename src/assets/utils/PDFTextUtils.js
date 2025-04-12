@@ -1,6 +1,5 @@
 import * as pdfjsLib from "pdfjs-dist";
 
-// Use a more specific CDN path
 const workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.6.82/pdf.worker.min.js`;
 pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc;
 

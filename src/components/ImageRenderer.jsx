@@ -38,7 +38,6 @@ export default function ImageRenderer({
   };
 
   const highlightSearchWords = (ctx) => {
-    // Check if file.locations exists AND is an array
     if (!file.locations || !Array.isArray(file.locations)) {
       console.log(
         "No searchable locations found in this file or locations is not an array"

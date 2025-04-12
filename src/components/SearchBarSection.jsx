@@ -49,8 +49,6 @@ export default function SearchBarSection({
     setShowAssistedSearchWords((prev) => !prev);
   };
 
-  /* PREDICTIVE TEXT */
-
   useEffect(() => {
     if (searchWord) {
       const allWords = new Set();
@@ -110,8 +108,6 @@ export default function SearchBarSection({
         placeholder="Search for Keywords"
       />
       <p className="resultsFound">{resultsCount} results found</p>
-
-      {/* Sorting Criteria Dropdown */}
 
       <div className="sortingControls tooltip-wrapper">
         <span className="tooltip">Organize files by</span>

@@ -26,7 +26,6 @@ export default function LoginScreen({
           localStorage.removeItem("userId");
           setIsLoggedIn(false);
         } else {
-          // ✅ Check if userId is already stored
           if (!localStorage.getItem("userId") && decoded.id) {
             localStorage.setItem("userId", decoded.id);
           }
@@ -68,26 +67,22 @@ export default function LoginScreen({
           throw new Error("No token returned");
         }
 
-        // ✅ Store token
         localStorage.setItem("token", token);
 
-        // ✅ Decode token
         const decoded = jwt_decode(token);
-        console.log("Decoded token:", decoded); // Optional: see what's inside
+        console.log("Decoded token:", decoded);
 
-        // ✅ Store userId
         if (decoded.userId) {
           localStorage.setItem("userId", decoded.userId);
         } else {
           console.warn("userId not found in decoded token");
         }
 
-        // ✅ Logged in actions
         setIsLoggedIn(true);
         setToggleSideBar(true);
         setShowAllFiles(true);
         setShowLoginScreen(false);
-        fetchFiles(); // 👈 load user’s files after login
+        fetchFiles();
         alert("Login successful!");
       } else {
         setError(data.error || "Login failed");
