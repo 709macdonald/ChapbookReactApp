@@ -28,11 +28,41 @@ export default function FileUploadSection({
     localStorage.setItem("folderName", folderName);
   }, [folderName]);
 
-  const handleReset = () => {
+  const handleReset = async () => {
     const confirmReset = window.confirm(
       "Are you sure you want to clear all files from Chapbook's library?"
     );
-    if (confirmReset) {
+
+    if (!confirmReset) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId"); // Make sure this is saved on login
+
+      if (!userId || !token) {
+        alert("Missing user information. Please log in again.");
+        return;
+      }
+
+      // 🔥 First: delete everything from backend (DB + S3)
+      const res = await fetch(
+        `http://localhost:5005/api/files/reset/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Reset failed.");
+      }
+
+      console.log("✅ Backend reset complete");
+
+      // ✅ Then: clear frontend state
       setFiles([]);
       setFolderName("Select Folder");
       setIsLoadingFiles(false);
@@ -45,6 +75,11 @@ export default function FileUploadSection({
       setUploadError(null);
       localStorage.removeItem("files");
       localStorage.removeItem("folderName");
+
+      alert("All files removed from Chapbook and S3.");
+    } catch (err) {
+      console.error("❌ Reset error:", err);
+      alert("Failed to reset files. Please try again.");
     }
   };
 

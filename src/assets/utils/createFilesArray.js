@@ -3,16 +3,8 @@ import { PDFTextExtraction } from "./PDFTextUtils";
 import { imageTextExtraction } from "./ImageTextUtils";
 import { wordTextExtraction } from "./wordDocTextUtils";
 
-/**
- * Ensures a value is an array - useful for normalizing locations data
- * @param {any} value - The value to check/convert
- * @returns {Array} - Either the original array or a new empty array
- */
 const ensureArray = (value) => {
-  // If it's already an array, return it
   if (Array.isArray(value)) return value;
-
-  // If it's a string that looks like JSON, try to parse it
   if (
     typeof value === "string" &&
     (value.startsWith("[") || value.startsWith("{"))
@@ -24,26 +16,15 @@ const ensureArray = (value) => {
       return [];
     }
   }
-
-  // If it's an object with numeric keys (like a JSON object representation of an array)
   if (value && typeof value === "object" && !Array.isArray(value)) {
-    // Check if it has numeric keys like {0: item1, 1: item2}
     const keys = Object.keys(value);
     if (keys.length > 0 && keys.every((k) => !isNaN(parseInt(k)))) {
       return Object.values(value);
     }
   }
-
-  // Default to empty array
   return [];
 };
 
-/**
- * Get a signed URL for S3 files (only needed for S3 storage)
- * @param {string} fileKey - The S3 key of the file
- * @param {string} token - Authentication token
- * @returns {Promise<string>} - Signed URL
- */
 const getSignedUrl = async (fileKey, token) => {
   try {
     const response = await fetch(
@@ -67,11 +48,6 @@ const getSignedUrl = async (fileKey, token) => {
   }
 };
 
-/**
- * Processes uploaded files and sends them to the backend for storage.
- * @param {Array<{ url?: string, fileUrl?: string, name?: string, originalname?: string, key?: string, filename?: string }>} uploadedFiles
- * @returns {Promise<Array<Object>>}
- */
 export const createFilesArray = async (uploadedFiles) => {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
@@ -90,9 +66,7 @@ export const createFilesArray = async (uploadedFiles) => {
           throw new Error("File URL or name missing");
         }
 
-        // Check if this is an S3 URL that needs to be signed
         if (fileUrl && fileUrl.includes("amazonaws.com")) {
-          // This is an S3 URL, we need to get a signed URL
           fileUrl = await getSignedUrl(fileKey, token);
         }
 
@@ -117,12 +91,11 @@ export const createFilesArray = async (uploadedFiles) => {
           serverKey: fileKey,
           text: "",
           matchedWords: [],
-          locations: [], // Initialize as empty array
+          locations: [],
           tags: [],
           UserId: userId,
         };
 
-        // Extract text & locations
         if (fileType === "application/pdf") {
           try {
             const result = await PDFTextExtraction(fileUrl);
@@ -155,7 +128,6 @@ export const createFilesArray = async (uploadedFiles) => {
           }
         }
 
-        // Send to backend
         await fetch("http://localhost:5005/api/files", {
           method: "POST",
           headers: {
@@ -179,18 +151,11 @@ export const createFilesArray = async (uploadedFiles) => {
   return processedFiles.filter(Boolean);
 };
 
-/**
- * Helper function to normalize file data from the server
- * Ensures that properties like locations are always in the expected format
- * @param {Object} file - The file object from the server
- * @returns {Object} - Normalized file object
- */
 export const normalizeFileData = (file) => {
   if (!file) return null;
 
   return {
     ...file,
-    // Ensure these are always arrays
     locations: ensureArray(file.locations),
     matchedWords: Array.isArray(file.matchedWords) ? file.matchedWords : [],
     tags: Array.isArray(file.tags) ? file.tags : [],
