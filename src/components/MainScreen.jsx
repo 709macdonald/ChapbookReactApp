@@ -6,6 +6,7 @@ import IndividualFileScreen from "./IndividualFileScreen";
 import NewDocumentPage from "./NewDocumentPage";
 import LoginScreen from "./LoginScreen";
 import SignUpScreen from "./SignUpScreen";
+import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 
 export default function MainScreen({
   files,
@@ -91,7 +92,7 @@ export default function MainScreen({
     if (fileId) {
       try {
         const token = localStorage.getItem("token");
-        await fetch(`http://localhost:5005/api/files/${fileId}`, {
+        await fetch(`${getBaseUrlWithEnv()}/api/files/${fileId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -137,7 +138,7 @@ export default function MainScreen({
     if (fileId) {
       try {
         const token = localStorage.getItem("token");
-        await fetch(`http://localhost:5005/api/files/${fileId}`, {
+        await fetch(`${getBaseUrlWithEnv()}/api/files/${fileId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

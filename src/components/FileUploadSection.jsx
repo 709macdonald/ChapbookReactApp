@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createFilesArray } from "../assets/utils/createFilesArray";
+import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 
 export default function FileUploadSection({
   files,
@@ -46,7 +47,7 @@ export default function FileUploadSection({
 
       // 🔥 First: delete everything from backend (DB + S3)
       const res = await fetch(
-        `http://localhost:5005/api/files/reset/${userId}`,
+        `${getBaseUrlWithEnv()}/api/files/reset/${userId}`,
         {
           method: "DELETE",
           headers: {
@@ -114,7 +115,7 @@ export default function FileUploadSection({
       setUploadError(null);
 
       // Upload files to S3 via our API
-      const res = await fetch("http://localhost:5005/api/upload", {
+      const res = await fetch(`${getBaseUrlWithEnv()}/api/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

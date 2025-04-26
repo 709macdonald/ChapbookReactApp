@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { EditorState, Modifier, SelectionState } from "draft-js";
+import { getBaseUrlWithEnv } from "./utils/backendConnect";
 
 const AIWritingAssistant = ({ editorState, setEditorState }) => {
   const [prompt, setPrompt] = useState("");
@@ -81,7 +82,7 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
         authToken.substring(0, 10) + "..."
       );
 
-      const response = await fetch("http://localhost:5005/api/ai/generate", {
+      const response = await fetch(`${getBaseUrlWithEnv()}/api/ai/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -119,12 +120,15 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:5005/api/ai/test-openai", {
-        headers: {
-          "x-auth-token": authToken,
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        `${getBaseUrlWithEnv()}/api/ai/test-openai`,
+        {
+          headers: {
+            "x-auth-token": authToken,
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       const data = await response.json();
       console.log("Test API Result:", data);

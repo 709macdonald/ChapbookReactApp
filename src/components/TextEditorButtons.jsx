@@ -5,6 +5,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { v4 as uuidv4 } from "uuid";
 import AIWritingAssistant from "./AIWritingAssistant";
+import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 
 const COLORS = [
   { label: "Black", style: "BLACK", hex: "#000000" },
@@ -177,7 +178,7 @@ const TextEditorButtons = ({
         };
 
         const res = await fetch(
-          `http://localhost:5005/api/files/${selectedUserCreatedFile.id}`,
+          `${getBaseUrlWithEnv()}/api/files/${selectedUserCreatedFile.id}`,
           {
             method: "PUT",
             headers: {
@@ -216,7 +217,7 @@ const TextEditorButtons = ({
           UserId: userId,
         };
 
-        const res = await fetch(`http://localhost:5005/api/files`, {
+        const res = await fetch(`${getBaseUrlWithEnv()}/api/files`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

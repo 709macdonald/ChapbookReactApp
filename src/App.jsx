@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import Sidebar from "./components/Sidebar";
 import MainScreen from "./components/MainScreen";
+import { getBaseUrlWithEnv } from "./utils/backendConnect";
 
 function App() {
   const [files, setFiles] = useState([]);
@@ -36,7 +37,7 @@ function App() {
       }
 
       // Send the token in the Authorization header
-      const res = await fetch(`http://localhost:5005/api/files`, {
+      const res = await fetch(`${getBaseUrlWithEnv()}/api/files`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -107,7 +108,7 @@ function App() {
       }
 
       // ✅ Delete from DB with token
-      const res = await fetch(`http://localhost:5005/api/files/${id}`, {
+      const res = await fetch(`${getBaseUrlWithEnv()}/api/files/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -118,7 +119,7 @@ function App() {
 
       // ✅ Optional: delete from local /uploads folder with token
       await fetch(
-        `http://localhost:5005/api/delete-local/${fileToDelete.serverKey}`,
+        `${getBaseUrlWithEnv()}/api/delete-local/${fileToDelete.serverKey}`,
         {
           method: "DELETE",
           headers: {

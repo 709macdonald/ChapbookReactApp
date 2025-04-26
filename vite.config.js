@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command, mode }) => ({
   plugins: [react()],
   base: command === "build" ? "/ChapbookReactApp/" : "/",
   define: {
@@ -19,7 +19,11 @@ export default defineConfig(({ command }) => ({
   },
   server: {
     proxy: {
-      "/api": "http://localhost:5005", // Proxy API calls to your backend running on port 5005
+      "/api": {
+        target: "http://localhost:5005", // ONLY for local dev!
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 }));

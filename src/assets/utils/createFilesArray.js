@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { PDFTextExtraction } from "./PDFTextUtils";
 import { imageTextExtraction } from "./ImageTextUtils";
 import { wordTextExtraction } from "./wordDocTextUtils";
+import { getBaseUrlWithEnv } from "./utils/backendConnect"; // 👈 ADD THIS
 
 const ensureArray = (value) => {
   if (Array.isArray(value)) return value;
@@ -28,7 +29,7 @@ const ensureArray = (value) => {
 const getSignedUrl = async (fileKey, token) => {
   try {
     const response = await fetch(
-      `http://localhost:5005/api/signed-url/${fileKey}`,
+      `${getBaseUrlWithEnv()}/api/signed-url/${fileKey}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -128,7 +129,7 @@ export const createFilesArray = async (uploadedFiles) => {
           }
         }
 
-        await fetch("http://localhost:5005/api/files", {
+        await fetch(`${getBaseUrlWithEnv()}/api/files`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
