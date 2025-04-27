@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
+import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 
 export default function UserSettings({
   setShowUserSettings,
@@ -29,7 +30,7 @@ export default function UserSettings({
           const decoded = jwt_decode(token);
           setUserId(decoded.userId);
 
-          const response = await fetch("/api/profile", {
+          const response = await fetch(`${getBaseUrlWithEnv()}/api/profile`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -152,12 +153,15 @@ export default function UserSettings({
     }
 
     try {
-      const response = await fetch(`/api/users/${userId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${getBaseUrlWithEnv()}/api/users/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         localStorage.removeItem("token");
@@ -196,12 +200,15 @@ export default function UserSettings({
     }
 
     try {
-      const response = await fetch(`/api/files/reset/${userId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${getBaseUrlWithEnv()}/api/files/reset/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
 

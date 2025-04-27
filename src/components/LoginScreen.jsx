@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
+import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 
 export default function LoginScreen({
   setToggleSideBar,
@@ -50,7 +51,7 @@ export default function LoginScreen({
     setError("");
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch(`${getBaseUrlWithEnv()}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

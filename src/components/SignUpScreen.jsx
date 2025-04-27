@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 
 export default function SignUpScreen({
   setToggleSideBar,
@@ -24,7 +25,7 @@ export default function SignUpScreen({
     const user = { firstName, lastName, email, password };
 
     try {
-      const response = await fetch("/api/users", {
+      const response = await fetch(`${getBaseUrlWithEnv()}/api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
