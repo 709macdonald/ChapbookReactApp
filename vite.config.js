@@ -2,9 +2,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 
-export default defineConfig(({ command, mode }) => ({
+export default defineConfig({
   plugins: [react()],
-  base: command === "build" ? "/ChapbookReactApp/" : "/",
+  base: "/", // 👈✅ Fixed for Vercel
   define: {
     global: "window",
   },
@@ -20,10 +20,10 @@ export default defineConfig(({ command, mode }) => ({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5005", // ONLY for local dev!
+        target: "http://localhost:5005",
         changeOrigin: true,
         secure: false,
       },
     },
   },
-}));
+});
