@@ -176,23 +176,25 @@ export default function MainScreen({
 
   return (
     <div className="mainScreenDiv">
-      <div className="centerWrapperDiv">
-        <LoginScreen
-          setToggleSideBar={setToggleSideBar}
-          setShowAllFiles={setShowAllFiles}
-          SetShowSignUpScreen={SetShowSignUpScreen}
-          showLoginScreen={showLoginScreen}
-          setShowLoginScreen={setShowLoginScreen}
-          fetchFiles={fetchFiles}
-        />
-        <SignUpScreen
-          setToggleSideBar={setToggleSideBar}
-          showSignUpScreen={showSignUpScreen}
-          SetShowSignUpScreen={SetShowSignUpScreen}
-          setShowLoginScreen={setShowLoginScreen}
-          setShowAllFiles={setShowAllFiles}
-        />
-      </div>
+      {(showLoginScreen || showSignUpScreen) && (
+        <div className="centerWrapperDiv">
+          <LoginScreen
+            setToggleSideBar={setToggleSideBar}
+            setShowAllFiles={setShowAllFiles}
+            SetShowSignUpScreen={SetShowSignUpScreen}
+            showLoginScreen={showLoginScreen}
+            setShowLoginScreen={setShowLoginScreen}
+            fetchFiles={fetchFiles}
+          />
+          <SignUpScreen
+            setToggleSideBar={setToggleSideBar}
+            showSignUpScreen={showSignUpScreen}
+            SetShowSignUpScreen={SetShowSignUpScreen}
+            setShowLoginScreen={setShowLoginScreen}
+            setShowAllFiles={setShowAllFiles}
+          />
+        </div>
+      )}
       <BGLogo bgLogoOn={bgLogoOn} />
       <LoadingGear isLoadingFiles={isLoadingFiles} />
       <FileSearchScreen
