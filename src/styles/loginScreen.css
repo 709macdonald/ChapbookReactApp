@@ -1,3 +1,15 @@
+.centerWrapperDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 998; /* so it's behind the login/signup boxes */
+}
+
 .loginPageDiv {
   z-index: 999;
   background-color: var(--main-bg-color);
