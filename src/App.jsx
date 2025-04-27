@@ -3,6 +3,7 @@ import jwt_decode from "jwt-decode";
 import Sidebar from "./components/Sidebar";
 import MainScreen from "./components/MainScreen";
 import { getBaseUrlWithEnv } from "./assets/utils/backendConnect";
+import "./pdfConfig";
 
 function App() {
   const [files, setFiles] = useState([]);
