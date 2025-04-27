@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { EditorState, Modifier, SelectionState } from "draft-js";
-import { getBaseUrlWithEnv } from "./utils/backendConnect";
+import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 
 const AIWritingAssistant = ({ editorState, setEditorState }) => {
   const [prompt, setPrompt] = useState("");

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import Sidebar from "./components/Sidebar";
 import MainScreen from "./components/MainScreen";
-import { getBaseUrlWithEnv } from "./utils/backendConnect";
+import { getBaseUrlWithEnv } from "./assets/utils/backendConnect";
 
 function App() {
   const [files, setFiles] = useState([]);

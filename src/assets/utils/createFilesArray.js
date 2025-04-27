@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { PDFTextExtraction } from "./PDFTextUtils";
 import { imageTextExtraction } from "./ImageTextUtils";
 import { wordTextExtraction } from "./wordDocTextUtils";
-import { getBaseUrlWithEnv } from "./utils/backendConnect"; // 👈 ADD THIS
+import { getBaseUrlWithEnv } from "./backendConnect";}
 
 const ensureArray = (value) => {
   if (Array.isArray(value)) return value;
