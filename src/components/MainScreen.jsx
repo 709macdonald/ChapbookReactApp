@@ -99,6 +99,7 @@ export default function MainScreen({
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ tags: updatedTags }),
+          credentials: "include",
         });
       } catch (err) {
         console.error("Error updating file tags:", err);
@@ -145,6 +146,7 @@ export default function MainScreen({
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ tags: updatedTags }),
+          credentials: "include",
         });
       } catch (err) {
         console.error("Error updating file tags:", err);

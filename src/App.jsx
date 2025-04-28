@@ -42,6 +42,7 @@ function App() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       });
 
       if (!res.ok) throw new Error("Failed to fetch user files");
@@ -114,6 +115,7 @@ function App() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       });
 
       if (!res.ok) throw new Error("Server error on DB delete");
@@ -126,6 +128,7 @@ function App() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
         }
       );
 

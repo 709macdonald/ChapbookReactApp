@@ -57,6 +57,7 @@ export default function LoginScreen({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
 
       const data = await response.json();

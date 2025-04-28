@@ -53,6 +53,7 @@ export default function FileUploadSection({
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
         }
       );
 
@@ -121,6 +122,7 @@ export default function FileUploadSection({
           Authorization: `Bearer ${token}`,
         },
         body: formData,
+        credentials: "include",
       });
 
       if (!res.ok) {

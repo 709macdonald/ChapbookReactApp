@@ -90,6 +90,7 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({ prompt }),
+        credentials: "include",
       });
 
       console.log("Response status:", response.status);
@@ -127,6 +128,7 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
             "x-auth-token": authToken,
             Authorization: `Bearer ${authToken}`,
           },
+          credentials: "include",
         }
       );
 

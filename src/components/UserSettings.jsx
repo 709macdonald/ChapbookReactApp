@@ -34,6 +34,7 @@ export default function UserSettings({
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            credentials: "include",
           });
 
           if (response.ok) {
@@ -160,6 +161,7 @@ export default function UserSettings({
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
         }
       );
 
@@ -207,6 +209,7 @@ export default function UserSettings({
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          credentials: "include",
         }
       );
 

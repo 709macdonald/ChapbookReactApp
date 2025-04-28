@@ -34,6 +34,7 @@ const getSignedUrl = async (fileKey, token) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       }
     );
 
@@ -136,6 +137,7 @@ export const createFilesArray = async (uploadedFiles) => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(fileData),
+          credentials: "include",
         });
 
         return fileData;

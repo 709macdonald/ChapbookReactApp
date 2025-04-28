@@ -186,6 +186,7 @@ const TextEditorButtons = ({
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(updatedFile),
+            credentials: "include",
           }
         );
 
@@ -224,6 +225,7 @@ const TextEditorButtons = ({
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(newChapbookFile),
+          credentials: "include",
         });
 
         if (!res.ok) {
