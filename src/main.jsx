@@ -12,7 +12,7 @@ import "./styles/loginScreen.css";
 import "./styles/signUpScreen.css";
 
 const clientId =
-  941831478532 - iklrlnrrvu857u85lgqek79ungfcafqp.apps.googleusercontent.com; // ⬅️ Paste your real Google client ID
+  "941831478532-iklrlnrrvu857u85lgqek79ungfcafqp.apps.googleusercontent.com";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={clientId}>
