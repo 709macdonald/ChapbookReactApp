@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function LoginScreen({
   setToggleSideBar,
@@ -130,6 +131,46 @@ export default function LoginScreen({
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              const googleToken = credentialResponse.credential;
+
+              try {
+                const response = await fetch(
+                  `${getBaseUrlWithEnv()}/api/google-login`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ token: googleToken }),
+                  }
+                );
+
+                const data = await response.json();
+
+                if (response.ok) {
+                  localStorage.setItem("token", data.token);
+                  localStorage.setItem("userId", data.userId);
+
+                  setIsLoggedIn(true);
+                  setToggleSideBar(true);
+                  setShowAllFiles(true);
+                  setShowLoginScreen(false);
+                  fetchFiles();
+                  alert("Google login successful!");
+                } else {
+                  setError(data.error || "Google login failed");
+                }
+              } catch (err) {
+                setError("Network error during Google login");
+              }
+            }}
+            onError={() => {
+              setError("Google Sign In was unsuccessful. Try again later.");
+            }}
+          />
+
           {error && <p className="errorText">{error}</p>}
           <button className="loginButton" onClick={handleLogin}>
             Login
