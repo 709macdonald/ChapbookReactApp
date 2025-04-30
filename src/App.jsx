@@ -197,6 +197,7 @@ function App() {
         sortCriteria={sortCriteria}
         setToggleSideBar={setToggleSideBar}
         setEmail={setEmail}
+        email={email}
       />
     </div>
   );

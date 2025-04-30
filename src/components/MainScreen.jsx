@@ -32,6 +32,7 @@ export default function MainScreen({
   fetchFiles,
   setIsLoadingFiles,
   setEmail,
+  email,
 }) {
   const [individualFile, setIndividualFile] = useState(null);
   const [showSignUpScreen, SetShowSignUpScreen] = useState(false);
@@ -189,6 +190,7 @@ export default function MainScreen({
             setShowLoginScreen={setShowLoginScreen}
             fetchFiles={fetchFiles}
             setEmail={setEmail}
+            email={email}
           />
           <SignUpScreen
             setToggleSideBar={setToggleSideBar}
@@ -197,6 +199,7 @@ export default function MainScreen({
             setShowLoginScreen={setShowLoginScreen}
             setShowAllFiles={setShowAllFiles}
             setEmail={setEmail}
+            email={email}
           />
         </div>
       )}

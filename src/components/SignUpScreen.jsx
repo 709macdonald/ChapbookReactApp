@@ -9,10 +9,10 @@ export default function SignUpScreen({
   setShowLoginScreen,
   setShowAllFiles,
   setEmail,
+  email,
 }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");

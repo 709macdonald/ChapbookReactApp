@@ -11,8 +11,8 @@ export default function LoginScreen({
   setShowLoginScreen,
   fetchFiles,
   setEmail,
+  email,
 }) {
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
