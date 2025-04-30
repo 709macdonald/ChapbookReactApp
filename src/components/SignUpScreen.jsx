@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
-import { GoogleLogin } from "@react-oauth/google";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 export default function SignUpScreen({
   setToggleSideBar,
@@ -8,6 +8,7 @@ export default function SignUpScreen({
   SetShowSignUpScreen,
   setShowLoginScreen,
   setShowAllFiles,
+  setEmail,
 }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -104,43 +105,17 @@ export default function SignUpScreen({
       <button className="createAccountButton" onClick={handleSignUp}>
         Create Account
       </button>
-      <GoogleLogin
-        text="signup_with" // 👈 This is the key!
-        onSuccess={async (credentialResponse) => {
-          const googleToken = credentialResponse.credential;
-
-          try {
-            const response = await fetch(
-              `${getBaseUrlWithEnv()}/api/google-login`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ token: googleToken }),
-              }
-            );
-
-            const data = await response.json();
-
-            if (response.ok) {
-              localStorage.setItem("token", data.token);
-              localStorage.setItem("userId", data.userId);
-
-              setToggleSideBar(true);
-              setShowAllFiles(true);
-              SetShowSignUpScreen(false);
-              alert("Signed up with Google!");
-            } else {
-              setError(data.error || "Google Sign-Up failed");
-            }
-          } catch (err) {
-            setError("Network error during Google Sign-Up");
-          }
+      <GoogleLoginButton
+        buttonText="signin_with"
+        fetchFiles={fetchFiles}
+        setToggleSideBar={setToggleSideBar}
+        setShowAllFiles={setShowAllFiles}
+        closeAuthScreens={() => {
+          setShowLoginScreen(false);
+          setIsLoggedIn(true);
+          setEmail(""); // clears the input
         }}
-        onError={() => {
-          setError("Google Sign-Up failed.");
-        }}
+        setError={setError}
       />
 
       {error && <p className="errorText">{error}</p>}

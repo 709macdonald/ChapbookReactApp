@@ -10,10 +10,11 @@ export default function UserSettings({
   isDarkMode,
   handleClose,
   setFiles,
+  email,
+  setEmail,
 }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

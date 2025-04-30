@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
-import { GoogleLogin } from "@react-oauth/google";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 export default function LoginScreen({
   setToggleSideBar,
@@ -10,6 +10,7 @@ export default function LoginScreen({
   showLoginScreen,
   setShowLoginScreen,
   fetchFiles,
+  setEmail,
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -131,44 +132,17 @@ export default function LoginScreen({
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <GoogleLogin
-            onSuccess={async (credentialResponse) => {
-              const googleToken = credentialResponse.credential;
-
-              try {
-                const response = await fetch(
-                  `${getBaseUrlWithEnv()}/api/google-login`,
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ token: googleToken }),
-                  }
-                );
-
-                const data = await response.json();
-
-                if (response.ok) {
-                  localStorage.setItem("token", data.token);
-                  localStorage.setItem("userId", data.userId);
-
-                  setIsLoggedIn(true);
-                  setToggleSideBar(true);
-                  setShowAllFiles(true);
-                  setShowLoginScreen(false);
-                  fetchFiles();
-                  alert("Google login successful!");
-                } else {
-                  setError(data.error || "Google login failed");
-                }
-              } catch (err) {
-                setError("Network error during Google login");
-              }
+          <GoogleLoginButton
+            buttonText="signin_with"
+            fetchFiles={fetchFiles}
+            setToggleSideBar={setToggleSideBar}
+            setShowAllFiles={setShowAllFiles}
+            closeAuthScreens={() => {
+              setShowLoginScreen(false);
+              setIsLoggedIn(true);
+              setEmail(""); // clears the input
             }}
-            onError={() => {
-              setError("Google Sign In was unsuccessful. Try again later.");
-            }}
+            setError={setError}
           />
 
           {error && <p className="errorText">{error}</p>}

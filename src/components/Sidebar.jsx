@@ -25,6 +25,8 @@ export default function Sidebar({
   setSortCriteria,
   toggleSideBar,
   setToggleSideBar,
+  email,
+  setEmail,
 }) {
   const [showUserSettings, setShowUserSettings] = useState(false);
 
@@ -78,6 +80,8 @@ export default function Sidebar({
           isDarkMode={isDarkMode}
           handleClose={handleCloseUserSettings}
           setFiles={setFiles}
+          email={email}
+          setEmail={setEmail}
         />
       ) : (
         <>

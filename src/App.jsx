@@ -20,6 +20,7 @@ function App() {
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
   const [sortCriteria, setSortCriteria] = useState("name");
+  const [email, setEmail] = useState("");
 
   if (typeof global === "undefined") {
     var global = window;
@@ -169,6 +170,8 @@ function App() {
         setSelectedUserCreatedFile={setSelectedUserCreatedFile}
         sortCriteria={sortCriteria}
         setSortCriteria={setSortCriteria}
+        email={email}
+        setEmail={setEmail}
       />
       <MainScreen
         fetchFiles={fetchFiles}
@@ -193,6 +196,7 @@ function App() {
         setSelectedUserCreatedFile={setSelectedUserCreatedFile}
         sortCriteria={sortCriteria}
         setToggleSideBar={setToggleSideBar}
+        setEmail={setEmail}
       />
     </div>
   );
