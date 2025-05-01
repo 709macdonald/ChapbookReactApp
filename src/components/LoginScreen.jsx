@@ -29,8 +29,8 @@ export default function LoginScreen({
           localStorage.removeItem("userId");
           setIsLoggedIn(false);
         } else {
-          if (!localStorage.getItem("userId") && decoded.id) {
-            localStorage.setItem("userId", decoded.id);
+          if (!localStorage.getItem("userId") && decoded.userId) {
+            localStorage.setItem("userId", decoded.userId);
           }
 
           setIsLoggedIn(true);

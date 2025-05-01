@@ -15,6 +15,13 @@ export default function GoogleLoginButton({
   const handleGoogleLogin = async (credentialResponse) => {
     const googleToken = credentialResponse.credential;
 
+    console.log("Google token received from Google:", googleToken);
+
+    if (!googleToken) {
+      setError?.("Missing Google token.");
+      return;
+    }
+
     try {
       const response = await fetch(`${getBaseUrlWithEnv()}/api/google-login`, {
         method: "POST",
@@ -25,6 +32,8 @@ export default function GoogleLoginButton({
       });
 
       const data = await response.json();
+
+      console.log("Backend login response:", data);
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
