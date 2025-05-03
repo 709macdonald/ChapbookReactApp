@@ -132,20 +132,6 @@ export default function LoginScreen({
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <GoogleLoginButton
-            buttonText="signin_with"
-            fetchFiles={fetchFiles}
-            setToggleSideBar={setToggleSideBar}
-            setShowAllFiles={setShowAllFiles}
-            closeAuthScreens={() => {
-              setShowLoginScreen(false);
-              setIsLoggedIn(true);
-              setEmail(""); // clears the input
-            }}
-            setError={setError}
-          />
-
-          {error && <p className="errorText">{error}</p>}
           <button className="loginButton" onClick={handleLogin}>
             Login
           </button>
@@ -157,6 +143,20 @@ export default function LoginScreen({
           SIGN UP
         </button>
       </p>
+      <GoogleLoginButton
+        buttonText="signin_with"
+        fetchFiles={fetchFiles}
+        setToggleSideBar={setToggleSideBar}
+        setShowAllFiles={setShowAllFiles}
+        closeAuthScreens={() => {
+          setShowLoginScreen(false);
+          setIsLoggedIn(true);
+          setEmail(""); // clears the input
+        }}
+        setError={setError}
+      />
+
+      {error && <p className="errorText">{error}</p>}
     </div>
   );
 }

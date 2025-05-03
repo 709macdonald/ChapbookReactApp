@@ -10,6 +10,7 @@ export default function SignUpScreen({
   setShowAllFiles,
   setEmail,
   email,
+  fetchFiles,
 }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -105,6 +106,12 @@ export default function SignUpScreen({
       <button className="createAccountButton" onClick={handleSignUp}>
         Create Account
       </button>
+      <p className="alreadyAMemberText">
+        Already a member?{" "}
+        <button onClick={showLoginPage} className="goToLoginButton">
+          LOGIN
+        </button>
+      </p>
       <GoogleLoginButton
         buttonText="signin_with"
         fetchFiles={fetchFiles}
@@ -120,12 +127,6 @@ export default function SignUpScreen({
 
       {error && <p className="errorText">{error}</p>}
       {successMessage && <p className="successText">{successMessage}</p>}
-      <p className="alreadyAMemberText">
-        Already a member?{" "}
-        <button onClick={showLoginPage} className="goToLoginButton">
-          LOGIN
-        </button>
-      </p>
     </div>
   );
 }

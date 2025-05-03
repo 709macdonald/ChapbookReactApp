@@ -200,6 +200,7 @@ export default function MainScreen({
             setShowAllFiles={setShowAllFiles}
             setEmail={setEmail}
             email={email}
+            fetchFiles={fetchFiles}
           />
         </div>
       )}
