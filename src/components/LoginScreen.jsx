@@ -96,6 +96,36 @@ export default function LoginScreen({
     }
   };
 
+  const handleGuestLogin = async () => {
+    try {
+      const res = await fetch(`${getBaseUrlWithEnv()}/api/guest-login`, {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Guest login failed");
+
+      const { token } = data;
+      localStorage.setItem("token", token);
+
+      const decoded = jwt_decode(token);
+      if (decoded.userId) {
+        localStorage.setItem("userId", decoded.userId);
+        localStorage.setItem("isGuest", "true"); // 👈 important
+      }
+
+      setIsLoggedIn(true);
+      setToggleSideBar(true);
+      setShowAllFiles(true);
+      setShowLoginScreen(false);
+      fetchFiles();
+    } catch (err) {
+      console.error("Guest login failed", err);
+      setError("Failed to log in as guest");
+    }
+  };
+
   const showSignUpPage = () => {
     SetShowSignUpScreen(true);
     setShowLoginScreen(false);
@@ -137,6 +167,10 @@ export default function LoginScreen({
           </button>
         </>
       )}
+      <button className="guestLoginButton" onClick={handleGuestLogin}>
+        Sign In as Guest
+      </button>
+
       <p className="notAMemberText">
         Not a member?{" "}
         <button onClick={showSignUpPage} className="signUpButton">

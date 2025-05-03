@@ -181,11 +181,34 @@ export default function UserSettings({
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    const isGuest = localStorage.getItem("isGuest") === "true";
+
+    // If guest, delete their files AND account
+    if (isGuest && userId && token) {
+      try {
+        await fetch(`${getBaseUrlWithEnv()}/api/guest-user/${userId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } catch (err) {
+        console.error("Failed to clean up guest account:", err);
+      }
+    }
+
+    // ✅ Always clear all user info to prevent leaks or accidental deletion
     localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("isGuest");
+
     setToggleSideBar(false);
     setShowAllFiles(false);
     setShowUserSettings(false);
+
     window.location.reload();
   };
 
