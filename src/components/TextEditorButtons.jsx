@@ -233,7 +233,6 @@ const TextEditorButtons = ({
         }
 
         setFiles((prevFiles) => [...prevFiles, newChapbookFile]);
-        console.log("Created new file:", newChapbookFile.name);
       }
 
       backToAllFileView();
