@@ -61,11 +61,6 @@ function App() {
     fetchFiles();
   }, []);
 
-  useEffect(() => {
-    console.log("Files state updated:", files);
-  }, [files]);
-
-  // 🌓 Light/Dark Mode
   const toggleTheme = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
@@ -110,7 +105,6 @@ function App() {
         return;
       }
 
-      // ✅ Delete from DB with token
       const res = await fetch(`${getBaseUrlWithEnv()}/api/files/${id}`, {
         method: "DELETE",
         headers: {
@@ -133,7 +127,6 @@ function App() {
         }
       );
 
-      // ✅ Update frontend
       setFiles(files.filter((file) => file.id !== id));
       setShowIndividualFile(false);
       setBgLogoOn(true);

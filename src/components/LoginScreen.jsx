@@ -74,7 +74,6 @@ export default function LoginScreen({
         localStorage.setItem("token", token);
 
         const decoded = jwt_decode(token);
-        console.log("Decoded token:", decoded);
 
         if (decoded.userId) {
           localStorage.setItem("userId", decoded.userId);
@@ -87,7 +86,6 @@ export default function LoginScreen({
         setShowAllFiles(true);
         setShowLoginScreen(false);
         fetchFiles();
-        alert("Login successful!");
       } else {
         setError(data.error || "Login failed");
       }

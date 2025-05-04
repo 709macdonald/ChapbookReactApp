@@ -43,7 +43,6 @@ export default function MainScreen({
     setBgLogoOn(false);
 
     if (file.type === "application/draft-js") {
-      console.log("Opening draft-js file:", file);
       const fileToPass = {
         ...file,
         fileContent: file.fileContent,
@@ -54,7 +53,6 @@ export default function MainScreen({
       setSelectedUserCreatedFile(fileToPass);
       setIndividualFile(null);
     } else {
-      console.log("Opening non-draft-js file:", file);
       setNewDocumentPage(false);
       setShowIndividualFile(true);
       setHideSearchSection(false);
@@ -83,14 +81,12 @@ export default function MainScreen({
     const trimmedTag = newTag.trim();
     if (!trimmedTag) return;
 
-    // Don't add duplicate tags
     if (currentTags.includes(trimmedTag)) {
       return currentTags;
     }
 
     const updatedTags = [...currentTags, trimmedTag];
 
-    // If a fileId exists, update the file's tags in the backend
     if (fileId) {
       try {
         const token = localStorage.getItem("token");
@@ -108,7 +104,6 @@ export default function MainScreen({
       }
     }
 
-    // Update files in the state
     setFiles((prevFiles) =>
       prevFiles.map((f) => {
         if (f.id === fileId) {
@@ -118,12 +113,10 @@ export default function MainScreen({
       })
     );
 
-    // If we're viewing an individual file, update it too
     if (individualFile && individualFile.id === fileId) {
       setIndividualFile({ ...individualFile, tags: updatedTags });
     }
 
-    // If we have a selected user created file, update it too
     if (selectedUserCreatedFile && selectedUserCreatedFile.id === fileId) {
       setSelectedUserCreatedFile({
         ...selectedUserCreatedFile,

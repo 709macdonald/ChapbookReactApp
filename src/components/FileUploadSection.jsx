@@ -38,14 +38,13 @@ export default function FileUploadSection({
 
     try {
       const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId"); // Make sure this is saved on login
+      const userId = localStorage.getItem("userId");
 
       if (!userId || !token) {
         alert("Missing user information. Please log in again.");
         return;
       }
 
-      // 🔥 First: delete everything from backend (DB + S3)
       const res = await fetch(
         `${getBaseUrlWithEnv()}/api/files/reset/${userId}`,
         {
@@ -64,7 +63,6 @@ export default function FileUploadSection({
 
       console.log("✅ Backend reset complete");
 
-      // ✅ Then: clear frontend state
       setFiles([]);
       setFolderName("Select Folder");
       setIsLoadingFiles(false);
@@ -115,7 +113,6 @@ export default function FileUploadSection({
       setShowAllFiles(false);
       setUploadError(null);
 
-      // Upload files to S3 via our API
       const res = await fetch(`${getBaseUrlWithEnv()}/api/upload`, {
         method: "POST",
         headers: {
@@ -133,16 +130,10 @@ export default function FileUploadSection({
       }
 
       const uploadedFiles = await res.json();
-      console.log("📦 S3 uploaded:", uploadedFiles);
 
-      // Process the files (extract text, create database entries)
       const processedFiles = await createFilesArray(uploadedFiles);
 
       setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
-
-      alert(
-        `Successfully uploaded and processed ${processedFiles.length} file(s) to S3.`
-      );
     } catch (err) {
       console.error("❌ S3 Upload or processing error:", err);
       setUploadError(
