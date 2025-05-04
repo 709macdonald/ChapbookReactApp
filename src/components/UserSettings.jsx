@@ -186,21 +186,24 @@ export default function UserSettings({
     const userId = localStorage.getItem("userId");
     const isGuest = localStorage.getItem("isGuest") === "true";
 
-    // If guest, delete their files AND account
     if (isGuest && userId && token) {
       try {
-        await fetch(`${getBaseUrlWithEnv()}/api/guest-user/${userId}`, {
+        // Delete all files
+        await fetch(`${getBaseUrlWithEnv()}/api/files/reset/${userId}`, {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        // Then delete the user
+        await fetch(`${getBaseUrlWithEnv()}/api/users/${userId}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {
-        console.error("Failed to clean up guest account:", err);
+        console.error("Guest cleanup failed:", err);
       }
     }
 
-    // ✅ Always clear all user info to prevent leaks or accidental deletion
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("isGuest");
