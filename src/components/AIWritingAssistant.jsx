@@ -77,11 +77,6 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
     setError("");
 
     try {
-      console.log(
-        "Sending request with token:",
-        authToken.substring(0, 10) + "..."
-      );
-
       const response = await fetch(`${getBaseUrlWithEnv()}/api/ai/generate`, {
         method: "POST",
         headers: {
@@ -92,9 +87,6 @@ const AIWritingAssistant = ({ editorState, setEditorState }) => {
         body: JSON.stringify({ prompt }),
         credentials: "include",
       });
-
-      console.log("Response status:", response.status);
-
       const data = await response.json();
 
       if (!response.ok) {
