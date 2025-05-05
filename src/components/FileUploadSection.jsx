@@ -17,7 +17,6 @@ export default function FileUploadSection({
   const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
   const [folderName, setFolderName] = useState(savedFolderName);
   const [authToken, setAuthToken] = useState(null);
-  const [uploadError, setUploadError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
@@ -71,7 +70,6 @@ export default function FileUploadSection({
       setSearchWord("");
       setNewDocumentPage(false);
       setHideSearchSection(false);
-      setUploadError(null);
       localStorage.removeItem("files");
       localStorage.removeItem("folderName");
 
@@ -155,7 +153,6 @@ export default function FileUploadSection({
       setIsUploading(true);
       setIsLoadingFiles(true);
       setShowAllFiles(false);
-      setUploadError(null);
 
       const res = await fetch(`${getBaseUrlWithEnv()}/api/upload`, {
         method: "POST",
@@ -178,9 +175,6 @@ export default function FileUploadSection({
       setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
     } catch (err) {
       console.error("❌ S3 Upload or processing error:", err);
-      setUploadError(
-        err.message || "Something went wrong processing the files."
-      );
     } finally {
       setIsUploading(false);
       setTimeout(() => {
@@ -249,9 +243,6 @@ export default function FileUploadSection({
       </div>
 
       <p className="folderName">{folderName}</p>
-
-      {uploadError && <div className="error-message">{uploadError}</div>}
-
       <hr />
     </div>
   );
