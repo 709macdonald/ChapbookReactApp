@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+
 import jwt_decode from "jwt-decode";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 import GoogleLoginButton from "./GoogleLoginButton";
+import { useSnackbar } from "react-simple-snackbar";
 
 export default function LoginScreen({
   setToggleSideBar,
@@ -16,6 +18,8 @@ export default function LoginScreen({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [openSnackbar] = useSnackbar();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -86,11 +90,17 @@ export default function LoginScreen({
         setShowAllFiles(true);
         setShowLoginScreen(false);
         fetchFiles();
+
+        openSnackbar("✅ Login successful!"); // ✅ Snackbar here
       } else {
         setError(data.error || "Login failed");
+
+        openSnackbar("❌ Login failed. Try again."); // ✅ Snackbar here
       }
     } catch (err) {
       setError("Network error, please try again");
+
+      openSnackbar("❌ Network Error. Please try again later."); // ✅ Snackbar here
     }
   };
 
@@ -118,9 +128,12 @@ export default function LoginScreen({
       setShowAllFiles(true);
       setShowLoginScreen(false);
       fetchFiles();
+
+      openSnackbar("👋 Guest login successful!");
     } catch (err) {
       console.error("Guest login failed", err);
       setError("Failed to log in as guest");
+      openSnackbar("❌ Guest login failed.");
     }
   };
 

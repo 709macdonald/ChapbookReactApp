@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import jwt_decode from "jwt-decode";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 import GoogleLoginButton from "./GoogleLoginButton";
+import { useSnackbar } from "react-simple-snackbar";
 
 export default function SignUpScreen({
   setToggleSideBar,
@@ -18,21 +20,20 @@ export default function SignUpScreen({
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  if (!showSignUpScreen) {
-    return <div></div>;
-  }
+  const [openSnackbar] = useSnackbar(); // ✅ Add this
+
+  if (!showSignUpScreen) return <div></div>;
 
   const handleSignUp = async () => {
     setError("");
     setSuccessMessage("");
+
     const user = { firstName, lastName, email, password };
 
     try {
       const response = await fetch(`${getBaseUrlWithEnv()}/api/users`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
         credentials: "include",
       });
@@ -40,15 +41,33 @@ export default function SignUpScreen({
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage("Account created successfully!");
+        const token = data.token;
+
+        if (!token) throw new Error("No token returned on signup.");
+
+        // ✅ Log user in immediately
+        localStorage.setItem("token", token);
+        const decoded = jwt_decode(token);
+
+        if (decoded.userId) {
+          localStorage.setItem("userId", decoded.userId);
+        }
+
         setToggleSideBar(true);
         setShowAllFiles(true);
         SetShowSignUpScreen(false);
+        setShowLoginScreen(false);
+        fetchFiles();
+        setEmail("");
+        openSnackbar("🎉 Account created & logged in!");
       } else {
         setError(data.error || "Account creation failed");
+        openSnackbar("❌ Failed to create account.");
       }
     } catch (err) {
+      console.error(err);
       setError("Network error, please try again");
+      openSnackbar("❌ Network error during signup.");
     }
   };
 
@@ -97,8 +116,8 @@ export default function SignUpScreen({
         <p>Password:</p>
         <input
           className="passwordCreateInput"
-          placeholder="Enter Password"
           type="password"
+          placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -119,8 +138,7 @@ export default function SignUpScreen({
         setShowAllFiles={setShowAllFiles}
         closeAuthScreens={() => {
           setShowLoginScreen(false);
-          setIsLoggedIn(true);
-          setEmail(""); // clears the input
+          setEmail("");
         }}
         setError={setError}
       />
