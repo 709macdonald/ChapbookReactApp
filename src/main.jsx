@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { SnackbarProvider } from "react-simple-snackbar"; // ✅ ADD THIS
+import { Toaster } from "react-hot-toast";
 
 import "./styles/index.css";
 import "./styles/sideBar.css";
@@ -20,9 +20,8 @@ const clientId =
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={clientId}>
-      <SnackbarProvider>
-        <App />
-      </SnackbarProvider>
+      <Toaster />
+      <App />
     </GoogleOAuthProvider>
   </StrictMode>
 );

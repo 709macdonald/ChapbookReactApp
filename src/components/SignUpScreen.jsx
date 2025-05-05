@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 import GoogleLoginButton from "./GoogleLoginButton";
-import { useSnackbar } from "react-simple-snackbar";
+import { toast } from "react-hot-toast";
 
 export default function SignUpScreen({
   setToggleSideBar,
@@ -19,8 +19,6 @@ export default function SignUpScreen({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
-  const [openSnackbar] = useSnackbar(); // ✅ Add this
 
   if (!showSignUpScreen) return <div></div>;
 
@@ -59,15 +57,15 @@ export default function SignUpScreen({
         setShowLoginScreen(false);
         fetchFiles();
         setEmail("");
-        openSnackbar("🎉 Account created & logged in!");
+        toast.success("🎉 Account created & logged in!");
       } else {
         setError(data.error || "Account creation failed");
-        openSnackbar("❌ Failed to create account.");
+        toast.error("❌ Failed to create account.");
       }
     } catch (err) {
       console.error(err);
       setError("Network error, please try again");
-      openSnackbar("❌ Network error during signup.");
+      toast.error("❌ Network error during signup.");
     }
   };
 
