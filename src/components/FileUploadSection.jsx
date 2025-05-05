@@ -33,7 +33,6 @@ export default function FileUploadSection({
     const confirmReset = window.confirm(
       "Are you sure you want to clear all files from Chapbook's library?"
     );
-
     if (!confirmReset) return;
 
     try {
@@ -87,9 +86,7 @@ export default function FileUploadSection({
     const selectedFiles = Array.from(e.target.files);
     if (!selectedFiles.length) return;
 
-    const formData = new FormData();
     const token = localStorage.getItem("token");
-
     if (!token) {
       alert("Authentication required. Please log in again.");
       return;
@@ -105,6 +102,53 @@ export default function FileUploadSection({
       return;
     }
 
+    // === 🚫 Validation ===
+    const MAX_FILES = 20;
+    const MAX_FILE_SIZE_MB = 100;
+    const MAX_TOTAL_SIZE_MB = 100;
+    const allowedExtensions = [
+      "pdf",
+      "jpg",
+      "jpeg",
+      "png",
+      "webp",
+      "doc",
+      "docx",
+    ];
+
+    if (files.length + newFiles.length > MAX_FILES) {
+      alert(`You can only upload up to ${MAX_FILES} files total.`);
+      return;
+    }
+
+    const invalidFiles = newFiles.filter(
+      (file) =>
+        !allowedExtensions.includes(file.name.split(".").pop()?.toLowerCase())
+    );
+    if (invalidFiles.length > 0) {
+      alert(
+        "Some files are not supported. Please upload PDFs, images, or Word docs."
+      );
+      return;
+    }
+
+    const totalSizeMB =
+      files.reduce((acc, f) => acc + (f.size || 0), 0) / (1024 * 1024) +
+      newFiles.reduce((acc, f) => acc + f.size, 0) / (1024 * 1024);
+    if (totalSizeMB > MAX_TOTAL_SIZE_MB) {
+      alert("Total upload limit exceeded. Max 100MB allowed per user.");
+      return;
+    }
+
+    for (const file of newFiles) {
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        alert(`${file.name} exceeds the 100MB file size limit.`);
+        return;
+      }
+    }
+    // === ✅ Validation Passed ===
+
+    const formData = new FormData();
     newFiles.forEach((file) => formData.append("files", file));
 
     try {
@@ -130,9 +174,7 @@ export default function FileUploadSection({
       }
 
       const uploadedFiles = await res.json();
-
       const processedFiles = await createFilesArray(uploadedFiles);
-
       setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
     } catch (err) {
       console.error("❌ S3 Upload or processing error:", err);
