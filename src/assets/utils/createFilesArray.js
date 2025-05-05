@@ -77,7 +77,7 @@ export const createFilesArray = async (uploadedFiles) => {
         let fileType = "application/octet-stream";
         if (ext === "pdf") {
           fileType = "application/pdf";
-        } else if (["jpg", "jpeg", "png", "webp"].includes(ext)) {
+        } else if (["jpg", "jpeg", "png"].includes(ext)) {
           fileType = `image/${ext}`;
         } else if (["docx", "doc"].includes(ext)) {
           fileType =
