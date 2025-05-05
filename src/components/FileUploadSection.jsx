@@ -104,15 +104,7 @@ export default function FileUploadSection({
     const MAX_FILES = 20;
     const MAX_FILE_SIZE_MB = 100;
     const MAX_TOTAL_SIZE_MB = 100;
-    const allowedExtensions = [
-      "pdf",
-      "jpg",
-      "jpeg",
-      "png",
-      "webp",
-      "doc",
-      "docx",
-    ];
+    const allowedExtensions = ["pdf", "jpg", "jpeg", "png", "doc", "docx"];
 
     if (files.length + newFiles.length > MAX_FILES) {
       alert(`You can only upload up to ${MAX_FILES} files total.`);
