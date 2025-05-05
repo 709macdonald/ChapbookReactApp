@@ -14,8 +14,6 @@ export default function FileUploadSection({
   setHideSearchSection,
   setSelectedUserCreatedFile,
 }) {
-  const savedFolderName = localStorage.getItem("folderName") || "Select Folder";
-  const [folderName, setFolderName] = useState(savedFolderName);
   const [authToken, setAuthToken] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -23,10 +21,6 @@ export default function FileUploadSection({
     const token = localStorage.getItem("token");
     setAuthToken(token);
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("folderName", folderName);
-  }, [folderName]);
 
   const handleReset = async () => {
     const confirmReset = window.confirm(
@@ -59,10 +53,7 @@ export default function FileUploadSection({
         throw new Error(errorData.error || "Reset failed.");
       }
 
-      console.log("✅ Backend reset complete");
-
       setFiles([]);
-      setFolderName("Select Folder");
       setIsLoadingFiles(false);
       setShowIndividualFile(false);
       setBgLogoOn(true);
@@ -71,7 +62,6 @@ export default function FileUploadSection({
       setNewDocumentPage(false);
       setHideSearchSection(false);
       localStorage.removeItem("files");
-      localStorage.removeItem("folderName");
 
       alert("All files removed from Chapbook and S3.");
     } catch (err) {
@@ -233,8 +223,6 @@ export default function FileUploadSection({
           </button>
         </div>
       </div>
-
-      <p className="folderName">{folderName}</p>
       <hr />
     </div>
   );
