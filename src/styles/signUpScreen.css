@@ -73,3 +73,29 @@
   font-size: 0.9rem;
   text-align: center;
 }
+
+.centerWrapperDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 998;
+}
+
+.signUpPageDiv {
+  z-index: 999;
+  background-color: var(--main-bg-color);
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  border-radius: 10px;
+}
