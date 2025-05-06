@@ -60,12 +60,12 @@ export default function SignUpScreen({
         toast.success("🎉 Account created & logged in!");
       } else {
         setError(data.error || "Account creation failed");
-        toast.error("❌ Failed to create account.");
+        alert("❌ Failed to create account.");
       }
     } catch (err) {
       console.error(err);
       setError("Network error, please try again");
-      toast.error("❌ Network error during signup.");
+      alert("❌ Network error during signup.");
     }
   };
 
