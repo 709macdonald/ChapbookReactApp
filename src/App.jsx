@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar";
 import MainScreen from "./components/MainScreen";
 import { getBaseUrlWithEnv } from "./assets/utils/backendConnect";
 import "./pdfConfig";
+import toast from "react-hot-toast";
 
 function App() {
   const [files, setFiles] = useState([]);
@@ -132,7 +133,7 @@ function App() {
       setBgLogoOn(true);
       setShowAllFiles(true);
 
-      alert("File deleted successfully.");
+      toast.success("File deleted successfully.");
     } catch (error) {
       console.error("❌ Error deleting file:", error);
       alert("Failed to delete the file. Please try again.");
