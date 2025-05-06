@@ -213,8 +213,10 @@ export default function UserSettings({
     setShowAllFiles(false);
     setShowUserSettings(false);
 
-    toast.success("Logged out successfully"); // 👈 Will fire but likely not seen
-    window.location.reload(); // 👈 Instant reload
+    toast.success("Logged out successfully");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   const handleResetAccount = async () => {
