@@ -186,7 +186,7 @@ export default function FileUploadSection({
 
       <div className="sideBarButtonsDiv">
         <div className="fileInputDiv tooltip-wrapper">
-          <span className="tooltip">Upload Files to S3</span>
+          <span className="tooltip">Upload Files</span>
           {authToken ? (
             <div className="fileInputLabel">
               <input
