@@ -76,7 +76,8 @@ export default function UserSettings({
       return;
     }
 
-    const response = await fetch("/api/profile", {
+    // ✅ Change to:
+    const response = await fetch(`${getBaseUrlWithEnv()}/api/profile`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -114,14 +115,18 @@ export default function UserSettings({
     }
 
     try {
-      const updateResponse = await fetch(`/api/users/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedFields),
-      });
+      // ✅ Change to:
+      const updateResponse = await fetch(
+        `${getBaseUrlWithEnv()}/api/users/${userId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(updatedFields),
+        }
+      );
 
       const data = await updateResponse.json();
 
