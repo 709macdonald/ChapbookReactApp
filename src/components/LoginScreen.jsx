@@ -148,10 +148,11 @@ export default function LoginScreen({
         <span className="chap">Chap</span>
         <span className="book">book</span>
       </h1>
+
       {isLoggedIn ? (
         <p>You are logged in!</p>
       ) : (
-        <>
+        <div className="loginFormWrapper">
           <div className="emailLoginDiv">
             <p>Email:</p>
             <input
@@ -161,6 +162,7 @@ export default function LoginScreen({
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+
           <div className="passwordLoginDiv">
             <p>Password:</p>
             <input
@@ -171,35 +173,38 @@ export default function LoginScreen({
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
           <button className="loginButton" onClick={handleLogin}>
             Login
           </button>
-        </>
+
+          <button className="guestLoginButton" onClick={handleGuestLogin}>
+            Sign In as Guest
+          </button>
+
+          <GoogleLoginButton
+            buttonText="signin_with"
+            fetchFiles={fetchFiles}
+            setToggleSideBar={setToggleSideBar}
+            setShowAllFiles={setShowAllFiles}
+            closeAuthScreens={() => {
+              setShowLoginScreen(false);
+              setIsLoggedIn(true);
+              setEmail(""); // clears the input
+            }}
+            setError={setError}
+          />
+
+          <p className="notAMemberText">
+            Not a member?{" "}
+            <button onClick={showSignUpPage} className="signUpButton">
+              SIGN UP
+            </button>
+          </p>
+
+          {error && <p className="errorText">{error}</p>}
+        </div>
       )}
-      <button className="guestLoginButton" onClick={handleGuestLogin}>
-        Sign In as Guest
-      </button>
-
-      <p className="notAMemberText">
-        Not a member?{" "}
-        <button onClick={showSignUpPage} className="signUpButton">
-          SIGN UP
-        </button>
-      </p>
-      <GoogleLoginButton
-        buttonText="signin_with"
-        fetchFiles={fetchFiles}
-        setToggleSideBar={setToggleSideBar}
-        setShowAllFiles={setShowAllFiles}
-        closeAuthScreens={() => {
-          setShowLoginScreen(false);
-          setIsLoggedIn(true);
-          setEmail(""); // clears the input
-        }}
-        setError={setError}
-      />
-
-      {error && <p className="errorText">{error}</p>}
     </div>
   );
 }

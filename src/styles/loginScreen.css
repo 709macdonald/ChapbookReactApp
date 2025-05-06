@@ -7,63 +7,93 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 998; /* so it's behind the login/signup boxes */
+  z-index: 998;
 }
 
 .loginPageDiv {
   z-index: 999;
   background-color: var(--main-bg-color);
-  padding: 4rem;
-  width: 40%;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   box-shadow: var(--shadow);
+  border-radius: 10px;
+  color: var(--font-color);
 }
 
-.emailLoginDiv {
+.loginFormWrapper {
   display: flex;
-  align-items: row;
-  height: 1rem;
-  width: 17rem;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin: 1rem 0 0 0;
-  padding: 0;
+  gap: 1rem;
+  width: 100%;
 }
 
-.emailLoginInput {
-  height: 1rem;
-  width: 10rem;
-}
-
+.emailLoginDiv,
 .passwordLoginDiv {
   display: flex;
-  align-items: row;
-  width: 17rem;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0;
-  padding: 0;
+  flex-direction: column;
+  width: 100%;
 }
 
+.emailLoginInput,
 .passwordLoginInput {
-  height: 1rem;
-  width: 10rem;
+  height: 2rem;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: var(--secondary-bg-color);
+  color: var(--font-color);
+}
+
+.loginButton,
+.guestLoginButton {
+  padding: 0.5rem 1rem;
+  margin: 0.25rem 0;
+  border: none;
+  background-color: var(--logo-2nd-color);
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 15rem;
+  font-size: 1rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.loginButton:hover,
+.guestLoginButton:hover {
+  background-color: var(--hover-bg-color);
+  color: var(--font-color);
 }
 
 .notAMemberText {
   font-size: var(--secondary-font-size);
+  text-align: center;
+  margin-top: 1rem;
 }
 
 .signUpButton {
   background-color: transparent;
   border: none;
-  color: rgb(7, 164, 249);
+  color: var(--logo-2nd-color);
   cursor: pointer;
+  font-weight: bold;
 }
 
 .signUpButton:hover {
-  color: rgb(7, 193, 255);
+  color: var(--hover-bg-color);
+}
+
+.errorText {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 1rem;
 }
