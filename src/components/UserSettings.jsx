@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
+import { toast } from "react-hot-toast";
 
 export default function UserSettings({
   setShowUserSettings,
@@ -19,7 +20,6 @@ export default function UserSettings({
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -65,17 +65,14 @@ export default function UserSettings({
   };
 
   const handleUpdateProfile = async () => {
-    setError("");
-    setSuccessMessage("");
-
     if (newPassword && newPassword !== confirmPassword) {
-      setError("New passwords do not match");
+      alert("New passwords do not match");
       return;
     }
 
     const token = localStorage.getItem("token");
     if (!token || !userId) {
-      setError("You must be logged in to update your profile");
+      alert("You must be logged in to update your profile");
       return;
     }
 
@@ -86,7 +83,7 @@ export default function UserSettings({
     });
 
     if (!response.ok) {
-      setError("Failed to fetch current user data");
+      alert("Failed to fetch current user data");
       return;
     }
 
@@ -112,7 +109,7 @@ export default function UserSettings({
     }
 
     if (Object.keys(updatedFields).length === 0) {
-      setSuccessMessage("No changes to update");
+      toast("No changes to update");
       return;
     }
 
@@ -129,15 +126,15 @@ export default function UserSettings({
       const data = await updateResponse.json();
 
       if (updateResponse.ok) {
-        setSuccessMessage("Profile updated successfully!");
+        toast.success("Profile updated successfully!");
         setPassword("");
         setNewPassword("");
         setConfirmPassword("");
       } else {
-        setError(data.error || "Failed to update profile");
+        alert(data.error || "Failed to update profile");
       }
     } catch (err) {
-      setError("Network error, please try again");
+      alert("Network error, please try again");
     }
   };
 
@@ -172,6 +169,7 @@ export default function UserSettings({
         setShowAllFiles(false);
         setShowUserSettings(false);
         alert("Your account has been deleted successfully");
+        window.location.reload(); // 👈 Instant reload
       } else {
         const data = await response.json();
         setError(data.error || "Failed to delete account");
@@ -188,13 +186,11 @@ export default function UserSettings({
 
     if (isGuest && userId && token) {
       try {
-        // Delete all files
         await fetch(`${getBaseUrlWithEnv()}/api/files/reset/${userId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        // Then delete the user
         await fetch(`${getBaseUrlWithEnv()}/api/users/${userId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -212,7 +208,8 @@ export default function UserSettings({
     setShowAllFiles(false);
     setShowUserSettings(false);
 
-    window.location.reload();
+    toast.success("Logged out successfully"); // 👈 Will fire but likely not seen
+    window.location.reload(); // 👈 Instant reload
   };
 
   const handleResetAccount = async () => {
@@ -243,15 +240,13 @@ export default function UserSettings({
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage("All files deleted successfully");
+        alert("All your files have been deleted successfully.");
 
         if (typeof setFiles === "function") {
           setFiles([]);
         }
 
-        setTimeout(() => {
-          setShowUserSettings(false);
-        }, 1000);
+        setShowUserSettings(false);
       } else {
         setError(data.error || "Failed to reset account");
       }
@@ -343,9 +338,6 @@ export default function UserSettings({
         </div>
       </div>
 
-      {error && <p className="errorText">{error}</p>}
-      {successMessage && <p className="successText">{successMessage}</p>}
-
       <div className="settingsButtonsDiv">
         <button className="updateProfileButton" onClick={handleUpdateProfile}>
           Update Profile
@@ -356,11 +348,11 @@ export default function UserSettings({
         <button className="deleteAccountButton" onClick={handleDeleteAccount}>
           Delete Account
         </button>
-        <button className="logoutButton" onClick={handleLogout}>
-          Log Out
-        </button>
         <button className="backToMainButton" onClick={handleCloseSettings}>
           Back to Main Menu
+        </button>
+        <button className="logoutButton" onClick={handleLogout}>
+          Log Out
         </button>
       </div>
     </div>
