@@ -83,66 +83,75 @@ export default function SignUpScreen({
       <p className="signUpInstructionsText">
         Complete all fields to create an account
       </p>
-      <div className="firstNameCreateDiv">
-        <p>First Name:</p>
-        <input
-          className="firstNameCreateInput"
-          placeholder="Enter First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-      </div>
-      <div className="lastNameCreateDiv">
-        <p>Last Name:</p>
-        <input
-          className="lastNameCreateInput"
-          placeholder="Enter Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-      </div>
-      <div className="emailCreateDiv">
-        <p>Email:</p>
-        <input
-          className="emailCreateInput"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div className="passwordCreateDiv">
-        <p>Password:</p>
-        <input
-          className="passwordCreateInput"
-          type="password"
-          placeholder="Enter Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <button className="createAccountButton" onClick={handleSignUp}>
-        Create Account
-      </button>
-      <p className="alreadyAMemberText">
-        Already a member?{" "}
-        <button onClick={showLoginPage} className="goToLoginButton">
-          LOGIN
-        </button>
-      </p>
-      <GoogleLoginButton
-        buttonText="signin_with"
-        fetchFiles={fetchFiles}
-        setToggleSideBar={setToggleSideBar}
-        setShowAllFiles={setShowAllFiles}
-        closeAuthScreens={() => {
-          setShowLoginScreen(false);
-          setEmail("");
-        }}
-        setError={setError}
-      />
 
-      {error && <p className="errorText">{error}</p>}
-      {successMessage && <p className="successText">{successMessage}</p>}
+      <div className="signUpFormWrapper">
+        <div className="formRow">
+          <label>First Name:</label>
+          <input
+            className="formInput"
+            placeholder="Enter First Name"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </div>
+
+        <div className="formRow">
+          <label>Last Name:</label>
+          <input
+            className="formInput"
+            placeholder="Enter Last Name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </div>
+
+        <div className="formRow">
+          <label>Email:</label>
+          <input
+            className="formInput"
+            placeholder="Enter Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <div className="formRow">
+          <label>Password:</label>
+          <input
+            className="formInput"
+            type="password"
+            placeholder="Enter Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+
+        <button className="createAccountButton" onClick={handleSignUp}>
+          Create Account
+        </button>
+
+        <GoogleLoginButton
+          buttonText="signin_with"
+          fetchFiles={fetchFiles}
+          setToggleSideBar={setToggleSideBar}
+          setShowAllFiles={setShowAllFiles}
+          closeAuthScreens={() => {
+            setShowLoginScreen(false);
+            setEmail("");
+          }}
+          setError={setError}
+        />
+
+        <p className="alreadyAMemberText">
+          Already a member?{" "}
+          <button onClick={showLoginPage} className="goToLoginButton">
+            LOGIN
+          </button>
+        </p>
+
+        {error && <p className="errorText">{error}</p>}
+        {successMessage && <p className="successText">{successMessage}</p>}
+      </div>
     </div>
   );
 }

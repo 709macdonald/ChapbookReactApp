@@ -1,91 +1,53 @@
-.signUpPageDiv {
-  z-index: 999;
-  background-color: var(--main-bg-color);
-  padding: 4rem;
-  width: 40%;
+.signUpFormWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow);
+  gap: 1rem;
+  width: 100%;
+  max-width: 20rem;
 }
 
-.firstNameCreateDiv {
+.formRow {
   display: flex;
-  align-items: row;
-  height: 1rem;
-  width: 17rem;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem 0 0 0;
-  padding: 0;
+  flex-direction: column;
+  width: 100%;
 }
 
-.firstNameCreateInput {
-  height: 1rem;
-  width: 10rem;
-}
-
-.lastNameCreateDiv {
-  display: flex;
-  align-items: row;
-  width: 17rem;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-}
-
-.lastNameCreateInput {
-  height: 1rem;
-  width: 10rem;
-}
-
-.emailCreateDiv {
-  display: flex;
-  align-items: row;
-  width: 17rem;
-  height: 1rem;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0;
-  padding: 0;
-}
-
-.emailCreateInput {
-  height: 1rem;
-  width: 10rem;
-}
-
-.passwordCreateDiv {
-  display: flex;
-  align-items: row;
-  width: 17rem;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 0 1rem 0;
-  padding: 0;
-}
-
-.passwordCreateInput {
-  height: 1rem;
-  width: 10rem;
+.formInput {
+  height: 2rem;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: var(--secondary-bg-color);
+  color: var(--font-color);
 }
 
 .createAccountButton {
-  margin-bottom: 1.5rem;
-  border-radius: 0.4em;
+  margin-bottom: 1rem;
+  border-radius: 5px;
   cursor: pointer;
-  height: 2rem;
+  height: 2.5rem;
+  width: 100%;
+  max-width: 15rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: var(--logo-2nd-color);
+  color: white;
+  border: none;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
 .createAccountButton:hover {
-  background-color: rgb(213, 252, 213);
-  transform: scale(1.05);
+  background-color: var(--hover-bg-color);
+  transform: scale(1.03);
+  color: var(--font-color);
 }
 
 .alreadyAMemberText {
   font-size: var(--secondary-font-size);
+  text-align: center;
 }
 
 .goToLoginButton {
@@ -93,8 +55,21 @@
   border: none;
   color: rgb(7, 164, 249);
   cursor: pointer;
+  font-weight: bold;
 }
 
 .goToLoginButton:hover {
   color: rgb(7, 193, 255);
+}
+
+.errorText {
+  color: red;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.successText {
+  color: green;
+  font-size: 0.9rem;
+  text-align: center;
 }
