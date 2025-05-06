@@ -137,9 +137,4 @@ body {
   .containerDiv {
     height: -webkit-fill-available;
   }
-
-  .mainScreenDiv {
-    height: -webkit-fill-available;
-    padding: 0;
-  }
 }
