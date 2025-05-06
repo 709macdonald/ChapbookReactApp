@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createFilesArray } from "../assets/utils/createFilesArray";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
+import toast from "react-hot-toast";
 
 export default function FileUploadSection({
   files,
@@ -155,8 +156,19 @@ export default function FileUploadSection({
       const uploadedFiles = await res.json();
       const processedFiles = await createFilesArray(uploadedFiles);
       setFiles((prevFiles) => [...prevFiles, ...processedFiles]);
+
+      if (processedFiles.length > 0) {
+        toast.success(
+          `${processedFiles.length} file${
+            processedFiles.length > 1 ? "s" : ""
+          } uploaded successfully!`
+        );
+      } else {
+        toast("Files uploaded, but none were processed.", { icon: "⚠️" });
+      }
     } catch (err) {
       console.error("❌ S3 Upload or processing error:", err);
+      toast.error("Upload failed. Please try again.");
     } finally {
       setIsUploading(false);
       setTimeout(() => {
