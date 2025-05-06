@@ -127,7 +127,6 @@ export default function FileUploadSection({
         return;
       }
     }
-    // === ✅ Validation Passed ===
 
     const formData = new FormData();
     newFiles.forEach((file) => formData.append("files", file));
@@ -168,7 +167,7 @@ export default function FileUploadSection({
       }
     } catch (err) {
       console.error("❌ S3 Upload or processing error:", err);
-      toast.error("Upload failed. Please try again.");
+      alert("Upload failed. S3 processing error");
     } finally {
       setIsUploading(false);
       setTimeout(() => {
