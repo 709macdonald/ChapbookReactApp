@@ -140,14 +140,7 @@ export const createFilesArray = async (uploadedFiles) => {
           credentials: "include",
         });
 
-        if (!response.ok) throw new Error("Error saving file to DB");
-
-        const savedFile = await response.json(); // ✅ This should include the real DB id
-
-        return {
-          ...fileData,
-          id: savedFile.id, // ✅ Replace frontend-generated ID with backend real ID
-        };
+        return fileData;
       } catch (err) {
         console.error(
           `❌ Error processing file (${file.url || file.fileUrl}):`,
