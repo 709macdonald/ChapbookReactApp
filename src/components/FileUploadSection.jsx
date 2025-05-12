@@ -190,9 +190,12 @@ export default function FileUploadSection({
 
   return (
     <div className="fileUploadSectionDiv">
-      <button onClick={handleReset} className="resetButton">
-        Reset
-      </button>
+      <div className="tooltip-wrapper">
+        <span className="tooltip">Delete all files from Chapbook</span>
+        <button onClick={handleReset} className="resetButton">
+          Reset
+        </button>
+      </div>
       <hr />
 
       <div className="sideBarButtonsDiv">
