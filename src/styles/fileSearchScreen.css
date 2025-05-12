@@ -1,3 +1,32 @@
+.paginationControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+  gap: 1rem;
+}
+
+.paginationControls button {
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: var(--main-bg-color);
+  color: var(--font-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  transition: background-color 0.2s ease;
+}
+
+.paginationControls button:hover:not(:disabled) {
+  background-color: var(--hover-bg-color);
+}
+
+.paginationControls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .fileSearchScreenDiv {
   z-index: 2;
   overflow-y: auto;

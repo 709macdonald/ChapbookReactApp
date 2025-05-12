@@ -11,6 +11,9 @@ export default function FileSearchScreen({
   sortCriteria,
 }) {
   const [hoveredFileId, setHoveredFileId] = useState(null);
+  const [renderErrors, setRenderErrors] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const resultsPerPage = 12;
 
   const sortedFiles = useMemo(() => {
     const sorted = [...files].sort((a, b) => {
@@ -21,13 +24,9 @@ export default function FileSearchScreen({
       } else if (sortCriteria === "nameZ-A") {
         comparison = b.name.toLowerCase().localeCompare(a.name.toLowerCase());
       } else if (sortCriteria === "dateOldNew") {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        comparison = dateA - dateB;
+        comparison = new Date(a.date) - new Date(b.date);
       } else if (sortCriteria === "dateNewOld") {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        comparison = dateB - dateA;
+        comparison = new Date(b.date) - new Date(a.date);
       } else if (sortCriteria === "wordCount") {
         const wordCountA = a.text ? a.text.split(" ").length : 0;
         const wordCountB = b.text ? b.text.split(" ").length : 0;
@@ -54,7 +53,6 @@ export default function FileSearchScreen({
               ? file.tags.some((tag) => tag.toLowerCase().includes(term))
               : false)
         );
-
         return matchedWords.length > 0 ? { ...file, matchedWords } : null;
       })
       .filter(Boolean);
@@ -62,15 +60,15 @@ export default function FileSearchScreen({
 
   useEffect(() => {
     setResultsCount(filteredFilesWithText.length);
+    setCurrentPage(1); // reset to page 1 when results change
   }, [filteredFilesWithText, setResultsCount]);
 
-  const handleMouseEnter = (fileId) => {
-    setHoveredFileId(fileId);
-  };
+  const totalPages = Math.ceil(filteredFilesWithText.length / resultsPerPage);
 
-  const handleMouseLeave = () => {
-    setHoveredFileId(null);
-  };
+  const paginatedFiles = useMemo(() => {
+    const startIndex = (currentPage - 1) * resultsPerPage;
+    return filteredFilesWithText.slice(startIndex, startIndex + resultsPerPage);
+  }, [filteredFilesWithText, currentPage]);
 
   const isSearchActive = searchWord || assistedSearchWords.length > 0;
 
@@ -80,7 +78,13 @@ export default function FileSearchScreen({
     file.type ===
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-  const [renderErrors, setRenderErrors] = useState({});
+  const handleMouseEnter = (fileId) => {
+    setHoveredFileId(fileId);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredFileId(null);
+  };
 
   const handleRenderError = (fileUrl) => {
     setRenderErrors((prev) => ({ ...prev, [fileUrl]: true }));
@@ -90,80 +94,103 @@ export default function FileSearchScreen({
 
   return (
     <div className="fileSearchScreenDiv">
-      {filteredFilesWithText.length > 0 ? (
-        filteredFilesWithText.map((file) => (
-          <div
-            key={file.id}
-            className="fileDisplayDiv"
-            onMouseEnter={() => handleMouseEnter(file.id)}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => openIndividualFile(file)}
-          >
-            <div className="fileDisplayTopDiv">
-              {isPdf(file) ? (
-                !renderErrors[file.fileUrl] ? (
-                  <iframe
-                    className="previewIFrame"
-                    src={file.fileUrl}
-                    title={file.name}
-                    style={{ width: "9rem", height: "12rem" }}
-                    onError={() => handleRenderError(file.fileUrl)}
-                  ></iframe>
-                ) : (
-                  <i className="fa-regular fa-file-pdf documentIcons"></i>
-                )
-              ) : isImage(file) ? (
-                !renderErrors[file.fileUrl] ? (
-                  <img
-                    className="previewImage"
-                    src={file.fileUrl}
-                    alt={file.name}
-                    style={{ width: "9rem", height: "12rem" }}
-                    onError={() => handleRenderError(file.fileUrl)}
-                  />
-                ) : (
-                  <i className="fa-regular fa-file-image documentIcons"></i>
-                )
-              ) : isWordDoc(file) ? (
-                <i className="fa-regular fa-file-word documentIcons"></i>
-              ) : (
-                <i className="fa-regular fa-file documentIcons"></i>
-              )}
-              <div className="deleteButtonAndMatchedWordsDiv">
-                <span
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleDeleteFile(file.id);
-                  }}
-                  className="fileDeleteButton"
-                >
-                  <i className="fa-solid fa-x fileDeleteIcon"></i>
-                </span>
-                <p className="matchedWords">
-                  {isSearchActive && file.matchedWords.length > 0 ? (
-                    <>
-                      Found:{" "}
-                      <span className="showMatchedWords">
-                        {file.matchedWords.join(", ")}
-                      </span>
-                    </>
+      {paginatedFiles.length > 0 ? (
+        <>
+          {paginatedFiles.map((file) => (
+            <div
+              key={file.id}
+              className="fileDisplayDiv"
+              onMouseEnter={() => handleMouseEnter(file.id)}
+              onMouseLeave={handleMouseLeave}
+              onClick={() => openIndividualFile(file)}
+            >
+              <div className="fileDisplayTopDiv">
+                {isPdf(file) ? (
+                  !renderErrors[file.fileUrl] ? (
+                    <iframe
+                      className="previewIFrame"
+                      src={file.fileUrl}
+                      title={file.name}
+                      style={{ width: "9rem", height: "12rem" }}
+                      onError={() => handleRenderError(file.fileUrl)}
+                    ></iframe>
                   ) : (
-                    ""
-                  )}
-                </p>
+                    <i className="fa-regular fa-file-pdf documentIcons"></i>
+                  )
+                ) : isImage(file) ? (
+                  !renderErrors[file.fileUrl] ? (
+                    <img
+                      className="previewImage"
+                      src={file.fileUrl}
+                      alt={file.name}
+                      style={{ width: "9rem", height: "12rem" }}
+                      onError={() => handleRenderError(file.fileUrl)}
+                    />
+                  ) : (
+                    <i className="fa-regular fa-file-image documentIcons"></i>
+                  )
+                ) : isWordDoc(file) ? (
+                  <i className="fa-regular fa-file-word documentIcons"></i>
+                ) : (
+                  <i className="fa-regular fa-file documentIcons"></i>
+                )}
+                <div className="deleteButtonAndMatchedWordsDiv">
+                  <span
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleDeleteFile(file.id);
+                    }}
+                    className="fileDeleteButton"
+                  >
+                    <i className="fa-solid fa-x fileDeleteIcon"></i>
+                  </span>
+                  <p className="matchedWords">
+                    {isSearchActive && file.matchedWords.length > 0 ? (
+                      <>
+                        Found:{" "}
+                        <span className="showMatchedWords">
+                          {file.matchedWords.join(", ")}
+                        </span>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </p>
+                </div>
               </div>
+              <p className="fileName">{file.name}</p>
+              {(isPdf(file) || isImage(file) || isWordDoc(file)) && (
+                <button
+                  onClick={() => openIndividualFile(file)}
+                  className="viewFileButton"
+                >
+                  {hoveredFileId === file.id ? "View File" : ""}
+                </button>
+              )}
             </div>
-            <p className="fileName">{file.name}</p>
-            {(isPdf(file) || isImage(file) || isWordDoc(file)) && (
-              <button
-                onClick={() => openIndividualFile(file)}
-                className="viewFileButton"
-              >
-                {hoveredFileId === file.id ? "View File" : ""}
-              </button>
-            )}
+          ))}
+
+          {/* PAGINATION CONTROLS */}
+          <div className="paginationControls">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </button>
+
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
           </div>
-        ))
+        </>
       ) : (
         <div></div>
       )}
