@@ -93,10 +93,10 @@ export default function FileSearchScreen({
   if (!showAllFiles) return null;
 
   return (
-    <div className="fileSearchScreenDiv">
-      {paginatedFiles.length > 0 ? (
-        <>
-          {paginatedFiles.map((file) => (
+    <div className="fileSearchWrapper">
+      <div className="fileSearchScreenDiv">
+        {paginatedFiles.length > 0 ? (
+          paginatedFiles.map((file) => (
             <div
               key={file.id}
               className="fileDisplayDiv"
@@ -168,32 +168,32 @@ export default function FileSearchScreen({
                 </button>
               )}
             </div>
-          ))}
+          ))
+        ) : (
+          <div>No files found.</div>
+        )}
+      </div>
 
-          {/* PAGINATION CONTROLS */}
-          <div className="paginationControls">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
+      {/* Pagination sits here, outside the scrolling grid */}
+      <div className="paginationControls">
+        <button
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
 
-            <span>
-              Page {currentPage} of {totalPages}
-            </span>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
 
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
-          </div>
-        </>
-      ) : (
-        <div></div>
-      )}
+        <button
+          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
