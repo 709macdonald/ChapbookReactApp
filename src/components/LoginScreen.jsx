@@ -14,6 +14,7 @@ export default function LoginScreen({
   fetchFiles,
   setEmail,
   email,
+  setShowTutorial,
 }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -89,6 +90,15 @@ export default function LoginScreen({
         setShowLoginScreen(false);
         fetchFiles();
 
+        const tutorialView = localStorage.getItem("tutorialView");
+
+        if (tutorialView === null) {
+          localStorage.setItem("tutorialView", "true");
+          setShowTutorial(true);
+        } else {
+          setShowTutorial(tutorialView === "true");
+        }
+
         toast.success("✅ Login successful!"); // ✅ Snackbar here
       } else {
         setError(data.error || "Login failed");
@@ -126,6 +136,9 @@ export default function LoginScreen({
       setShowAllFiles(true);
       setShowLoginScreen(false);
       fetchFiles();
+
+      localStorage.setItem("tutorialView", "true");
+      setShowTutorial(true);
 
       toast.success("👋 Guest login successful!");
     } catch (err) {

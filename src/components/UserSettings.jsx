@@ -13,6 +13,7 @@ export default function UserSettings({
   setFiles,
   email,
   setEmail,
+  setShowTutorial,
 }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -355,6 +356,15 @@ export default function UserSettings({
         <button className="deleteAccountButton" onClick={handleDeleteAccount}>
           Delete Account
         </button>
+        <button
+          className="showTutorialButton"
+          onClick={() => {
+            setShowTutorial(true);
+          }}
+        >
+          Show Tutorial
+        </button>
+
         <button className="backToMainButton" onClick={handleCloseSettings}>
           Back to Main Menu
         </button>

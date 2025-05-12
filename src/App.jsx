@@ -5,6 +5,7 @@ import MainScreen from "./components/MainScreen";
 import { getBaseUrlWithEnv } from "./assets/utils/backendConnect";
 import "./pdfConfig";
 import toast from "react-hot-toast";
+import TutorialModal from "./components/TutorialModal";
 
 function App() {
   const [files, setFiles] = useState([]);
@@ -23,11 +24,12 @@ function App() {
   const [sortCriteria, setSortCriteria] = useState("name");
   const [email, setEmail] = useState("");
 
+  const [showTutorial, setShowTutorial] = useState("");
+
   if (typeof global === "undefined") {
     var global = window;
   }
 
-  // 🔁 Load files when app first loads
   const fetchFiles = async () => {
     try {
       setIsLoadingFiles(true);
@@ -35,11 +37,9 @@ function App() {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        console.warn("No token found. User may not be logged in.");
         return;
       }
 
-      // Send the token in the Authorization header
       const res = await fetch(`${getBaseUrlWithEnv()}/api/files`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -116,7 +116,6 @@ function App() {
 
       if (!res.ok) throw new Error("Server error on DB delete");
 
-      // ✅ Optional: delete from local /uploads folder with token
       await fetch(
         `${getBaseUrlWithEnv()}/api/delete-local/${fileToDelete.serverKey}`,
         {
@@ -166,6 +165,7 @@ function App() {
         setSortCriteria={setSortCriteria}
         email={email}
         setEmail={setEmail}
+        setShowTutorial={setShowTutorial}
       />
       <MainScreen
         fetchFiles={fetchFiles}
@@ -192,7 +192,9 @@ function App() {
         setToggleSideBar={setToggleSideBar}
         setEmail={setEmail}
         email={email}
+        setShowTutorial={setShowTutorial}
       />
+      {showTutorial && <TutorialModal setShowTutorial={setShowTutorial} />}
     </div>
   );
 }

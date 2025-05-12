@@ -13,6 +13,7 @@ import "./styles/fileSearchScreen.css";
 import "./styles/toolTip.css";
 import "./styles/loginScreen.css";
 import "./styles/signUpScreen.css";
+import "./styles/tutorialModal.css";
 
 const clientId =
   "941831478532-iklrlnrrvu857u85lgqek79ungfcafqp.apps.googleusercontent.com";

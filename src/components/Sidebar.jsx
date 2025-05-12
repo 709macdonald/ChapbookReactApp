@@ -27,6 +27,7 @@ export default function Sidebar({
   setToggleSideBar,
   email,
   setEmail,
+  setShowTutorial,
 }) {
   const [showUserSettings, setShowUserSettings] = useState(false);
 
@@ -82,6 +83,7 @@ export default function Sidebar({
           setFiles={setFiles}
           email={email}
           setEmail={setEmail}
+          setShowTutorial={setShowTutorial}
         />
       ) : (
         <>

@@ -13,6 +13,7 @@ export default function SignUpScreen({
   setEmail,
   email,
   fetchFiles,
+  setShowTutorial,
 }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -49,6 +50,9 @@ export default function SignUpScreen({
         if (decoded.userId) {
           localStorage.setItem("userId", decoded.userId);
         }
+
+        localStorage.setItem("tutorialView", "true");
+        setShowTutorial(true);
 
         setToggleSideBar(true);
         setShowAllFiles(true);

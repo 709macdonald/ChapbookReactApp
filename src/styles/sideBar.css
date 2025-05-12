@@ -335,6 +335,13 @@
   background-color: #333;
 }
 
+.showTutorialButton {
+  background-color: #e8f0fe;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
+  margin-top: 0.5rem;
+}
+
 .resetAccountButton {
   padding: 10px;
   border-radius: 4px;

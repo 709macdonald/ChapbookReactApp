@@ -4,7 +4,7 @@ import { resolve } from "path";
 
 export default defineConfig({
   plugins: [react()],
-  base: "/", // 👈✅ Fixed for Vercel
+  base: "/", 
   define: {
     global: "window",
   },
