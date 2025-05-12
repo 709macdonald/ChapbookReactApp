@@ -130,7 +130,7 @@ export const createFilesArray = async (uploadedFiles) => {
           }
         }
 
-        await fetch(`${getBaseUrlWithEnv()}/api/files`, {
+        const res = await fetch(`${getBaseUrlWithEnv()}/api/files`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -140,7 +140,11 @@ export const createFilesArray = async (uploadedFiles) => {
           credentials: "include",
         });
 
-        return fileData;
+        if (!res.ok) throw new Error("Failed to save file");
+
+        const savedFile = await res.json(); // 👈 This must include the real `id` from DB
+
+        return savedFile;
       } catch (err) {
         console.error(
           `❌ Error processing file (${file.url || file.fileUrl}):`,
