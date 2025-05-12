@@ -115,9 +115,15 @@ export default function Sidebar({
 
       <div className="creatorNameDiv">
         <p>Created By Peter MacDonald</p>
-        <button className="userSettingsButton" onClick={handleShowUserSettings}>
-          <i className="fa-solid fa-user-gear"></i>
-        </button>
+        <div className="tooltip-wrapper">
+          <span className="tooltip">Open User Settings</span>
+          <button
+            className="userSettingsButton"
+            onClick={handleShowUserSettings}
+          >
+            <i className="fa-solid fa-user-gear"></i>
+          </button>
+        </div>
       </div>
     </div>
   );
