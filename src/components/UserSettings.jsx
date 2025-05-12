@@ -269,6 +269,17 @@ export default function UserSettings({
         <h2>User Settings</h2>
       </div>
 
+      {/* Top Priority Buttons */}
+      <div className="settingsButtonsDiv">
+        <button
+          className="showTutorialButton"
+          onClick={() => setShowTutorial(true)}
+        >
+          Show Tutorial
+        </button>
+      </div>
+
+      {/* Profile Info */}
       <div className="settingsSection">
         <h3>Profile Information</h3>
         <div className="profileInputDiv">
@@ -297,6 +308,7 @@ export default function UserSettings({
         </div>
       </div>
 
+      {/* Password Section */}
       <div className="settingsSection">
         <h3>Change Password</h3>
         <div className="profileInputDiv">
@@ -328,6 +340,17 @@ export default function UserSettings({
         </div>
       </div>
 
+      {/* Update & Reset Buttons */}
+      <div className="settingsButtonsDiv">
+        <button className="updateProfileButton" onClick={handleUpdateProfile}>
+          Update Profile
+        </button>
+        <button className="resetAccountButton" onClick={handleResetAccount}>
+          Reset Account (Delete All Files)
+        </button>
+      </div>
+
+      {/* Theme Toggle */}
       <div className="themeToggleSection">
         <h3>Appearance</h3>
         <div className="themeToggleDiv">
@@ -346,25 +369,11 @@ export default function UserSettings({
         </div>
       </div>
 
+      {/* Danger Zone */}
       <div className="settingsButtonsDiv">
-        <button className="updateProfileButton" onClick={handleUpdateProfile}>
-          Update Profile
-        </button>
-        <button className="resetAccountButton" onClick={handleResetAccount}>
-          Reset Account (Delete All Files)
-        </button>
         <button className="deleteAccountButton" onClick={handleDeleteAccount}>
           Delete Account
         </button>
-        <button
-          className="showTutorialButton"
-          onClick={() => {
-            setShowTutorial(true);
-          }}
-        >
-          Show Tutorial
-        </button>
-
         <button className="backToMainButton" onClick={handleCloseSettings}>
           Back to Main Menu
         </button>
@@ -372,6 +381,9 @@ export default function UserSettings({
           Log Out
         </button>
       </div>
+
+      {/* Optional: Error Display */}
+      {error && <p className="errorText">{error}</p>}
     </div>
   );
 }
