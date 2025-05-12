@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import jwt_decode from "jwt-decode";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 import GoogleLoginButton from "./GoogleLoginButton";
@@ -19,6 +18,16 @@ export default function LoginScreen({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [disableLoginButton, setDisableLoginButton] = useState(true); // ✅ track disabled state
+
+  // ✅ watch for field changes to toggle the button disabled
+  useEffect(() => {
+    if (email.trim() !== "" && password.trim() !== "") {
+      setDisableLoginButton(false);
+    } else {
+      setDisableLoginButton(true);
+    }
+  }, [email, password]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -55,6 +64,11 @@ export default function LoginScreen({
   const handleLogin = async () => {
     setError("");
 
+    if (!email || !password) {
+      alert("❌ Please enter both email and password");
+      return;
+    }
+
     try {
       const response = await fetch(`${getBaseUrlWithEnv()}/api/login`, {
         method: "POST",
@@ -70,18 +84,20 @@ export default function LoginScreen({
       if (response.ok) {
         const token = data.token;
 
-        if (!token) {
-          throw new Error("No token returned");
-        }
+        if (!token) throw new Error("No token returned");
 
         localStorage.setItem("token", token);
-
         const decoded = jwt_decode(token);
-
         if (decoded.userId) {
           localStorage.setItem("userId", decoded.userId);
+        }
+
+        const tutorialView = localStorage.getItem("tutorialView");
+        if (tutorialView === null) {
+          localStorage.setItem("tutorialView", "true");
+          setShowTutorial(true);
         } else {
-          console.warn("userId not found in decoded token");
+          setShowTutorial(tutorialView === "true");
         }
 
         setIsLoggedIn(true);
@@ -90,25 +106,15 @@ export default function LoginScreen({
         setShowLoginScreen(false);
         fetchFiles();
 
-        const tutorialView = localStorage.getItem("tutorialView");
-
-        if (tutorialView === null) {
-          localStorage.setItem("tutorialView", "true");
-          setShowTutorial(true);
-        } else {
-          setShowTutorial(tutorialView === "true");
-        }
-
-        toast.success("✅ Login successful!"); // ✅ Snackbar here
+        toast.success("✅ Login successful!");
       } else {
         setError(data.error || "Login failed");
-
-        toast.error("❌ Login failed. Try again."); // ✅ Snackbar here
+        alert(`❌ Login failed: ${data.error || "Unknown error"}`);
       }
     } catch (err) {
+      console.error("Login error:", err);
       setError("Network error, please try again");
-
-      toast.error("❌ Network Error. Please try again later."); // ✅ Snackbar here
+      alert(`❌ Login failed: ${err.message || "Network error"}`);
     }
   };
 
@@ -124,11 +130,10 @@ export default function LoginScreen({
 
       const { token } = data;
       localStorage.setItem("token", token);
-
       const decoded = jwt_decode(token);
       if (decoded.userId) {
         localStorage.setItem("userId", decoded.userId);
-        localStorage.setItem("isGuest", "true"); // 👈 important
+        localStorage.setItem("isGuest", "true");
       }
 
       setIsLoggedIn(true);
@@ -144,7 +149,7 @@ export default function LoginScreen({
     } catch (err) {
       console.error("Guest login failed", err);
       setError("Failed to log in as guest");
-      toast.error("❌ Guest login failed.");
+      alert(`❌ Guest login failed: ${err.message || "Unknown error"}`);
     }
   };
 
@@ -187,7 +192,11 @@ export default function LoginScreen({
             />
           </div>
 
-          <button className="loginButton" onClick={handleLogin}>
+          <button
+            className="loginButton"
+            onClick={handleLogin}
+            disabled={disableLoginButton}
+          >
             Login
           </button>
 
@@ -203,7 +212,7 @@ export default function LoginScreen({
             closeAuthScreens={() => {
               setShowLoginScreen(false);
               setIsLoggedIn(true);
-              setEmail(""); // clears the input
+              setEmail("");
             }}
             setError={setError}
           />

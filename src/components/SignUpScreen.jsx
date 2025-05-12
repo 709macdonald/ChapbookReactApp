@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
 import GoogleLoginButton from "./GoogleLoginButton";
@@ -20,12 +20,32 @@ export default function SignUpScreen({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [disableSignUpButton, setDisableSignUpButton] = useState(true);
+
+  // ✅ Disable button unless all fields are filled
+  useEffect(() => {
+    if (
+      firstName.trim() !== "" &&
+      lastName.trim() !== "" &&
+      email.trim() !== "" &&
+      password.trim() !== ""
+    ) {
+      setDisableSignUpButton(false);
+    } else {
+      setDisableSignUpButton(true);
+    }
+  }, [firstName, lastName, email, password]);
 
   if (!showSignUpScreen) return <div></div>;
 
   const handleSignUp = async () => {
     setError("");
     setSuccessMessage("");
+
+    if (!firstName || !lastName || !email || !password) {
+      alert("❌ Please fill out all fields");
+      return;
+    }
 
     const user = { firstName, lastName, email, password };
 
@@ -41,12 +61,10 @@ export default function SignUpScreen({
 
       if (response.ok) {
         const token = data.token;
-
         if (!token) throw new Error("No token returned on signup.");
 
         localStorage.setItem("token", token);
         const decoded = jwt_decode(token);
-
         if (decoded.userId) {
           localStorage.setItem("userId", decoded.userId);
         }
@@ -63,12 +81,12 @@ export default function SignUpScreen({
         toast.success("🎉 Account created & logged in!");
       } else {
         setError(data.error || "Account creation failed");
-        alert("❌ Failed to create account.");
+        alert(`❌ Signup failed: ${data.error || "Unknown error"}`);
       }
     } catch (err) {
       console.error(err);
       setError("Network error, please try again");
-      alert("❌ Network error during signup.");
+      alert(`❌ Signup failed: ${err.message || "Network error"}`);
     }
   };
 
@@ -130,7 +148,11 @@ export default function SignUpScreen({
             />
           </div>
 
-          <button className="createAccountButton" onClick={handleSignUp}>
+          <button
+            className="createAccountButton"
+            onClick={handleSignUp}
+            disabled={disableSignUpButton}
+          >
             Create Account
           </button>
 
