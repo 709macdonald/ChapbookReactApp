@@ -336,10 +336,21 @@
 }
 
 .showTutorialButton {
+  padding: 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
   background-color: #e8f0fe;
   color: #1a73e8;
   border: 1px solid #1a73e8;
-  margin-top: 0.5rem;
+}
+
+.showTutorialButton:hover {
+  background-color: #d2e3fc;
+  transform: scale(1.05);
 }
 
 .resetAccountButton {
