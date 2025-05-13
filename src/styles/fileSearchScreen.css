@@ -48,6 +48,7 @@
   z-index: 2; /* ✅ this is safe to restore */
   height: 100%; /* ✅ forces full height in flex column */
   box-sizing: border-box;
+  width: 100%;
 }
 
 /* FILE DISPLAYS STYLES*/
