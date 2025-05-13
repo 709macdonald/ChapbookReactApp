@@ -21,7 +21,7 @@ function App() {
   const [selectedUserCreatedFile, setSelectedUserCreatedFile] = useState(null);
   const [searchWord, setSearchWord] = useState("");
   const [assistedSearchWords, setAssistedSearchWords] = useState([]);
-  const [sortCriteria, setSortCriteria] = useState("name");
+  const [sortCriteria, setSortCriteria] = useState("dateNewOld");
   const [email, setEmail] = useState("");
 
   const [showTutorial, setShowTutorial] = useState("");
