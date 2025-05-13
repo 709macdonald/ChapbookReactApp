@@ -50,11 +50,16 @@ body {
   text-align: center;
 }
 
+.logoText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .sloganTextSmall {
   font-size: 0.85rem;
   color: var(--secondary-font-color);
-  text-align: center;
-  margin-top: -0.3rem;
+  margin-top: 0.2rem;
 }
 
 /* MAIN SCREEN STYLES*/

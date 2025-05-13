@@ -32,12 +32,13 @@
 
 .sideBarLogoDiv {
   display: flex;
-  width: 18rem;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  height: 4rem;
+  height: auto;
   margin-top: 4rem;
+  text-align: center;
 }
 
 .resetButton {

@@ -66,11 +66,14 @@ export default function Sidebar({
       <button className="sideBarButton" onClick={handleToggleSideBar}>
         <i className="fa-solid fa-bars"></i>
       </button>
-      <div className="sideBarLogoDiv">
-        <h2 onClick={goToMainScreen} className="chap">
-          Chap<span className="book">book</span>
-        </h2>
-        <p className="sloganTextSmall">Every File. Every Word. Instantly.</p>
+
+      <div className="sideBarLogoDiv" onClick={goToMainScreen}>
+        <div className="logoText">
+          <h2 className="chap">
+            Chap<span className="book">book</span>
+          </h2>
+          <p className="sloganTextSmall">Every File. Every Word. Instantly.</p>
+        </div>
       </div>
 
       {showUserSettings ? (
