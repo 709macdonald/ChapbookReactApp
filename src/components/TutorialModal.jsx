@@ -21,11 +21,30 @@ export default function TutorialModal({ setShowTutorial }) {
         <h2>Welcome to CHAPBOOK!</h2>
         <p>Here's how to get started:</p>
         <ol>
-          <li>📂 Upload documents (PDF, Word, images).</li>
-          <li>🔍 Search for keywords across all uploaded files.</li>
-          <li>💡 Use Assisted Search for related terms.</li>
-          <li>📑 Review highlighted results in documents.</li>
-          <li>🏷️ Tag files for easier future access.</li>
+          <li>
+            📂 <strong>Upload files</strong> — PDFs, Word documents, and images
+            (like scanned notes, receipts, or forms).
+          </li>
+          <li>
+            🔍 <strong>Search instantly</strong> across all your documents —
+            even handwritten or scanned content.
+          </li>
+          <li>
+            💡 <strong>Use Assisted Search</strong> to uncover related terms and
+            smarter suggestions.
+          </li>
+          <li>
+            📌 <strong>See highlights</strong> showing exactly where your
+            keywords appear inside each file.
+          </li>
+          <li>
+            ✍️ <strong>Generate content</strong> with the AI Writing button —
+            create summaries, brainstorm ideas, or rewrite text.
+          </li>
+          <li>
+            🏷️ <strong>Add tags</strong> to organize your files and make them
+            easy to find later.
+          </li>
         </ol>
 
         <label
