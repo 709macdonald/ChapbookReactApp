@@ -6,6 +6,7 @@ import jsPDF from "jspdf";
 import { v4 as uuidv4 } from "uuid";
 import AIWritingAssistant from "./AIWritingAssistant";
 import { getBaseUrlWithEnv } from "../assets/utils/backendConnect";
+import toast from "react-hot-toast";
 
 const COLORS = [
   { label: "Black", style: "BLACK", hex: "#000000" },
@@ -236,6 +237,7 @@ const TextEditorButtons = ({
       }
 
       backToAllFileView();
+      toast.success("Uploaded to Chapbook!");
     } catch (error) {
       console.error("Error saving document:", error);
       alert("Failed to save document. Please try again.");
