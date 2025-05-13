@@ -70,6 +70,7 @@ export default function Sidebar({
         <h2 onClick={goToMainScreen} className="chap">
           Chap<span className="book">book</span>
         </h2>
+        <p className="sloganTextSmall">Every File. Every Word. Instantly.</p>
       </div>
 
       {showUserSettings ? (
