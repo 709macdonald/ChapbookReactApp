@@ -69,7 +69,7 @@ export default function Sidebar({
 
       <div className="sideBarLogoDiv" onClick={goToMainScreen}>
         <div className="logoText">
-          <h2 className="chap">
+          <h2 className="sideBarChap">
             Chap<span className="book">book</span>
           </h2>
           <p className="sloganTextSmall">Every File. Every Word. Instantly.</p>

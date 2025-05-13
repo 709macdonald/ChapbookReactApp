@@ -138,6 +138,12 @@ body {
   color: var(--font-color);
 }
 
+.sideBarChap {
+  font-size: 3rem;
+  color: var(--font-color);
+  margin: 1rem auto 0 auto;
+}
+
 .book {
   font-size: 3rem;
   color: var(--logo-2nd-color);
