@@ -393,13 +393,19 @@
 }
 
 .profileInput {
-  width: 90%; /* Reduce width from 100% */
-  max-width: 300px; /* Set a max width */
-  padding: 8px;
-  border: 1px solid rgba(128, 128, 128, 0.3);
-  border-radius: 4px;
-  background-color: inherit;
-  color: inherit;
+  height: 1.3rem;
+  width: 16rem;
+  font-size: 1.2rem;
+  padding: 0.2rem 0.5rem;
+  background-color: rgb(246, 246, 246);
+  border: none;
+  border-radius: 0.5rem;
+  color: var(--font-color);
+  outline: none;
+}
+
+.profileInput:hover {
+  background-color: white;
 }
 
 /* Theme Toggle */
