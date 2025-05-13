@@ -102,6 +102,7 @@ export default function SignUpScreen({
           <span className="chap">Chap</span>
           <span className="book">book</span>
         </h1>
+        <p className="sloganText">Every File. Every Word. Instantly.</p>
         <p className="signUpInstructionsText">
           Complete all fields to create an account
         </p>
