@@ -49,6 +49,7 @@ export default function LoginScreen({
           setToggleSideBar(true);
           setShowAllFiles(true);
           setShowLoginScreen(false);
+          fetchFiles();
         }
       } catch (error) {
         console.error("Token decoding error:", error);
