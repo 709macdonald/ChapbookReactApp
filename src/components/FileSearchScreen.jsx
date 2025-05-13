@@ -183,7 +183,7 @@ export default function FileSearchScreen({
           Previous
         </button>
 
-        <span>
+        <span className="pageNumber">
           Page {currentPage} of {totalPages}
         </span>
 

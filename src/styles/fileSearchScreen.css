@@ -1,3 +1,7 @@
+.pageNumber {
+  padding: 0 1rem;
+}
+
 .fileSearchWrapper {
   display: flex;
   flex-direction: column;
