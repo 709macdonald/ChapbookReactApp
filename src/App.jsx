@@ -58,9 +58,9 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    fetchFiles();
-  }, []);
+  // useEffect(() => {
+  //   fetchFiles();
+  // }, []);
 
   const toggleTheme = () => {
     const newMode = !isDarkMode;
