@@ -235,14 +235,16 @@
 }
 
 .previousPageButton {
-  background-color: var(--main-bg-color);
-  border: none;
-  border-radius: 0.2rem;
-  padding: 0.5rem;
-  font-size: 1rem;
-  color: var(--font-color);
   margin-right: 1rem;
-  border-radius: 1rem;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: var(--main-bg-color);
+  color: var(--font-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  transition: background-color 0.2s ease;
 }
 
 .previousPageButton:hover {
@@ -251,19 +253,30 @@
 }
 
 .nextPageButton {
-  background-color: var(--main-bg-color);
-  border: none;
-  border-radius: 0.2rem;
-  padding: 0.5rem;
-  font-size: 1rem;
-  color: var(--font-color);
   margin-left: 1rem;
-  border-radius: 1rem;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: var(--main-bg-color);
+  color: var(--font-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  transition: background-color 0.2s ease;
 }
 
 .nextPageButton:hover {
   transform: scale(1.05);
   background-color: var(--hover-bg-color);
+}
+
+.nextPageButton:hover:not(:disabled) {
+  background-color: var(--hover-bg-color);
+}
+
+.nextPageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* IMAGE STYLES */
