@@ -126,12 +126,14 @@
 #searchBar {
   height: 1.3rem;
   width: 16rem;
-  font-size: 1.2rem;
   padding: 0.2rem 0.5rem 0.2rem 0.5rem;
-  background-color: rgb(246, 246, 246);
   cursor: pointer;
-  border-radius: 0.5rem;
   margin: 1rem 0 1rem 0;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: var(--secondary-bg-color);
+  color: var(--font-color);
 }
 
 #searchBar:hover {
