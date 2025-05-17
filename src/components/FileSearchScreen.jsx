@@ -170,7 +170,7 @@ export default function FileSearchScreen({
             </div>
           ))
         ) : (
-          <div>No files found.</div>
+          <div></div>
         )}
       </div>
 
